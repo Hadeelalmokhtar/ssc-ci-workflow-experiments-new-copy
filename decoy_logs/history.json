@@ -1,0 +1,1994 @@
+[
+    {
+        "run_id": "1771993573",
+        "package": "packages/decoy/package_169.py",
+        "file_entropy": 4.6288,
+        "execution_time": 0.073,
+        "suspicious_imports": [
+            "os",
+            "subprocess",
+            "socket",
+            "requests"
+        ],
+        "command_injection_calls": [
+            "system"
+        ],
+        "obfuscation_flags": [
+            "hex encoded string"
+        ],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_169.py\"], 0x7ffd1252f740 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 9,
+        "mitre_techniques": [
+            "T1059 - Command and Scripting Interpreter",
+            "T1027 - Obfuscated Files or Information",
+            "T1204 - User Execution"
+        ],
+        "timestamp": "2026-02-25T04:26:13.067280"
+    },
+    {
+        "run_id": "174",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.357,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffff5a08d70 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:28:00.308172"
+    },
+    {
+        "run_id": "1771993731",
+        "package": "packages/decoy/package_174.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.04,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_174.py\"], 0x7ffd2096ba60 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:28:51.214371"
+    },
+    {
+        "run_id": "175",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.114,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffd0c607170 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:41:11.134277"
+    },
+    {
+        "run_id": "1771994523",
+        "package": "packages/decoy/package_175.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.034,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_175.py\"], 0x7fff3c29d0d0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:42:03.532132"
+    },
+    {
+        "run_id": "177",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.156,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffde915ed60 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:53:44.794173"
+    },
+    {
+        "run_id": "1771995278",
+        "package": "packages/decoy/package_177.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.035,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_177.py\"], 0x7ffc6e1a0700 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:53:23.657817"
+    },
+    {
+        "run_id": "178",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.244,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffd19d6cea0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:54:33.748684"
+    },
+    {
+        "run_id": "1771995324",
+        "package": "packages/decoy/package_178.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.037,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_178.py\"], 0x7ffcbdefb660 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T04:55:24.815486"
+    },
+    {
+        "run_id": "180",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.475,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffdea127090 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:27:07.983230"
+    },
+    {
+        "run_id": "1771997280",
+        "package": "packages/decoy/package_180.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.034,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_180.py\"], 0x7ffc709e3140 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:28:00.872469"
+    },
+    {
+        "run_id": "182",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.104,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffdebbe6010 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:28:38.603918"
+    },
+    {
+        "run_id": "1771997369",
+        "package": "packages/decoy/package_182.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.035,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_182.py\"], 0x7fff02789660 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:29:29.708965"
+    },
+    {
+        "run_id": "183",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.115,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffeff16aa30 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:33:53.063732"
+    },
+    {
+        "run_id": "1771997682",
+        "package": "packages/decoy/package_183.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.038,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_183.py\"], 0x7ffc72d97980 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:34:42.009723"
+    },
+    {
+        "run_id": "184",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 4.6279,
+        "execution_time": 0.288,
+        "exit_code": 1,
+        "suspicious_imports": [
+            "os",
+            "subprocess",
+            "socket",
+            "requests"
+        ],
+        "command_injection_calls": [
+            "system"
+        ],
+        "obfuscation_flags": [
+            "hex encoded string"
+        ],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffecfd43860 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 9,
+        "mitre_techniques": [
+            {
+                "technique": "Command and Scripting Interpreter",
+                "id": "T1059",
+                "tactic": "Execution"
+            },
+            {
+                "technique": "Obfuscated Files or Information",
+                "id": "T1027",
+                "tactic": "Defense Evasion"
+            },
+            {
+                "technique": "User Execution",
+                "id": "T1204",
+                "tactic": "Execution"
+            }
+        ],
+        "timestamp": "2026-02-25T05:36:08.956054"
+    },
+    {
+        "run_id": "1771997819",
+        "package": "packages/decoy/package_184.py",
+        "file_entropy": 4.6279,
+        "execution_time": 0.078,
+        "suspicious_imports": [
+            "os",
+            "subprocess",
+            "socket",
+            "requests"
+        ],
+        "command_injection_calls": [
+            "system"
+        ],
+        "obfuscation_flags": [
+            "hex encoded string"
+        ],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_184.py\"], 0x7ffc72f69030 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 9,
+        "mitre_techniques": [
+            "T1059 - Command and Scripting Interpreter",
+            "T1027 - Obfuscated Files or Information",
+            "T1204 - User Execution"
+        ],
+        "timestamp": "2026-02-25T05:36:59.139646"
+    },
+    {
+        "run_id": "185",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.283,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffe040752c0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:41:44.892759"
+    },
+    {
+        "run_id": "1771998156",
+        "package": "packages/decoy/package_185.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.035,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_185.py\"], 0x7ffd81556fb0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:42:36.209245"
+    },
+    {
+        "run_id": "187",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.179,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffc021fc0b0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:45:39.630827"
+    },
+    {
+        "run_id": "1771998391",
+        "package": "packages/decoy/package_187.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.041,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_187.py\"], 0x7ffd45304d10 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:46:31.582521"
+    },
+    {
+        "run_id": "188",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.27,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffc07a5a8a0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T05:59:34.639783"
+    },
+    {
+        "run_id": "1771999223",
+        "package": "packages/decoy/package_188.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.032,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_188.py\"], 0x7fff6dcf8b40 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T06:00:23.107579"
+    },
+    {
+        "run_id": "189",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.149,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7fff039d9000 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T06:02:47.415417"
+    },
+    {
+        "run_id": "1771999412",
+        "package": "packages/decoy/package_189.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.032,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_189.py\"], 0x7ffd003d2890 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T06:03:32.413609"
+    },
+    {
+        "run_id": "190",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.132,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffcf2c36a80 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T06:04:44.517988"
+    },
+    {
+        "run_id": "1771999532",
+        "package": "packages/decoy/package_190.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.037,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_190.py\"], 0x7ffec181e220 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-25T06:05:32.585254"
+    },
+    {
+        "run_id": "191",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 4.627,
+        "execution_time": 0.408,
+        "exit_code": 1,
+        "suspicious_imports": [
+            "os",
+            "subprocess",
+            "socket",
+            "requests"
+        ],
+        "command_injection_calls": [
+            "system"
+        ],
+        "obfuscation_flags": [
+            "hex encoded string"
+        ],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffd15c195d0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 9,
+        "mitre_techniques": [
+            {
+                "technique": "Command and Scripting Interpreter",
+                "id": "T1059",
+                "tactic": "Execution"
+            },
+            {
+                "technique": "Obfuscated Files or Information",
+                "id": "T1027",
+                "tactic": "Defense Evasion"
+            },
+            {
+                "technique": "User Execution",
+                "id": "T1204",
+                "tactic": "Execution"
+            }
+        ],
+        "timestamp": "2026-02-25T06:37:38.991223"
+    },
+    {
+        "run_id": "1772001511",
+        "package": "packages/decoy/package_191.py",
+        "file_entropy": 4.627,
+        "execution_time": 0.087,
+        "suspicious_imports": [
+            "os",
+            "subprocess",
+            "socket",
+            "requests"
+        ],
+        "command_injection_calls": [
+            "system"
+        ],
+        "obfuscation_flags": [
+            "hex encoded string"
+        ],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_191.py\"], 0x7ffd0eb29aa0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 9,
+        "mitre_techniques": [
+            "T1059 - Command and Scripting Interpreter",
+            "T1027 - Obfuscated Files or Information",
+            "T1204 - User Execution"
+        ],
+        "timestamp": "2026-02-25T06:38:31.042848"
+    },
+    {
+        "run_id": "193",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 4.6261,
+        "execution_time": 0.293,
+        "exit_code": 1,
+        "suspicious_imports": [
+            "os",
+            "subprocess",
+            "socket",
+            "requests"
+        ],
+        "command_injection_calls": [
+            "system"
+        ],
+        "obfuscation_flags": [
+            "hex encoded string"
+        ],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffe35dacfb0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 9,
+        "mitre_techniques": [
+            {
+                "technique": "Command and Scripting Interpreter",
+                "id": "T1059",
+                "tactic": "Execution"
+            },
+            {
+                "technique": "Obfuscated Files or Information",
+                "id": "T1027",
+                "tactic": "Defense Evasion"
+            },
+            {
+                "technique": "User Execution",
+                "id": "T1204",
+                "tactic": "Execution"
+            }
+        ],
+        "timestamp": "2026-02-25T12:12:38.771771"
+    },
+    {
+        "run_id": "1772021606",
+        "package": "packages/decoy/package_193.py",
+        "file_entropy": 4.6261,
+        "execution_time": 0.076,
+        "suspicious_imports": [
+            "os",
+            "subprocess",
+            "socket",
+            "requests"
+        ],
+        "command_injection_calls": [
+            "system"
+        ],
+        "obfuscation_flags": [
+            "hex encoded string"
+        ],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_193.py\"], 0x7ffd3a446000 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 9,
+        "mitre_techniques": [
+            "T1059 - Command and Scripting Interpreter",
+            "T1027 - Obfuscated Files or Information",
+            "T1204 - User Execution"
+        ],
+        "timestamp": "2026-02-25T12:13:26.862832"
+    },
+    {
+        "run_id": "1",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.119,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffd26d3bd10 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-27T16:17:16.680347"
+    },
+    {
+        "run_id": "1772209094",
+        "package": "packages/decoy/package_1.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.039,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_1.py\"], 0x7ffc424aff60 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-02-27T16:18:14.376484"
+    },
+    {
+        "run_id": "2",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.215,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7fffc59778e0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-03T04:31:39.624460"
+    },
+    {
+        "run_id": "1772512348",
+        "package": "packages/decoy/package_2.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.043,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_2.py\"], 0x7ffcf4d2a5a0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-03T04:32:28.748262"
+    },
+    {
+        "run_id": "3",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.14,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffedf61a910 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-03T04:35:39.592254"
+    },
+    {
+        "run_id": "1772512594",
+        "package": "packages/decoy/package_3.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.035,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_3.py\"], 0x7ffc4d1fc2b0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-03T04:36:34.887949"
+    },
+    {
+        "run_id": "4",
+        "package": "build/package.py",
+        "risk_probability": 0.9763720631599426,
+        "prediction": 1,
+        "file_entropy": 3.9679,
+        "execution_time": 0.227,
+        "exit_code": 0,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7fff5d6b25c0 /* 120 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-03T04:46:19.855433"
+    },
+    {
+        "run_id": "1772513233",
+        "package": "packages/decoy/package_4.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.038,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_4.py\"], 0x7ffcfc5539c0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-03T04:47:13.444011"
+    },
+    {
+        "run_id": "1772517077",
+        "package": "packages/decoy/package_5.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.039,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_5.py\"], 0x7ffc5d2ff000 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-03T05:51:17.602508"
+    },
+    {
+        "run_id": "1772667850",
+        "package": "packages/decoy/package_6.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.042,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_6.py\"], 0x7ffe75607ba0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-04T23:44:10.213315"
+    },
+    {
+        "run_id": "1772669386",
+        "package": "packages/decoy/package_7.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.046,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_7.py\"], 0x7ffe2d604530 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-05T00:09:46.067997"
+    },
+    {
+        "run_id": "1772670666",
+        "package": "packages/decoy/package_8.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.036,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_8.py\"], 0x7ffd4d1a9310 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-05T00:31:06.647266"
+    },
+    {
+        "run_id": "1772671876",
+        "package": "packages/decoy/package_9.py",
+        "file_entropy": 3.9679,
+        "execution_time": 0.037,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_9.py\"], 0x7fff9609ee40 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-05T00:51:16.773049"
+    },
+    {
+        "run_id": "1772831137",
+        "package": "packages/decoy/package_10",
+        "file_entropy": 3.9679,
+        "execution_time": 0.036,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_10\"], 0x7ffdaad60670 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-06T21:05:37.927045"
+    },
+    {
+        "run_id": "1772833402",
+        "package": "packages/decoy/package_24",
+        "file_entropy": -0.0,
+        "execution_time": 0.035,
+        "suspicious_imports": [],
+        "command_injection_calls": [],
+        "obfuscation_flags": [],
+        "system_calls_detected": [
+            "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_24\"], 0x7fffa0aa61c0 /* 8 vars */) = 0"
+        ],
+        "behavior_score": 0,
+        "mitre_techniques": [],
+        "timestamp": "2026-03-06T21:43:22.146467"
+    },
+    {
+        "run_id": "1772930887",
+        "package": {
+            "name": "package_19.tgz",
+            "path": "packages/decoy/package_19.tgz",
+            "hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+        },
+        "runtime_seconds": 0.051,
+        "process_activity": [
+            "python"
+        ],
+        "network_activity": {
+            "connections": 0,
+            "details": []
+        },
+        "filesystem_activity": {
+            "files_created": [],
+            "files_written": [],
+            "files_deleted": []
+        },
+        "sensitive_access": [],
+        "commands_detected": [
+            "python"
+        ],
+        "syscall_stats": {
+            "execve": 1,
+            "openat": 39,
+            "write": 1,
+            "183": 1,
+            "+++": 1
+        },
+        "behavior_score": 3,
+        "mitre_techniques": [
+            "T1059 Command and Scripting Interpreter"
+        ],
+        "ioc": {
+            "ips": [],
+            "files_created": [],
+            "files_written": [],
+            "commands": [
+                "python"
+            ],
+            "package_hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+        },
+        "attack_path": [
+            {
+                "source": "package",
+                "target": "python",
+                "type": "process"
+            }
+        ],
+        "timeline": [
+            {
+                "timestamp": "2026-03-08T00:48:07.221414",
+                "event": "execve",
+                "detail": "00:48:07.173673 execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_19.tgz\"], 0x7fffe7ac8a48 /* 8 vars */) = 0"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221545",
+                "event": "openat",
+                "detail": "00:48:07.174439 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v3/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221615",
+                "event": "openat",
+                "detail": "00:48:07.174607 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v2/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221621",
+                "event": "openat",
+                "detail": "00:48:07.174782 openat(AT_FDCWD, \"/usr/local/bin/../lib/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221626",
+                "event": "openat",
+                "detail": "00:48:07.175384 openat(AT_FDCWD, \"/usr/local/bin/../lib/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221630",
+                "event": "openat",
+                "detail": "00:48:07.175496 openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221634",
+                "event": "openat",
+                "detail": "00:48:07.175762 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221637",
+                "event": "openat",
+                "detail": "00:48:07.176472 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libm.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221640",
+                "event": "openat",
+                "detail": "00:48:07.178353 openat(AT_FDCWD, \"/usr/lib/locale/locale-archive\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221644",
+                "event": "openat",
+                "detail": "00:48:07.178461 openat(AT_FDCWD, \"/usr/share/locale/locale.alias\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221648",
+                "event": "openat",
+                "detail": "00:48:07.178564 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221652",
+                "event": "openat",
+                "detail": "00:48:07.178662 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221655",
+                "event": "openat",
+                "detail": "00:48:07.178958 openat(AT_FDCWD, \"/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221659",
+                "event": "openat",
+                "detail": "00:48:07.182347 openat(AT_FDCWD, \"/usr/local/bin/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221663",
+                "event": "openat",
+                "detail": "00:48:07.182462 openat(AT_FDCWD, \"/usr/local/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221667",
+                "event": "openat",
+                "detail": "00:48:07.182777 openat(AT_FDCWD, \"/usr/local/bin/pybuilddir.txt\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221671",
+                "event": "openat",
+                "detail": "00:48:07.184746 openat(AT_FDCWD, \"/etc/localtime\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221674",
+                "event": "openat",
+                "detail": "00:48:07.185669 openat(AT_FDCWD, \"/app\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221678",
+                "event": "openat",
+                "detail": "00:48:07.186541 openat(AT_FDCWD, \"/usr/local/lib/python3.10\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221682",
+                "event": "openat",
+                "detail": "00:48:07.187715 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221686",
+                "event": "openat",
+                "detail": "00:48:07.188863 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/codecs.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221690",
+                "event": "openat",
+                "detail": "00:48:07.190401 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221694",
+                "event": "openat",
+                "detail": "00:48:07.191176 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/aliases.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221698",
+                "event": "openat",
+                "detail": "00:48:07.192299 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/utf_8.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221701",
+                "event": "openat",
+                "detail": "00:48:07.197670 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/io.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221705",
+                "event": "openat",
+                "detail": "00:48:07.198743 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221709",
+                "event": "openat",
+                "detail": "00:48:07.201310 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/site.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221712",
+                "event": "openat",
+                "detail": "00:48:07.202555 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/os.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221716",
+                "event": "openat",
+                "detail": "00:48:07.203979 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/stat.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221720",
+                "event": "openat",
+                "detail": "00:48:07.205072 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_collections_abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221724",
+                "event": "openat",
+                "detail": "00:48:07.207212 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/posixpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221732",
+                "event": "openat",
+                "detail": "00:48:07.208242 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/genericpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221736",
+                "event": "openat",
+                "detail": "00:48:07.209639 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_sitebuiltins.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221740",
+                "event": "openat",
+                "detail": "00:48:07.210984 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221744",
+                "event": "openat",
+                "detail": "00:48:07.211592 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/distutils-precedence.pth\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221747",
+                "event": "openat",
+                "detail": "00:48:07.212635 openat(AT_FDCWD, \"/usr/local/lib/python3.10/lib-dynload\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221751",
+                "event": "openat",
+                "detail": "00:48:07.213388 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221755",
+                "event": "openat",
+                "detail": "00:48:07.214306 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/_distutils_hack/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221759",
+                "event": "openat",
+                "detail": "00:48:07.216221 openat(AT_FDCWD, \"/app/packages/decoy/package_19.tgz\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221763",
+                "event": "openat",
+                "detail": "00:48:07.217686 openat(AT_FDCWD, \"/app/packages/decoy/package_19.tgz\", O_RDONLY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221767",
+                "event": "write",
+                "detail": "00:48:07.218391 write(2, \"SyntaxError: Non-UTF-8 code star\"..., 183SyntaxError: Non-UTF-8 code starting with '\\x8b' in file /app/packages/decoy/package_19.tgz on line 2, but no encoding declared; see https://python.org/dev/peps/pep-0263/ for details"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221770",
+                "event": "183",
+                "detail": ") = 183"
+            },
+            {
+                "timestamp": "2026-03-08T00:48:07.221772",
+                "event": "+++",
+                "detail": "00:48:07.221060 +++ exited with 1 +++"
+            }
+        ],
+        "timestamp": "2026-03-08T00:48:07.221845"
+    },
+    {
+        "run_id": "1772931909",
+        "package": {
+            "name": "package_21.tgz",
+            "path": "packages/decoy/package_21.tgz",
+            "hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+        },
+        "runtime_seconds": 0.037,
+        "process_activity": [
+            "python"
+        ],
+        "network_activity": {
+            "connections": 0,
+            "details": []
+        },
+        "filesystem_activity": {
+            "files_created": [],
+            "files_written": [],
+            "files_deleted": []
+        },
+        "sensitive_access": [],
+        "commands_detected": [
+            "python"
+        ],
+        "syscall_stats": {
+            "execve": 1,
+            "openat": 39,
+            "write": 1,
+            "183": 1,
+            "+++": 1
+        },
+        "behavior_score": 3,
+        "mitre_techniques": [
+            "T1059 Command and Scripting Interpreter"
+        ],
+        "ioc": {
+            "ips": [],
+            "files_created": [],
+            "files_written": [],
+            "commands": [
+                "python"
+            ],
+            "package_hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+        },
+        "attack_path": [
+            {
+                "source": "package",
+                "target": "python",
+                "type": "process"
+            }
+        ],
+        "timeline": [
+            {
+                "timestamp": "2026-03-08T01:05:09.132030",
+                "event": "execve",
+                "detail": "01:05:09.097727 execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_21.tgz\"], 0x7ffe7c387cb8 /* 8 vars */) = 0"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132153",
+                "event": "openat",
+                "detail": "01:05:09.098495 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v3/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132222",
+                "event": "openat",
+                "detail": "01:05:09.098665 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v2/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132228",
+                "event": "openat",
+                "detail": "01:05:09.098819 openat(AT_FDCWD, \"/usr/local/bin/../lib/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132233",
+                "event": "openat",
+                "detail": "01:05:09.099375 openat(AT_FDCWD, \"/usr/local/bin/../lib/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132237",
+                "event": "openat",
+                "detail": "01:05:09.099474 openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132241",
+                "event": "openat",
+                "detail": "01:05:09.099717 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132245",
+                "event": "openat",
+                "detail": "01:05:09.100399 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libm.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132248",
+                "event": "openat",
+                "detail": "01:05:09.102176 openat(AT_FDCWD, \"/usr/lib/locale/locale-archive\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132252",
+                "event": "openat",
+                "detail": "01:05:09.102277 openat(AT_FDCWD, \"/usr/share/locale/locale.alias\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132256",
+                "event": "openat",
+                "detail": "01:05:09.102356 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132260",
+                "event": "openat",
+                "detail": "01:05:09.102447 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132263",
+                "event": "openat",
+                "detail": "01:05:09.102692 openat(AT_FDCWD, \"/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132267",
+                "event": "openat",
+                "detail": "01:05:09.105256 openat(AT_FDCWD, \"/usr/local/bin/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132271",
+                "event": "openat",
+                "detail": "01:05:09.105393 openat(AT_FDCWD, \"/usr/local/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132275",
+                "event": "openat",
+                "detail": "01:05:09.105756 openat(AT_FDCWD, \"/usr/local/bin/pybuilddir.txt\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132279",
+                "event": "openat",
+                "detail": "01:05:09.107146 openat(AT_FDCWD, \"/etc/localtime\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132282",
+                "event": "openat",
+                "detail": "01:05:09.107981 openat(AT_FDCWD, \"/app\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132286",
+                "event": "openat",
+                "detail": "01:05:09.108761 openat(AT_FDCWD, \"/usr/local/lib/python3.10\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132290",
+                "event": "openat",
+                "detail": "01:05:09.109735 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132294",
+                "event": "openat",
+                "detail": "01:05:09.110724 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/codecs.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132298",
+                "event": "openat",
+                "detail": "01:05:09.111938 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132302",
+                "event": "openat",
+                "detail": "01:05:09.112396 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/aliases.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132306",
+                "event": "openat",
+                "detail": "01:05:09.113373 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/utf_8.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132309",
+                "event": "openat",
+                "detail": "01:05:09.115518 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/io.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132313",
+                "event": "openat",
+                "detail": "01:05:09.116015 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132317",
+                "event": "openat",
+                "detail": "01:05:09.117221 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/site.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132321",
+                "event": "openat",
+                "detail": "01:05:09.118090 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/os.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132324",
+                "event": "openat",
+                "detail": "01:05:09.119156 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/stat.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132328",
+                "event": "openat",
+                "detail": "01:05:09.119976 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_collections_abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132332",
+                "event": "openat",
+                "detail": "01:05:09.121522 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/posixpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132340",
+                "event": "openat",
+                "detail": "01:05:09.122285 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/genericpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132344",
+                "event": "openat",
+                "detail": "01:05:09.123267 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_sitebuiltins.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132348",
+                "event": "openat",
+                "detail": "01:05:09.124286 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132352",
+                "event": "openat",
+                "detail": "01:05:09.124751 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/distutils-precedence.pth\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132356",
+                "event": "openat",
+                "detail": "01:05:09.125482 openat(AT_FDCWD, \"/usr/local/lib/python3.10/lib-dynload\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132360",
+                "event": "openat",
+                "detail": "01:05:09.126002 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132363",
+                "event": "openat",
+                "detail": "01:05:09.126681 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/_distutils_hack/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132368",
+                "event": "openat",
+                "detail": "01:05:09.128068 openat(AT_FDCWD, \"/app/packages/decoy/package_21.tgz\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132371",
+                "event": "openat",
+                "detail": "01:05:09.129190 openat(AT_FDCWD, \"/app/packages/decoy/package_21.tgz\", O_RDONLY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132375",
+                "event": "write",
+                "detail": "01:05:09.129732 write(2, \"SyntaxError: Non-UTF-8 code star\"..., 183SyntaxError: Non-UTF-8 code starting with '\\x8b' in file /app/packages/decoy/package_21.tgz on line 2, but no encoding declared; see https://python.org/dev/peps/pep-0263/ for details"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132378",
+                "event": "183",
+                "detail": ") = 183"
+            },
+            {
+                "timestamp": "2026-03-08T01:05:09.132381",
+                "event": "+++",
+                "detail": "01:05:09.131682 +++ exited with 1 +++"
+            }
+        ],
+        "timestamp": "2026-03-08T01:05:09.132456"
+    },
+    {
+        "run_id": "1772932288",
+        "package": {
+            "name": "package_22.tgz",
+            "path": "packages/decoy/package_22.tgz",
+            "hash": "2db694084d5942388572fb8162513cec1bceda4e321d738c439835511d67e3eb"
+        },
+        "runtime_seconds": 0.04,
+        "process_activity": [
+            "python"
+        ],
+        "network_activity": {
+            "connections": 0,
+            "details": []
+        },
+        "filesystem_activity": {
+            "files_created": [],
+            "files_written": [],
+            "files_deleted": []
+        },
+        "sensitive_access": [],
+        "commands_detected": [
+            "python"
+        ],
+        "syscall_stats": {
+            "execve": 1,
+            "openat": 40,
+            "write": 4,
+            "53": 1,
+            "18": 1,
+            "15": 1,
+            "37": 1,
+            "+++": 1
+        },
+        "behavior_score": 3,
+        "mitre_techniques": [
+            "T1059 Command and Scripting Interpreter"
+        ],
+        "ioc": {
+            "ips": [],
+            "files_created": [],
+            "files_written": [],
+            "commands": [
+                "python"
+            ],
+            "package_hash": "2db694084d5942388572fb8162513cec1bceda4e321d738c439835511d67e3eb"
+        },
+        "attack_path": [
+            {
+                "source": "package",
+                "target": "python",
+                "type": "process"
+            }
+        ],
+        "timeline": [
+            {
+                "timestamp": "2026-03-08T01:11:28.237931",
+                "event": "execve",
+                "detail": "01:11:28.200500 execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_22.tgz\"], 0x7ffe9e440e68 /* 8 vars */) = 0"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238072",
+                "event": "openat",
+                "detail": "01:11:28.201166 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v3/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238149",
+                "event": "openat",
+                "detail": "01:11:28.201306 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v2/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238156",
+                "event": "openat",
+                "detail": "01:11:28.201429 openat(AT_FDCWD, \"/usr/local/bin/../lib/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238161",
+                "event": "openat",
+                "detail": "01:11:28.201926 openat(AT_FDCWD, \"/usr/local/bin/../lib/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238166",
+                "event": "openat",
+                "detail": "01:11:28.202006 openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238170",
+                "event": "openat",
+                "detail": "01:11:28.202248 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238173",
+                "event": "openat",
+                "detail": "01:11:28.202841 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libm.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238177",
+                "event": "openat",
+                "detail": "01:11:28.204343 openat(AT_FDCWD, \"/usr/lib/locale/locale-archive\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238181",
+                "event": "openat",
+                "detail": "01:11:28.204434 openat(AT_FDCWD, \"/usr/share/locale/locale.alias\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238184",
+                "event": "openat",
+                "detail": "01:11:28.204511 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238188",
+                "event": "openat",
+                "detail": "01:11:28.204583 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238192",
+                "event": "openat",
+                "detail": "01:11:28.204904 openat(AT_FDCWD, \"/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238196",
+                "event": "openat",
+                "detail": "01:11:28.207340 openat(AT_FDCWD, \"/usr/local/bin/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238200",
+                "event": "openat",
+                "detail": "01:11:28.207425 openat(AT_FDCWD, \"/usr/local/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238204",
+                "event": "openat",
+                "detail": "01:11:28.207698 openat(AT_FDCWD, \"/usr/local/bin/pybuilddir.txt\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238207",
+                "event": "openat",
+                "detail": "01:11:28.209029 openat(AT_FDCWD, \"/etc/localtime\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238211",
+                "event": "openat",
+                "detail": "01:11:28.209818 openat(AT_FDCWD, \"/app\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238214",
+                "event": "openat",
+                "detail": "01:11:28.210462 openat(AT_FDCWD, \"/usr/local/lib/python3.10\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238218",
+                "event": "openat",
+                "detail": "01:11:28.211283 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238222",
+                "event": "openat",
+                "detail": "01:11:28.212127 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/codecs.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238226",
+                "event": "openat",
+                "detail": "01:11:28.213353 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238230",
+                "event": "openat",
+                "detail": "01:11:28.213939 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/aliases.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238234",
+                "event": "openat",
+                "detail": "01:11:28.214825 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/utf_8.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238237",
+                "event": "openat",
+                "detail": "01:11:28.218922 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/io.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238241",
+                "event": "openat",
+                "detail": "01:11:28.219731 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238245",
+                "event": "openat",
+                "detail": "01:11:28.221700 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/site.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238248",
+                "event": "openat",
+                "detail": "01:11:28.222691 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/os.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238252",
+                "event": "openat",
+                "detail": "01:11:28.223763 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/stat.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238256",
+                "event": "openat",
+                "detail": "01:11:28.224608 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_collections_abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238263",
+                "event": "openat",
+                "detail": "01:11:28.226161 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/posixpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238267",
+                "event": "openat",
+                "detail": "01:11:28.226960 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/genericpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238271",
+                "event": "openat",
+                "detail": "01:11:28.227949 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_sitebuiltins.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238275",
+                "event": "openat",
+                "detail": "01:11:28.229084 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238279",
+                "event": "openat",
+                "detail": "01:11:28.229563 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/distutils-precedence.pth\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238283",
+                "event": "openat",
+                "detail": "01:11:28.230374 openat(AT_FDCWD, \"/usr/local/lib/python3.10/lib-dynload\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238287",
+                "event": "openat",
+                "detail": "01:11:28.230979 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238291",
+                "event": "openat",
+                "detail": "01:11:28.231700 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/_distutils_hack/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238295",
+                "event": "openat",
+                "detail": "01:11:28.233270 openat(AT_FDCWD, \"/app/packages/decoy/package_22.tgz\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238298",
+                "event": "openat",
+                "detail": "01:11:28.234535 openat(AT_FDCWD, \"/app/packages/decoy/package_22.tgz\", O_RDONLY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238302",
+                "event": "openat",
+                "detail": "01:11:28.235070 openat(AT_FDCWD, \"/app/packages/decoy/package_22.tgz\", O_RDONLY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238306",
+                "event": "write",
+                "detail": "01:11:28.235450 write(2, \"  File \\\"/app/packages/decoy/pack\"..., 53  File \"/app/packages/decoy/package_22.tgz\", line 17"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238309",
+                "event": "53",
+                "detail": ") = 53"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238311",
+                "event": "write",
+                "detail": "01:11:28.235532 write(2, \"    padding:30px;\\n\", 18    padding:30px;"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238313",
+                "event": "18",
+                "detail": ") = 18"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238314",
+                "event": "write",
+                "detail": "01:11:28.235609 write(2, \"             ^\\n\", 15             ^"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238316",
+                "event": "15",
+                "detail": ") = 15"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238318",
+                "event": "write",
+                "detail": "01:11:28.235690 write(2, \"SyntaxError: invalid decimal lit\"..., 37SyntaxError: invalid decimal literal"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238320",
+                "event": "37",
+                "detail": ") = 37"
+            },
+            {
+                "timestamp": "2026-03-08T01:11:28.238321",
+                "event": "+++",
+                "detail": "01:11:28.237608 +++ exited with 1 +++"
+            }
+        ],
+        "timestamp": "2026-03-08T01:11:28.238369"
+    },
+    {
+        "run_id": "1772932613",
+        "package": {
+            "name": "package_23.tgz",
+            "path": "packages/decoy/package_23.tgz",
+            "hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+        },
+        "runtime_seconds": 0.045,
+        "process_activity": [
+            "python"
+        ],
+        "network_activity": {
+            "connections": 0,
+            "details": []
+        },
+        "filesystem_activity": {
+            "files_created": [],
+            "files_written": [],
+            "files_deleted": []
+        },
+        "sensitive_access": [],
+        "commands_detected": [
+            "python"
+        ],
+        "syscall_stats": {
+            "execve": 1,
+            "openat": 39,
+            "write": 1,
+            "183": 1,
+            "+++": 1
+        },
+        "behavior_score": 3,
+        "mitre_techniques": [
+            "T1059 Command and Scripting Interpreter"
+        ],
+        "ioc": {
+            "ips": [],
+            "files_created": [],
+            "files_written": [],
+            "commands": [
+                "python"
+            ],
+            "package_hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+        },
+        "attack_path": [
+            {
+                "source": "package",
+                "target": "python",
+                "type": "process"
+            }
+        ],
+        "timeline": [
+            {
+                "timestamp": "2026-03-08T01:16:53.792876",
+                "event": "execve",
+                "detail": "01:16:53.751113 execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_23.tgz\"], 0x7ffddf117568 /* 8 vars */) = 0"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793004",
+                "event": "openat",
+                "detail": "01:16:53.751738 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v3/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793087",
+                "event": "openat",
+                "detail": "01:16:53.751868 openat(AT_FDCWD, \"/usr/local/bin/../lib/glibc-hwcaps/x86-64-v2/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793095",
+                "event": "openat",
+                "detail": "01:16:53.751983 openat(AT_FDCWD, \"/usr/local/bin/../lib/libpython3.10.so.1.0\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793101",
+                "event": "openat",
+                "detail": "01:16:53.752420 openat(AT_FDCWD, \"/usr/local/bin/../lib/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793107",
+                "event": "openat",
+                "detail": "01:16:53.752494 openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793111",
+                "event": "openat",
+                "detail": "01:16:53.752719 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793116",
+                "event": "openat",
+                "detail": "01:16:53.753245 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libm.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793120",
+                "event": "openat",
+                "detail": "01:16:53.754590 openat(AT_FDCWD, \"/usr/lib/locale/locale-archive\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793125",
+                "event": "openat",
+                "detail": "01:16:53.754688 openat(AT_FDCWD, \"/usr/share/locale/locale.alias\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793130",
+                "event": "openat",
+                "detail": "01:16:53.754766 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793134",
+                "event": "openat",
+                "detail": "01:16:53.754837 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793139",
+                "event": "openat",
+                "detail": "01:16:53.755047 openat(AT_FDCWD, \"/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793145",
+                "event": "openat",
+                "detail": "01:16:53.757338 openat(AT_FDCWD, \"/usr/local/bin/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793149",
+                "event": "openat",
+                "detail": "01:16:53.757419 openat(AT_FDCWD, \"/usr/local/pyvenv.cfg\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793154",
+                "event": "openat",
+                "detail": "01:16:53.757664 openat(AT_FDCWD, \"/usr/local/bin/pybuilddir.txt\", O_RDONLY) = -1 ENOENT (No such file or directory)"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793158",
+                "event": "openat",
+                "detail": "01:16:53.759092 openat(AT_FDCWD, \"/etc/localtime\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793163",
+                "event": "openat",
+                "detail": "01:16:53.759982 openat(AT_FDCWD, \"/app\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793167",
+                "event": "openat",
+                "detail": "01:16:53.760833 openat(AT_FDCWD, \"/usr/local/lib/python3.10\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793172",
+                "event": "openat",
+                "detail": "01:16:53.761875 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793177",
+                "event": "openat",
+                "detail": "01:16:53.762997 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/codecs.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793182",
+                "event": "openat",
+                "detail": "01:16:53.764288 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793187",
+                "event": "openat",
+                "detail": "01:16:53.764980 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/aliases.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793192",
+                "event": "openat",
+                "detail": "01:16:53.766071 openat(AT_FDCWD, \"/usr/local/lib/python3.10/encodings/__pycache__/utf_8.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793197",
+                "event": "openat",
+                "detail": "01:16:53.771300 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/io.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793202",
+                "event": "openat",
+                "detail": "01:16:53.772405 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793207",
+                "event": "openat",
+                "detail": "01:16:53.774930 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/site.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793210",
+                "event": "openat",
+                "detail": "01:16:53.776199 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/os.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793214",
+                "event": "openat",
+                "detail": "01:16:53.777475 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/stat.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793217",
+                "event": "openat",
+                "detail": "01:16:53.778467 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_collections_abc.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793221",
+                "event": "openat",
+                "detail": "01:16:53.780213 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/posixpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793229",
+                "event": "openat",
+                "detail": "01:16:53.781200 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/genericpath.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793233",
+                "event": "openat",
+                "detail": "01:16:53.782352 openat(AT_FDCWD, \"/usr/local/lib/python3.10/__pycache__/_sitebuiltins.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793237",
+                "event": "openat",
+                "detail": "01:16:53.783547 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793241",
+                "event": "openat",
+                "detail": "01:16:53.784076 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/distutils-precedence.pth\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793245",
+                "event": "openat",
+                "detail": "01:16:53.784950 openat(AT_FDCWD, \"/usr/local/lib/python3.10/lib-dynload\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793249",
+                "event": "openat",
+                "detail": "01:16:53.785587 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages\", O_RDONLY|O_NONBLOCK|O_CLOEXEC|O_DIRECTORY) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793252",
+                "event": "openat",
+                "detail": "01:16:53.786401 openat(AT_FDCWD, \"/usr/local/lib/python3.10/site-packages/_distutils_hack/__pycache__/__init__.cpython-310.pyc\", O_RDONLY|O_CLOEXEC) = 4"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793256",
+                "event": "openat",
+                "detail": "01:16:53.788225 openat(AT_FDCWD, \"/app/packages/decoy/package_23.tgz\", O_RDONLY|O_CLOEXEC) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793260",
+                "event": "openat",
+                "detail": "01:16:53.789825 openat(AT_FDCWD, \"/app/packages/decoy/package_23.tgz\", O_RDONLY) = 3"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793264",
+                "event": "write",
+                "detail": "01:16:53.790561 write(2, \"SyntaxError: Non-UTF-8 code star\"..., 183SyntaxError: Non-UTF-8 code starting with '\\x8b' in file /app/packages/decoy/package_23.tgz on line 2, but no encoding declared; see https://python.org/dev/peps/pep-0263/ for details"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793267",
+                "event": "183",
+                "detail": ") = 183"
+            },
+            {
+                "timestamp": "2026-03-08T01:16:53.793269",
+                "event": "+++",
+                "detail": "01:16:53.792536 +++ exited with 1 +++"
+            }
+        ],
+        "timestamp": "2026-03-08T01:16:53.793306"
+    }
+]

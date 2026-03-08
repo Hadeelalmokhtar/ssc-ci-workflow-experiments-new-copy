@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SSC Threat Intelligence Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/vis-network/styles/vis-network.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+padding:30px;
+}
+
+h1{
+margin-bottom:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+gap:25px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+}
+
+.list{
+background:#0b1220;
+padding:10px;
+border-radius:8px;
+margin-top:10px;
+font-size:13px;
+}
+
+.item{
+padding:6px;
+border-bottom:1px solid #1e293b;
+}
+
+.mitre{
+background:#111827;
+padding:8px;
+margin:6px 0;
+border-left:4px solid #3b82f6;
+border-radius:6px;
+}
+
+.timeline{
+border-left:3px solid #3b82f6;
+padding-left:10px;
+margin-bottom:8px;
+}
+
+.high{color:#ff4d4d}
+.medium{color:#ffcc00}
+.low{color:#4dff88}
+
+.verdict-clean{
+color:#4dff88;
+font-weight:bold;
+font-size:22px;
+}
+
+.verdict-suspicious{
+color:#ffcc00;
+font-weight:bold;
+font-size:22px;
+}
+
+.verdict-malicious{
+color:#ff4d4d;
+font-weight:bold;
+font-size:22px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🛡 SSC Threat Intelligence Dashboard</h1>
+
+<div class="card">
+<h2>Analysis Information</h2>
+
+<div class="list">
+<div class="item"><strong>Package:</strong> <span id="pkgName">-</span></div>
+<div class="item"><strong>Run ID:</strong> <span id="runID">-</span></div>
+<div class="item"><strong>Execution Time:</strong> <span id="runTime">-</span> sec</div>
+<div class="item"><strong>Behavior Score:</strong> <span id="behaviorScore">-</span></div>
+</div>
+
+<h3>Threat Verdict</h3>
+<div id="verdictPanel">-</div>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h2>Threat Score</h2>
+<canvas id="gauge"></canvas>
+</div>
+
+<div class="card">
+<h2>Risk Trend</h2>
+<canvas id="trend"></canvas>
+</div>
+
+<div class="card">
+<h2>Network Activity</h2>
+<canvas id="networkChart"></canvas>
+<div id="networkList" class="list"></div>
+</div>
+
+<div class="card">
+<h2>Network Graph</h2>
+<div id="networkGraph" style="height:350px;"></div>
+</div>
+
+<div class="card">
+<h2>Process Activity</h2>
+<div id="processList" class="list"></div>
+</div>
+
+<div class="card">
+<h2>Process Tree</h2>
+<div id="processTree" style="height:350px;"></div>
+</div>
+
+<div class="card">
+<h2>Filesystem Activity</h2>
+<div id="fsList" class="list"></div>
+</div>
+
+<div class="card">
+<h2>Sensitive Access</h2>
+<div id="sensitiveList" class="list"></div>
+</div>
+
+<div class="card">
+<h2>Commands Detected</h2>
+<div id="commandList" class="list"></div>
+</div>
+
+<div class="card">
+<h2>Syscall Heatmap</h2>
+<canvas id="syscallChart"></canvas>
+</div>
+
+<div class="card">
+<h2>MITRE ATT&CK Matrix</h2>
+<div id="mitrePanel"></div>
+</div>
+
+<div class="card">
+<h2>IOC Indicators</h2>
+<div id="iocPanel" class="list"></div>
+</div>
+
+<div class="card">
+<h2>Attack Path</h2>
+<div id="attackGraph" style="height:350px;"></div>
+</div>
+
+<div class="card">
+<h2>Behavior Comparison</h2>
+<canvas id="comparisonChart"></canvas>
+</div>
+
+<div class="card">
+<h2>Behavior Timeline</h2>
+<div id="timeline"></div>
+</div>
+
+</div>
+
+<script>
+
+const BASE_PATH = window.location.pathname.split("/")[1]
+
+let gaugeChart,trendChart,networkChart,syscallChart,comparisonChart;
+
+async function safeFetch(url){
+try{
+const r=await fetch(url+"?t="+Date.now());
+if(!r.ok) return null;
+return await r.json();
+}catch{
+return null;
+}
+}
+
+async function loadData(){
+
+const latest=await safeFetch(`/${BASE_PATH}/decoy_logs/latest.json`);
+const history=await safeFetch(`/${BASE_PATH}/decoy_logs/history.json`);
+
+if(!latest) return;
+
+renderRunInfo(latest);
+
+renderGauge(latest.behavior_score||0);
+renderTrend(history||[]);
+renderNetwork(latest.network_activity||{});
+renderNetworkGraph(latest.network_activity||{});
+renderProcesses(latest.process_activity||[]);
+renderProcessTree(latest.process_activity||[]);
+renderFilesystem(latest.filesystem_activity||{});
+renderSensitive(latest.sensitive_access||[]);
+renderCommands(latest.commands_detected||[]);
+renderSyscalls(latest.syscall_stats||{});
+renderMitre(latest.mitre_techniques||[]);
+renderTimeline(latest.timeline||[]);
+renderComparison(history||[]);
+renderIOC(latest);
+renderAttackPath(latest);
+
+}
+
+function renderRunInfo(data){
+
+document.getElementById("pkgName").textContent=data.package?.name || "-";
+document.getElementById("runID").textContent=data.run_id || "-";
+document.getElementById("runTime").textContent=data.runtime_seconds || "-";
+
+const score=data.behavior_score || 0;
+document.getElementById("behaviorScore").textContent=score;
+
+let verdict="";
+let css="";
+
+if(score<=3){
+verdict="CLEAN";
+css="verdict-clean";
+}
+else if(score<=7){
+verdict="SUSPICIOUS";
+css="verdict-suspicious";
+}
+else{
+verdict="MALICIOUS";
+css="verdict-malicious";
+}
+
+document.getElementById("verdictPanel").innerHTML=
+`<span class="${css}">${verdict}</span>`;
+
+}
+
+loadData();
+setInterval(loadData,8000);
+
+</script>
+
+</body>
+</html>

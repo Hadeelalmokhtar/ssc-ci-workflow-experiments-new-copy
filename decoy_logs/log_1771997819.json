@@ -1,0 +1,28 @@
+{
+    "run_id": "1771997819",
+    "package": "packages/decoy/package_184.py",
+    "file_entropy": 4.6279,
+    "execution_time": 0.078,
+    "suspicious_imports": [
+        "os",
+        "subprocess",
+        "socket",
+        "requests"
+    ],
+    "command_injection_calls": [
+        "system"
+    ],
+    "obfuscation_flags": [
+        "hex encoded string"
+    ],
+    "system_calls_detected": [
+        "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_184.py\"], 0x7ffc72f69030 /* 8 vars */) = 0"
+    ],
+    "behavior_score": 9,
+    "mitre_techniques": [
+        "T1059 - Command and Scripting Interpreter",
+        "T1027 - Obfuscated Files or Information",
+        "T1204 - User Execution"
+    ],
+    "timestamp": "2026-02-25T05:36:59.139646"
+}

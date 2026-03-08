@@ -1,0 +1,35 @@
+{
+    "run_id": "1772945491",
+    "package": {
+        "name": "package_50.tgz"
+    },
+    "runtime": 0.002,
+    "behavior_score": 0,
+    "threat_verdict": "CLEAN",
+    "ioc": {
+        "ips": []
+    },
+    "commands_detected": [],
+    "network_activity": {
+        "details": []
+    },
+    "dns_activity": [],
+    "process_activity": [],
+    "filesystem": [],
+    "sensitive_access": [],
+    "mitre": [],
+    "attack_graph": {
+        "nodes": [
+            {
+                "id": 1,
+                "label": "Package"
+            }
+        ],
+        "edges": []
+    },
+    "timeline": [
+        "strace: must have PROG [ARGS] or -p PID",
+        "Try 'strace -h' for more information."
+    ],
+    "timestamp": "2026-03-08T04:51:31.151556"
+}

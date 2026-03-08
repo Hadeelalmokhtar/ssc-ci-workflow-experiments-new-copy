@@ -1,0 +1,15 @@
+{
+    "run_id": "1772833402",
+    "package": "packages/decoy/package_24",
+    "file_entropy": -0.0,
+    "execution_time": 0.035,
+    "suspicious_imports": [],
+    "command_injection_calls": [],
+    "obfuscation_flags": [],
+    "system_calls_detected": [
+        "execve(\"/usr/local/bin/python\", [\"python\", \"packages/decoy/package_24\"], 0x7fffa0aa61c0 /* 8 vars */) = 0"
+    ],
+    "behavior_score": 0,
+    "mitre_techniques": [],
+    "timestamp": "2026-03-06T21:43:22.146467"
+}

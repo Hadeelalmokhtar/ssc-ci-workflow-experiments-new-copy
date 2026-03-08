@@ -1,0 +1,167 @@
+name: SSC Build Pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+  workflow_dispatch:
+    inputs:
+      package_file:
+        description: "Enter package file name (e.g. animejs-3.2.1.tgz)"
+        required: true
+        default: "animejs-3.2.1.tgz"
+
+permissions:
+  contents: write
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+
+      - name: Download NLTK Data
+        run: |
+          python -c "import nltk; nltk.download('stopwords')"
+
+
+      - name: Detect Package
+        id: detect_pkg
+        run: |
+
+          PACKAGE=""
+
+          echo "Trigger type: ${{ github.event_name }}"
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            PACKAGE="${{ github.event.inputs.package_file }}"
+          fi
+
+          if [ -z "$PACKAGE" ]; then
+            FILES=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" 2>/dev/null || true)
+
+            for f in $FILES; do
+              if [[ "$f" == *.tgz ]] || [[ "$f" == *.tar.gz ]]; then
+                PACKAGE="$f"
+                break
+              fi
+            done
+          fi
+
+          if [ -z "$PACKAGE" ]; then
+            PACKAGE=$(ls *.tgz *.tar.gz 2>/dev/null | head -n 1 || true)
+          fi
+
+          if [ -z "$PACKAGE" ]; then
+            echo "No package detected → skipping pipeline"
+            echo "skip_pipeline=true" >> $GITHUB_OUTPUT
+            echo "package_path=" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Package detected: $PACKAGE"
+
+          echo "skip_pipeline=false" >> $GITHUB_OUTPUT
+          echo "package_path=$PACKAGE" >> $GITHUB_OUTPUT
+
+
+
+      - name: ML Security Gate
+        id: ml_scan
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        continue-on-error: true
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          python -m scripts.run_analysis "${{ steps.detect_pkg.outputs.package_path }}"
+
+
+
+      - name: Move Package to Decoy
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        run: |
+          mkdir -p packages/decoy
+
+          mv -f "${{ steps.detect_pkg.outputs.package_path }}" \
+          packages/decoy/package_${{ github.run_number }}.tgz
+
+
+
+      - name: Build Sandbox Image
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        run: |
+          docker build -t ssc-sandbox -f sandbox/Dockerfile .
+
+
+
+      - name: Run Dynamic Analysis
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        continue-on-error: true
+        run: |
+          docker run --rm \
+          -v ${{ github.workspace }}:/app \
+          ssc-sandbox \
+          python sandbox/runner.py \
+          packages/decoy/package_${{ github.run_number }}.tgz
+
+
+
+      - name: Release Package if Clean
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        run: | 
+
+          LOG_FILE="decoy_logs/latest.json"
+
+          if [ ! -f "$LOG_FILE" ]; then
+            echo "No sandbox log found"
+            exit 0
+          fi
+
+          VERDICT=$(python -c "import json;print(json.load(open('decoy_logs/latest.json')).get('threat_verdict','UNKNOWN'))")
+
+          echo "Sandbox verdict: $VERDICT"
+
+          if [ "$VERDICT" = "CLEAN" ]; then
+
+            echo "Package confirmed safe → releasing"
+
+            mkdir -p packages/releases
+
+            mv packages/decoy/package_${{ github.run_number }}.tgz \
+            packages/releases/package_${{ github.run_number }}.tgz
+
+          else
+
+            echo "Package not safe → staying in decoy"
+
+          fi
+
+
+
+      - name: Commit Results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add packages/ || true
+          git add decoy_logs/ || true
+
+          git commit -m "SSC pipeline result (run ${{ github.run_number }})" || echo "Nothing to commit"
+          git push origin main

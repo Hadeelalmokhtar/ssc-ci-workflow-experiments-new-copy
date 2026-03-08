@@ -1,0 +1,308 @@
+{
+    "run_id": "1772939672",
+    "package": {
+        "name": "package_38.tgz",
+        "path": "packages/decoy/package_38.tgz",
+        "hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+    },
+    "runtime_seconds": 0.155,
+    "process_activity": [
+        "node"
+    ],
+    "network_activity": {
+        "connections": 0,
+        "details": []
+    },
+    "filesystem_activity": {
+        "files_created": [],
+        "files_written": [],
+        "files_deleted": []
+    },
+    "sensitive_access": [],
+    "commands_detected": [
+        "node"
+    ],
+    "syscall_stats": {
+        "execve": 1,
+        "openat": 44,
+        "write": 5,
+        "clone": 6,
+        "12": 1,
+        "13": 1,
+        "14": 1,
+        "15": 1,
+        "16": 1,
+        "17": 1,
+        "err;": 1,
+        "^": 1,
+        "'/app/sandbox_env/package/sandbox_env/package/package/index.js'": 1,
+        "Module._resolveFilename": 1,
+        "Module._load": 1,
+        "runMain]": 1,
+        "{": 1,
+        "'MODULE_NOT_FOUND',": 1,
+        "[]": 1,
+        "}": 1,
+        "473": 1,
+        "v20.19.2": 1,
+        "18": 1,
+        "+++": 7
+    },
+    "behavior_score": 3,
+    "mitre_techniques": [
+        "T1059 Command Interpreter"
+    ],
+    "timeline": [
+        {
+            "timestamp": "2026-03-08T03:14:32.941885",
+            "event": "execve",
+            "detail": "03:14:32.789668 execve(\"/usr/bin/node\", [\"node\", \"sandbox_env/package/package/inde\"...], 0x7ffc59555888 /* 8 vars */) = 0"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942028",
+            "event": "openat",
+            "detail": "03:14:32.790333 openat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v3/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942090",
+            "event": "openat",
+            "detail": "03:14:32.790478 openat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v2/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942098",
+            "event": "openat",
+            "detail": "03:14:32.790595 openat(AT_FDCWD, \"/usr/bin/../lib/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942103",
+            "event": "openat",
+            "detail": "03:14:32.790734 openat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v3/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942108",
+            "event": "openat",
+            "detail": "03:14:32.790875 openat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v2/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942112",
+            "event": "openat",
+            "detail": "03:14:32.790990 openat(AT_FDCWD, \"/usr/bin/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942116",
+            "event": "openat",
+            "detail": "03:14:32.791129 openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942121",
+            "event": "openat",
+            "detail": "03:14:32.791356 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libnode.so.115\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942125",
+            "event": "openat",
+            "detail": "03:14:32.791818 openat(AT_FDCWD, \"/usr/bin/../lib/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942129",
+            "event": "openat",
+            "detail": "03:14:32.791910 openat(AT_FDCWD, \"/usr/bin/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942132",
+            "event": "openat",
+            "detail": "03:14:32.792005 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942136",
+            "event": "openat",
+            "detail": "03:14:32.792543 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libz.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942139",
+            "event": "openat",
+            "detail": "03:14:32.792944 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libuv.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942143",
+            "event": "openat",
+            "detail": "03:14:32.793427 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libbrotlidec.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942147",
+            "event": "openat",
+            "detail": "03:14:32.793840 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libbrotlienc.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942150",
+            "event": "openat",
+            "detail": "03:14:32.794330 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libcares.so.2\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942153",
+            "event": "openat",
+            "detail": "03:14:32.794740 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libnghttp2.so.14\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942156",
+            "event": "openat",
+            "detail": "03:14:32.795150 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libcrypto.so.3\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942159",
+            "event": "openat",
+            "detail": "03:14:32.795608 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libssl.so.3\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942163",
+            "event": "openat",
+            "detail": "03:14:32.796008 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libicui18n.so.76\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942166",
+            "event": "openat",
+            "detail": "03:14:32.796477 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libicuuc.so.76\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942168",
+            "event": "openat",
+            "detail": "03:14:32.796987 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libstdc++.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942171",
+            "event": "openat",
+            "detail": "03:14:32.797545 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libm.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942174",
+            "event": "openat",
+            "detail": "03:14:32.798034 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libgcc_s.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942177",
+            "event": "openat",
+            "detail": "03:14:32.798549 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libbrotlicommon.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942181",
+            "event": "openat",
+            "detail": "03:14:32.799046 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libzstd.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942184",
+            "event": "openat",
+            "detail": "03:14:32.799607 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libicudata.so.76\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942187",
+            "event": "openat",
+            "detail": "03:14:32.826099 openat(AT_FDCWD, \"/usr/lib/ssl/openssl.cnf\", O_RDONLY) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942195",
+            "event": "openat",
+            "detail": "03:14:32.828523 openat(AT_FDCWD, \"/proc/version_signature\", O_RDONLY|O_CLOEXEC) = 4"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942199",
+            "event": "write",
+            "detail": "03:14:32.828860 write(5, \"*\", 1)        = 1"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942202",
+            "event": "clone",
+            "detail": "03:14:32.829439 clone(child_stack=0x7f93091f4e30, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTIDstrace: Process 12 attached"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942204",
+            "event": "12",
+            "detail": ", parent_tid=[12], tls=0x7f93091f56c0, child_tidptr=0x7f93091f5990) = 12"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942207",
+            "event": "clone",
+            "detail": "[pid    11] 03:14:32.830441 clone(child_stack=0x7f93081f3e30, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTIDstrace: Process 13 attached"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942209",
+            "event": "13",
+            "detail": ", parent_tid=[13], tls=0x7f93081f46c0, child_tidptr=0x7f93081f4990) = 13"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942211",
+            "event": "clone",
+            "detail": "[pid    11] 03:14:32.830814 clone(child_stack=0x7f93071f2e30, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTIDstrace: Process 14 attached"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942213",
+            "event": "14",
+            "detail": ", parent_tid=[14], tls=0x7f93071f36c0, child_tidptr=0x7f93071f3990) = 14"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942215",
+            "event": "clone",
+            "detail": "[pid    11] 03:14:32.831195 clone(child_stack=0x7f93061f1e30, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTIDstrace: Process 15 attached"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942217",
+            "event": "15",
+            "detail": ", parent_tid=[15], tls=0x7f93061f26c0, child_tidptr=0x7f93061f2990) = 15"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942221",
+            "event": "clone",
+            "detail": "[pid    11] 03:14:32.831577 clone(child_stack=0x7f93051f0e30, flags=CLONE_VM|CLONE_FS|CLONE_FILES|CLONE_SIGHAND|CLONE_THREAD|CLONE_SYSVSEM|CLONE_SETTLS|CLONE_PARENT_SETTID|CLONE_CHILD_CLEARTIDstrace: Process 16 attached"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942223",
+            "event": "16",
+            "detail": ", parent_tid=[16], tls=0x7f93051f16c0, child_tidptr=0x7f93051f1990) = 16"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942225",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.833239 openat(AT_FDCWD, \"/proc/self/cgroup\", O_RDONLY|O_CLOEXEC) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942229",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.833497 openat(AT_FDCWD, \"/sys/fs/cgroup//memory.max\", O_RDONLY|O_CLOEXEC) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942233",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.833702 openat(AT_FDCWD, \"/sys/fs/cgroup//memory.high\", O_RDONLY|O_CLOEXEC) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942237",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.833897 openat(AT_FDCWD, \"/proc/meminfo\", O_RDONLY|O_CLOEXEC) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942240",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.834123 openat(AT_FDCWD, \"/proc/self/maps\", O_RDONLY|O_CLOEXEC) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942243",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.836755 openat(AT_FDCWD, \"/proc/self/maps\", O_RDONLY) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942272",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.838123 openat(AT_FDCWD, \"/proc/self/maps\", O_RDONLY) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942285",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.839236 openat(AT_FDCWD, \"/usr/lib/x86_64-linux-gnu/libnode.so.115\", O_RDONLY) = 17"
+        },
+        {
+            "timestamp": "2026-03-08T03:14:32.942289",
+            "event": "openat",
+            "detail": "[pid    11] 03:14:32.843369 openat(AT_FDCWD, \"/usr/share/nodejs/cjs-module-lexer/lexer.js\", O_RDONLY|O_CLOEXEC) = 17"
+        }
+    ],
+    "timestamp": "2026-03-08T03:14:32.942430"
+}

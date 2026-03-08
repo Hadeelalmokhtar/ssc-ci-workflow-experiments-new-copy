@@ -1,0 +1,18 @@
+{
+    "run_id": "1772512905",
+    "package": "packages/clean_test.py",
+    "risk_probability": 0.9763720631599426,
+    "prediction": 1,
+    "file_entropy": 3.9679,
+    "execution_time": 0.335,
+    "exit_code": 0,
+    "suspicious_imports": [],
+    "command_injection_calls": [],
+    "obfuscation_flags": [],
+    "system_calls_detected": [
+        "execve(\"/home/codespace/.python/current/bin/python\", [\"python\", \"packages/clean_test.py\"], 0x7ffd561aeb90 /* 108 vars */) = 0"
+    ],
+    "behavior_score": 0,
+    "mitre_techniques": [],
+    "timestamp": "2026-03-03T04:41:45.309696"
+}

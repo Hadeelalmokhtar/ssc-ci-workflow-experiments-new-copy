@@ -1,0 +1,129 @@
+{
+    "run_id": "1772950690",
+    "package": {
+        "name": "package_60.tgz"
+    },
+    "runtime": 0.584,
+    "behavior_score": 14,
+    "malware_family_hint": "Unknown",
+    "threat_verdict": "MALICIOUS",
+    "ioc": {
+        "ips": [
+            "104.26.12.205",
+            "172.67.74.152",
+            "104.26.13.205",
+            "168.63.129.16"
+        ],
+        "domains": []
+    },
+    "commands_detected": [
+        "node"
+    ],
+    "network_activity": {
+        "details": [
+            {
+                "ip": "104.26.12.205",
+                "country": "Canada",
+                "asn": "AS13335 Cloudflare, Inc.",
+                "org": "Cloudflare, Inc.",
+                "isp": "Cloudflare, Inc."
+            },
+            {
+                "ip": "172.67.74.152",
+                "country": "Canada",
+                "asn": "AS13335 Cloudflare, Inc.",
+                "org": "Cloudflare, Inc.",
+                "isp": "Cloudflare, Inc."
+            },
+            {
+                "ip": "104.26.13.205",
+                "country": "Canada",
+                "asn": "AS13335 Cloudflare, Inc.",
+                "org": "Cloudflare, Inc.",
+                "isp": "Cloudflare, Inc."
+            },
+            {
+                "ip": "168.63.129.16",
+                "country": "Hong Kong",
+                "asn": "AS8075 Microsoft Corporation",
+                "org": "Microsoft Corp",
+                "isp": "Microsoft Corporation"
+            }
+        ]
+    },
+    "dns_activity": [
+        "DNS query detected",
+        "DNS query detected"
+    ],
+    "process_activity": [
+        "node"
+    ],
+    "filesystem": [],
+    "sensitive_access": [],
+    "mitre": [
+        "T1071 Application Layer Protocol",
+        "T1059 Command Interpreter",
+        "T1046 Network Discovery"
+    ],
+    "attack_graph": {
+        "nodes": [
+            {
+                "id": 1,
+                "label": "Package"
+            },
+            {
+                "id": 2,
+                "label": "node"
+            }
+        ],
+        "edges": [
+            {
+                "from": 1,
+                "to": 2
+            }
+        ]
+    },
+    "timeline": [
+        "execve(\"/usr/bin/node\", [\"node\", \"/tmp/tmp1wn9r_dq/package/index.j\"...], 0x7ffd9af08a50 /* 8 vars */) = 0",
+        "write(5, \"*\", 1)                        = 1",
+        "strace: Process 12 attached",
+        "strace: Process 13 attached",
+        "strace: Process 14 attached",
+        "strace: Process 15 attached",
+        "strace: Process 16 attached",
+        "[pid    11] write(16, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "strace: Process 17 attached",
+        "[pid    11] connect(17, {sa_family=AF_UNIX, sun_path=\"/var/run/nscd/socket\"}, 110) = -1 ENOENT (No such file or directory)",
+        "[pid    11] connect(17, {sa_family=AF_UNIX, sun_path=\"/var/run/nscd/socket\"}, 110) = -1 ENOENT (No such file or directory)",
+        "strace: Process 18 attached",
+        "strace: Process 19 attached",
+        "strace: Process 20 attached",
+        "strace: Process 21 attached",
+        "[pid    18] connect(18, {sa_family=AF_UNIX, sun_path=\"/var/run/nscd/socket\"}, 110) = -1 ENOENT (No such file or directory)",
+        "[pid    18] connect(18, {sa_family=AF_UNIX, sun_path=\"/var/run/nscd/socket\"}, 110) = -1 ENOENT (No such file or directory)",
+        "[pid    18] connect(18, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr(\"168.63.129.16\")}, 16) = 0",
+        "[pid    18] sendto(18, [{nlmsg_len=20, nlmsg_type=RTM_GETADDR, nlmsg_flags=NLM_F_REQUEST|NLM_F_DUMP, nlmsg_seq=1772950690, nlmsg_pid=0}, {ifa_family=AF_UNSPEC, ...}], 20, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 12) = 20",
+        "[pid    18] connect(18, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr(\"104.26.12.205\")}, 16) = 0",
+        "[pid    18] connect(18, {sa_family=AF_UNSPEC, sa_data=\"\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"}, 16) = 0",
+        "[pid    18] connect(18, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr(\"104.26.13.205\")}, 16) = 0",
+        "[pid    18] connect(18, {sa_family=AF_UNSPEC, sa_data=\"\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"}, 16) = 0",
+        "[pid    18] connect(18, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr(\"172.67.74.152\")}, 16) = 0",
+        "[pid    18] write(16, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "[pid    11] connect(18, {sa_family=AF_INET, sin_port=htons(443), sin_addr=inet_addr(\"104.26.12.205\")}, 16) = -1 EINPROGRESS (Operation now in progress)",
+        "[pid    11] write(18, \"\\26\\3\\1\\6:\\1\\0\\0066\\3\\3\\221ET\\331E\\233~\\25+\\212\\206x\\322\\10\\265\\361\\23D$\\274M\"..., 1599) = 1599",
+        "[pid    11] write(18, \"\\24\\3\\3\\0\\1\\1\\27\\3\\3\\0E\\323\\217\\263\\vO$\\332\\354p)\\223\\365\\206C\\350\\254\\35\\245\\230\\2545\"..., 177) = 177",
+        "[pid    11] connect(19, {sa_family=AF_INET, sin_port=htons(53), sin_addr=inet_addr(\"168.63.129.16\")}, 16) = 0",
+        "[pid    11] sendto(19, \"\\364\\324\\1\\0\\0\\1\\0\\0\\0\\0\\0\\0\\25root-d9a0e9ab9c6f-1\"..., 102, MSG_NOSIGNAL, NULL, 0) = 102",
+        "[pid    11] write(1, \"Consulta DNS enviada: [ '3.248.3\"..., 57) = 57",
+        "[pid    11] write(12, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "[pid    16] +++ exited with 0 +++",
+        "[pid    13] +++ exited with 0 +++",
+        "[pid    14] +++ exited with 0 +++",
+        "[pid    15] +++ exited with 0 +++",
+        "[pid    12] +++ exited with 0 +++",
+        "[pid    19] +++ exited with 0 +++",
+        "[pid    20] +++ exited with 0 +++",
+        "[pid    21] +++ exited with 0 +++"
+    ],
+    "timestamp": "2026-03-08T06:18:10.645701"
+}

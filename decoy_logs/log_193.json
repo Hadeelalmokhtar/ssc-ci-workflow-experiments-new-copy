@@ -1,0 +1,43 @@
+{
+    "run_id": "193",
+    "package": "build/package.py",
+    "risk_probability": 0.9763720631599426,
+    "prediction": 1,
+    "file_entropy": 4.6261,
+    "execution_time": 0.293,
+    "exit_code": 1,
+    "suspicious_imports": [
+        "os",
+        "subprocess",
+        "socket",
+        "requests"
+    ],
+    "command_injection_calls": [
+        "system"
+    ],
+    "obfuscation_flags": [
+        "hex encoded string"
+    ],
+    "system_calls_detected": [
+        "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffe35dacfb0 /* 120 vars */) = 0"
+    ],
+    "behavior_score": 9,
+    "mitre_techniques": [
+        {
+            "technique": "Command and Scripting Interpreter",
+            "id": "T1059",
+            "tactic": "Execution"
+        },
+        {
+            "technique": "Obfuscated Files or Information",
+            "id": "T1027",
+            "tactic": "Defense Evasion"
+        },
+        {
+            "technique": "User Execution",
+            "id": "T1204",
+            "tactic": "Execution"
+        }
+    ],
+    "timestamp": "2026-02-25T12:12:38.771771"
+}

@@ -1,0 +1,34 @@
+{
+    "run_id": "1772933976",
+    "package": {
+        "name": "package_27.tgz",
+        "path": "packages/decoy/package_27.tgz",
+        "hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+    },
+    "runtime_seconds": 0.003,
+    "process_activity": [],
+    "network_activity": {
+        "connections": 0,
+        "details": []
+    },
+    "filesystem_activity": {
+        "files_created": [],
+        "files_written": [],
+        "files_deleted": []
+    },
+    "sensitive_access": [],
+    "commands_detected": [],
+    "syscall_stats": {
+        "'npm'": 1
+    },
+    "behavior_score": 0,
+    "mitre_techniques": [],
+    "timeline": [
+        {
+            "timestamp": "2026-03-08T01:39:36.053975",
+            "event": "'npm'",
+            "detail": "strace: Cannot find executable 'npm'"
+        }
+    ],
+    "timestamp": "2026-03-08T01:39:36.054023"
+}

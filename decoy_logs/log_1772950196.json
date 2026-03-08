@@ -1,0 +1,87 @@
+{
+    "run_id": "1772950196",
+    "package": {
+        "name": "package_59.tgz"
+    },
+    "runtime": 0.186,
+    "behavior_score": 6,
+    "malware_family_hint": "Unknown",
+    "threat_verdict": "SUSPICIOUS",
+    "ioc": {
+        "ips": [],
+        "domains": [
+            "package.json",
+            "anime.es.js"
+        ]
+    },
+    "commands_detected": [
+        "node"
+    ],
+    "network_activity": {
+        "details": []
+    },
+    "dns_activity": [],
+    "process_activity": [
+        "node"
+    ],
+    "filesystem": [],
+    "sensitive_access": [],
+    "mitre": [
+        "T1059 Command Interpreter"
+    ],
+    "attack_graph": {
+        "nodes": [
+            {
+                "id": 1,
+                "label": "Package"
+            },
+            {
+                "id": 2,
+                "label": "node"
+            }
+        ],
+        "edges": [
+            {
+                "from": 1,
+                "to": 2
+            }
+        ]
+    },
+    "timeline": [
+        "execve(\"/usr/bin/node\", [\"node\", \"/tmp/tmpi44ev_bk/package/lib/ani\"...], 0x7fffbee165d0 /* 8 vars */) = 0",
+        "write(5, \"*\", 1)                        = 1",
+        "strace: Process 12 attached",
+        "strace: Process 13 attached",
+        "strace: Process 14 attached",
+        "strace: Process 15 attached",
+        "strace: Process 16 attached",
+        "[pid    11] write(16, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "strace: Process 17 attached",
+        "strace: Process 18 attached",
+        "strace: Process 19 attached",
+        "strace: Process 20 attached",
+        "strace: Process 21 attached",
+        "[pid    18] write(16, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "[pid    19] write(16, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "[pid    20] write(16, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "[pid    21] write(16, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "[pid    11] write(2, \"(node:11) [MODULE_TYPELESS_PACKA\"..., 421(node:11) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///tmp/tmpi44ev_bk/package/lib/anime.es.js is not specified and it doesn't parse as CommonJS.",
+        "Reparsing as ES module because module syntax was detected. This incurs a performance overhead.",
+        "To eliminate this warning, add \"type\": \"module\" to /tmp/tmpi44ev_bk/package/package.json.",
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        ") = 421",
+        "[pid    11] write(12, \"\\1\\0\\0\\0\\0\\0\\0\\0\", 8) = 8",
+        "[pid    15] +++ exited with 0 +++",
+        "[pid    16] +++ exited with 0 +++",
+        "[pid    14] +++ exited with 0 +++",
+        "[pid    13] +++ exited with 0 +++",
+        "[pid    12] +++ exited with 0 +++",
+        "[pid    18] +++ exited with 0 +++",
+        "[pid    19] +++ exited with 0 +++",
+        "[pid    21] +++ exited with 0 +++",
+        "[pid    20] +++ exited with 0 +++",
+        "[pid    17] +++ exited with 0 +++",
+        "+++ exited with 0 +++"
+    ],
+    "timestamp": "2026-03-08T06:09:56.965794"
+}

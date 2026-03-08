@@ -1,0 +1,9 @@
+{
+    "run_id": "1772921567",
+    "package": "numpy-1.26.4.tar.gz",
+    "risk_probability": 0.0020766339730471373,
+    "prediction": 0,
+    "file_entropy": 4.6815,
+    "execution_time": 1.309,
+    "timestamp": "2026-03-07T22:12:47.252785"
+}

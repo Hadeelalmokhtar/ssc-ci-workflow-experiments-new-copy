@@ -1,0 +1,18 @@
+{
+    "run_id": "1",
+    "package": "build/package.py",
+    "risk_probability": 0.9763720631599426,
+    "prediction": 1,
+    "file_entropy": 3.9679,
+    "execution_time": 0.119,
+    "exit_code": 0,
+    "suspicious_imports": [],
+    "command_injection_calls": [],
+    "obfuscation_flags": [],
+    "system_calls_detected": [
+        "execve(\"/opt/hostedtoolcache/Python/3.11.14/x64/bin/python\", [\"python\", \"build/package.py\"], 0x7ffd26d3bd10 /* 120 vars */) = 0"
+    ],
+    "behavior_score": 0,
+    "mitre_techniques": [],
+    "timestamp": "2026-02-27T16:17:16.680347"
+}

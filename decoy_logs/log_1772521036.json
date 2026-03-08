@@ -1,0 +1,18 @@
+{
+    "run_id": "1772521036",
+    "package": "testpkg",
+    "risk_probability": 0.9878985285758972,
+    "prediction": 1,
+    "file_entropy": 4.5386,
+    "execution_time": 1.152,
+    "exit_code": 1,
+    "suspicious_imports": [],
+    "command_injection_calls": [],
+    "obfuscation_flags": [],
+    "system_calls_detected": [
+        "execve(\"/home/codespace/.python/current/bin/python\", [\"python\", \"testpkg/setup.py\"], 0x7fffc2238740 /* 108 vars */) = 0"
+    ],
+    "behavior_score": 2,
+    "mitre_techniques": [],
+    "timestamp": "2026-03-03T06:57:16.011347"
+}

@@ -1,0 +1,9 @@
+{
+    "run_id": "1772921279",
+    "package": "requests-2.31.0.tar.gz",
+    "risk_probability": 0.6867888569831848,
+    "prediction": 1,
+    "file_entropy": 4.9892,
+    "execution_time": 1.576,
+    "timestamp": "2026-03-07T22:07:59.838124"
+}

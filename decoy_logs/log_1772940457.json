@@ -1,0 +1,312 @@
+{
+    "run_id": "1772940457",
+    "package": {
+        "name": "package_40.tgz",
+        "path": "packages/decoy/package_40.tgz",
+        "hash": "f5695ebc5e69b665f32a79dba2641ae18a1a10c3279fa996875c92dbaabf81f8"
+    },
+    "runtime_seconds": 1.049,
+    "process_activity": [
+        "node",
+        "npm"
+    ],
+    "network_activity": {
+        "connections": 0,
+        "details": []
+    },
+    "filesystem_activity": {
+        "files_created": [
+            "/app/sandbox_env/package/package-lock.json",
+            "/root/.npm/_logs/2026-03-08T03_27_37_288Z-debug-0.log",
+            "/app/sandbox_env/package/node_modules/.package-lock.json",
+            "/root/.npm/_update-notifier-last-checked"
+        ],
+        "files_written": [
+            "/app/sandbox_env/package/package-lock.json",
+            "/root/.npm/_logs/2026-03-08T03_27_37_288Z-debug-0.log",
+            "/app/sandbox_env/package/node_modules/.package-lock.json",
+            "/root/.npm/_update-notifier-last-checked"
+        ],
+        "files_deleted": []
+    },
+    "sensitive_access": [
+        "/root/.npm/_update-notifier-last-checked",
+        "/root/.npm/_logs",
+        "/usr/share/nodejs/postcss-selector-parser/dist/selectors/root.js",
+        "/usr/share/nodejs/cacache/lib/util/tmp.js",
+        "/root/.npmrc",
+        "/root/.npm/_logs/2026-03-08T03_27_37_288Z-debug-0.log"
+    ],
+    "commands_detected": [
+        "chown",
+        "nc",
+        "node",
+        "sh"
+    ],
+    "syscall_stats": {
+        "execve": 6,
+        "openat": 1099,
+        "write": 205,
+        "clone": 10,
+        "sendto": 2
+    },
+    "behavior_score": 13,
+    "mitre_techniques": [
+        "T1059 Command Interpreter",
+        "T1005 Data from Local System",
+        "T1105 Ingress Tool Transfer"
+    ],
+    "timeline": [
+        {
+            "timestamp": "2026-03-08T03:27:37.420290",
+            "event": "execve",
+            "detail": "03:27:36.373420 execve(\"/usr/bin/npm\", [\"npm\", \"install\", \"--ignore-scripts=false\"], 0x7ffcbe9b63f0 /* 8 vars */) = 0"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420387",
+            "event": "openat",
+            "detail": "03:27:36.374003 openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420440",
+            "event": "openat",
+            "detail": "03:27:36.374230 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420447",
+            "event": "openat",
+            "detail": "03:27:36.375381 openat(AT_FDCWD, \"/usr/lib/locale/locale-archive\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420454",
+            "event": "openat",
+            "detail": "03:27:36.375463 openat(AT_FDCWD, \"/usr/share/locale/locale.alias\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420461",
+            "event": "openat",
+            "detail": "03:27:36.375534 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420467",
+            "event": "openat",
+            "detail": "03:27:36.375602 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_IDENTIFICATION\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420473",
+            "event": "openat",
+            "detail": "03:27:36.375799 openat(AT_FDCWD, \"/usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420480",
+            "event": "openat",
+            "detail": "03:27:36.376036 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_MEASUREMENT\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420486",
+            "event": "openat",
+            "detail": "03:27:36.376130 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_MEASUREMENT\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420491",
+            "event": "openat",
+            "detail": "03:27:36.376340 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_TELEPHONE\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420496",
+            "event": "openat",
+            "detail": "03:27:36.376439 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_TELEPHONE\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420502",
+            "event": "openat",
+            "detail": "03:27:36.376640 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_ADDRESS\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420507",
+            "event": "openat",
+            "detail": "03:27:36.376716 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_ADDRESS\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420512",
+            "event": "openat",
+            "detail": "03:27:36.376971 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_NAME\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420517",
+            "event": "openat",
+            "detail": "03:27:36.377102 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_NAME\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420522",
+            "event": "openat",
+            "detail": "03:27:36.377367 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_PAPER\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420527",
+            "event": "openat",
+            "detail": "03:27:36.377459 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_PAPER\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420532",
+            "event": "openat",
+            "detail": "03:27:36.377688 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_MESSAGES\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420537",
+            "event": "openat",
+            "detail": "03:27:36.377769 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_MESSAGES\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420542",
+            "event": "openat",
+            "detail": "03:27:36.377941 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420547",
+            "event": "openat",
+            "detail": "03:27:36.378195 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_MONETARY\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420551",
+            "event": "openat",
+            "detail": "03:27:36.378278 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_MONETARY\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420556",
+            "event": "openat",
+            "detail": "03:27:36.378524 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_COLLATE\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420561",
+            "event": "openat",
+            "detail": "03:27:36.378613 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_COLLATE\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420565",
+            "event": "openat",
+            "detail": "03:27:36.378852 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_TIME\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420570",
+            "event": "openat",
+            "detail": "03:27:36.378938 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_TIME\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420578",
+            "event": "openat",
+            "detail": "03:27:36.379223 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_NUMERIC\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420583",
+            "event": "openat",
+            "detail": "03:27:36.379314 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_NUMERIC\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420587",
+            "event": "openat",
+            "detail": "03:27:36.379574 openat(AT_FDCWD, \"/usr/lib/locale/C.UTF-8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420592",
+            "event": "openat",
+            "detail": "03:27:36.379657 openat(AT_FDCWD, \"/usr/lib/locale/C.utf8/LC_CTYPE\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420597",
+            "event": "execve",
+            "detail": "03:27:36.379895 execve(\"/usr/local/bin/node\", [\"node\", \"/usr/bin/npm\", \"install\", \"--ignore-scripts=false\"], 0x7fffb6ce18b8 /* 8 vars */) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420606",
+            "event": "execve",
+            "detail": "03:27:36.379995 execve(\"/usr/local/sbin/node\", [\"node\", \"/usr/bin/npm\", \"install\", \"--ignore-scripts=false\"], 0x7fffb6ce18b8 /* 8 vars */) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420613",
+            "event": "execve",
+            "detail": "03:27:36.380108 execve(\"/usr/local/bin/node\", [\"node\", \"/usr/bin/npm\", \"install\", \"--ignore-scripts=false\"], 0x7fffb6ce18b8 /* 8 vars */) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420621",
+            "event": "execve",
+            "detail": "03:27:36.380184 execve(\"/usr/sbin/node\", [\"node\", \"/usr/bin/npm\", \"install\", \"--ignore-scripts=false\"], 0x7fffb6ce18b8 /* 8 vars */) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420628",
+            "event": "execve",
+            "detail": "03:27:36.380271 execve(\"/usr/bin/node\", [\"node\", \"/usr/bin/npm\", \"install\", \"--ignore-scripts=false\"], 0x7fffb6ce18b8 /* 8 vars */) = 0"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420636",
+            "event": "openat",
+            "detail": "03:27:36.380864 openat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v3/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420643",
+            "event": "openat",
+            "detail": "03:27:36.380997 openat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v2/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420649",
+            "event": "openat",
+            "detail": "03:27:36.381148 openat(AT_FDCWD, \"/usr/bin/../lib/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420654",
+            "event": "openat",
+            "detail": "03:27:36.381293 openat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v3/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420660",
+            "event": "openat",
+            "detail": "03:27:36.381440 openat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v2/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420665",
+            "event": "openat",
+            "detail": "03:27:36.381567 openat(AT_FDCWD, \"/usr/bin/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420671",
+            "event": "openat",
+            "detail": "03:27:36.381716 openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420676",
+            "event": "openat",
+            "detail": "03:27:36.381966 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libnode.so.115\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420681",
+            "event": "openat",
+            "detail": "03:27:36.382540 openat(AT_FDCWD, \"/usr/bin/../lib/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420686",
+            "event": "openat",
+            "detail": "03:27:36.382639 openat(AT_FDCWD, \"/usr/bin/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420691",
+            "event": "openat",
+            "detail": "03:27:36.382737 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420696",
+            "event": "openat",
+            "detail": "03:27:36.383425 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libz.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420701",
+            "event": "openat",
+            "detail": "03:27:36.383944 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libuv.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "timestamp": "2026-03-08T03:27:37.420706",
+            "event": "openat",
+            "detail": "03:27:36.384555 openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libbrotlidec.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        }
+    ],
+    "timestamp": "2026-03-08T03:27:37.427664"
+}
