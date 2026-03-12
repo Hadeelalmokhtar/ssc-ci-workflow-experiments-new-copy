@@ -1,6 +1,0 @@
-# Deprecated internal configuration
-# DO NOT MODIFY - legacy integration
-
-internal_registry_endpoint: http://127.0.0.1:5000/internal/repo/auth/legacy-access
-internal_registry_token: ghp_ProdLegacyAccess_2026
-backup_api_secret: legacy_backup_token_9843
