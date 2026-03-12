@@ -18,6 +18,10 @@ jobs:
   build-test:
     runs-on: ubuntu-latest
 
+    env:
+      BUILD_DEPLOY_TOKEN: build-prod-deploy-master-2026
+      ARTIFACT_SIGN_KEY: signing-service-build-2026
+
     steps:
 
       - name: Checkout Repository
