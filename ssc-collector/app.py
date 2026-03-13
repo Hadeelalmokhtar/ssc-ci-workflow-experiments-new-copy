@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
 import json
+import base64
 import os
 import requests
 import csv
@@ -92,21 +93,47 @@ def enrich_ip(ip):
 
 # =====================================================
 #  Event Logging
-
+                                                                                                            
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+GITHUB_REPO = os.getenv("GITHUB_REPO")
+FILE_PATH = "CTI_Storage/events.json"
 
 def log_event(event):
-    with open(EVENTS_FILE, "r") as f:
-        data = json.load(f)
+
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
+
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        content = response.json()
+        sha = content["sha"]
+        existing_data = base64.b64decode(content["content"]).decode()
+        data = json.loads(existing_data)
+    else:
+        sha = None
+        data = []
 
     data.append(event)
 
-    with open(EVENTS_FILE, "w") as f:
-        json.dump(data, f, indent=4)
+    updated_content = base64.b64encode(
+        json.dumps(data, indent=4).encode()
+    ).decode()
 
-def append_dataset_row(row):
-    with open(DATASET_FILE, "a", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow(row)
+    payload = {
+        "message": "Update events log",
+        "content": updated_content,
+        "branch": "main"
+    }
+
+    if sha:
+        payload["sha"] = sha
+
+    requests.put(url, headers=headers, json=payload)
 
 # =====================================================
 # Production-style Auth Endpoint
