@@ -27,17 +27,6 @@ CREDENTIAL_STORE = {
 }
 
 # =====================================================
-#  Storage
-
-
-EVENTS_FILE = "events.json"
-
-if not os.path.exists(EVENTS_FILE):
-    with open(EVENTS_FILE, "w") as f:
-        json.dump([], f)
-
-
-# =====================================================
 #  IP Tracking
 
 
@@ -193,13 +182,26 @@ def validate_session():
 # =====================================================
 #  Events Viewer                                                             
 
-
-
 @app.route("/api/v1/events", methods=["GET"])
 def get_events():
-    with open(EVENTS_FILE, "r") as f:
-        data = json.load(f)
-    return jsonify(data)
+
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
+
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github.v3+json"
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        content = response.json()
+        decoded = base64.b64decode(content["content"]).decode()
+        data = json.loads(decoded)
+        return jsonify(data)
+
+    return jsonify({"error": "Unable to fetch events"}), 500
+
 
 # =====================================================
 #  Health
