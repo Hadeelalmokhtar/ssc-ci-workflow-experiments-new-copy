@@ -4,7 +4,6 @@ import json
 import base64
 import os
 import requests
-import csv
 
 app = Flask(__name__)
 
@@ -32,26 +31,11 @@ CREDENTIAL_STORE = {
 
 
 EVENTS_FILE = "events.json"
-DATASET_FILE = "events_dataset.csv"
 
 if not os.path.exists(EVENTS_FILE):
     with open(EVENTS_FILE, "w") as f:
         json.dump([], f)
 
-if not os.path.exists(DATASET_FILE):
-    with open(DATASET_FILE, "w", newline="") as f:
-        writer = csv.writer(f)
-        writer.writerow([
-            "privilege_level",
-            "ip_attempt_count",
-            "hour_of_day",
-            "weekend_flag",
-            "automation_flag",
-            "proxy_flag",
-            "hosting_flag",
-            "content_length",
-            "header_count"
-        ])
 
 # =====================================================
 #  IP Tracking
@@ -201,18 +185,6 @@ def validate_session():
             }
 
             log_event(event)
-
-            append_dataset_row([
-                privilege_level,
-                ip_data["count"],
-                hour,
-                int(is_weekend),
-                int(automation_flag),
-                int(proxy_flag),
-                int(hosting_flag),
-                request.content_length or 0,
-                len(request.headers)
-            ])
 
             return jsonify({"error": "Unauthorized"}), 401
 
