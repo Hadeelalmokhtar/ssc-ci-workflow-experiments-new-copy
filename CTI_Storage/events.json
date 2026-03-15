@@ -159,5 +159,28 @@
         "content_length": 0,
         "header_count": 18,
         "timestamp": "2026-03-15T03:23:53.863233"
+    },
+    {
+        "event_type": "credential_misuse",
+        "token_profile": "repo_admin",
+        "privilege_level": 3,
+        "ip": "9.9.9.9",
+        "country": "United States",
+        "city": "Berkeley",
+        "isp": "Quad9",
+        "asn": "AS19281 Quad9",
+        "proxy_flag": false,
+        "hosting_flag": false,
+        "ip_attempt_count": 1,
+        "first_seen": "2026-03-15T03:41:16.056156",
+        "last_seen": "2026-03-15T03:41:16.056156",
+        "hour_of_day": 3,
+        "weekend_flag": true,
+        "automation_flag": false,
+        "endpoint": "/api/v1/session",
+        "method": "POST",
+        "content_length": 0,
+        "header_count": 18,
+        "timestamp": "2026-03-15T03:41:16.081594"
     }
 ]
