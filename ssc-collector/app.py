@@ -115,12 +115,13 @@ def log_event(event):
 @app.route("/api/v1/session", methods=["POST"])
 def validate_session():
 
-    provided_token = request.headers.get("Authorization")
+   provided_token = request.headers.get("Authorization")
+
     ip = request.headers.get("X-Forwarded-For")
-if ip:
-    ip = ip.split(",")[0].strip()
-else:
-    ip = request.remote_addr
+    if ip:
+        ip = ip.split(",")[0].strip()
+    else:
+        ip = request.remote_addr
 
     ua = request.headers.get("User-Agent")
 
