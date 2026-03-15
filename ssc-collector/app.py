@@ -111,11 +111,10 @@ def log_event(event):
 # =====================================================
 # Production-style Auth Endpoint
 
-
-@app.route("/api/v1/session", methods=["POST"])
+ @app.route("/api/v1/session", methods=["POST"])
 def validate_session():
 
-   provided_token = request.headers.get("Authorization")
+    provided_token = request.headers.get("Authorization")
 
     ip = request.headers.get("X-Forwarded-For")
     if ip:
@@ -127,6 +126,7 @@ def validate_session():
 
     if not provided_token:
         return jsonify({"error": "Missing credentials"}), 400
+
 
     provided_token = provided_token.replace("Bearer ", "")
 
