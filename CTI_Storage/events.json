@@ -90,5 +90,28 @@
         "content_length": 0,
         "header_count": 18,
         "timestamp": "2026-03-14T23:58:46.737648"
+    },
+    {
+        "event_type": "credential_misuse",
+        "token_profile": "repo_admin",
+        "privilege_level": 3,
+        "ip": "8.8.8.8,64.227.21.251, 104.23.190.84, 10.19.203.4",
+        "country": null,
+        "city": null,
+        "isp": null,
+        "asn": null,
+        "proxy_flag": false,
+        "hosting_flag": false,
+        "ip_attempt_count": 1,
+        "first_seen": "2026-03-15T02:19:18.765453",
+        "last_seen": "2026-03-15T02:19:18.765453",
+        "hour_of_day": 2,
+        "weekend_flag": true,
+        "automation_flag": false,
+        "endpoint": "/api/v1/session",
+        "method": "POST",
+        "content_length": 0,
+        "header_count": 18,
+        "timestamp": "2026-03-15T02:19:18.791395"
     }
 ]
