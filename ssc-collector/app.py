@@ -112,7 +112,7 @@ def log_event(event):
 # Production-style Auth Endpoint
 
  @app.route("/api/v1/session", methods=["POST"])
-def validate_session():
+ def validate_session():
 
     provided_token = request.headers.get("Authorization")
 
