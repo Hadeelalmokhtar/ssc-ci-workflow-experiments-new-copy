@@ -116,7 +116,12 @@ def log_event(event):
 def validate_session():
 
     provided_token = request.headers.get("Authorization")
+    ip = request.headers.get("X-Forwarded-For")
+if ip:
+    ip = ip.split(",")[0].strip()
+else:
     ip = request.remote_addr
+
     ua = request.headers.get("User-Agent")
 
     if not provided_token:
