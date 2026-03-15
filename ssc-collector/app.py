@@ -116,6 +116,7 @@ def validate_session():
 
     provided_token = request.headers.get("Authorization")
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    ip = ip.split(",")[0].strip()
     ua = request.headers.get("User-Agent")
 
     if not provided_token:
