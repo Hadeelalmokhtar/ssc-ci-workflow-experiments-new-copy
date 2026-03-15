@@ -111,8 +111,8 @@ def log_event(event):
 # =====================================================
 # Production-style Auth Endpoint
 
- @app.route("/api/v1/session", methods=["POST"])
- def validate_session():
+@app.route("/api/v1/session", methods=["POST"])
+def validate_session():
 
     provided_token = request.headers.get("Authorization")
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -120,7 +120,6 @@ def log_event(event):
 
     if not provided_token:
         return jsonify({"error": "Missing credentials"}), 400
-
 
     provided_token = provided_token.replace("Bearer ", "")
 
@@ -148,7 +147,6 @@ def log_event(event):
                 "event_type": "credential_misuse",
                 "token_profile": name,
                 "privilege_level": privilege_level,
-
                 "ip": ip,
                 "country": geo.get("country"),
                 "city": geo.get("city"),
@@ -156,20 +154,16 @@ def log_event(event):
                 "asn": geo.get("as"),
                 "proxy_flag": proxy_flag,
                 "hosting_flag": hosting_flag,
-
                 "ip_attempt_count": ip_data["count"],
                 "first_seen": ip_data["first_seen"].isoformat(),
                 "last_seen": ip_data["last_seen"].isoformat(),
-
                 "hour_of_day": hour,
                 "weekend_flag": is_weekend,
                 "automation_flag": automation_flag,
-
                 "endpoint": "/api/v1/session",
                 "method": request.method,
                 "content_length": request.content_length,
                 "header_count": len(request.headers),
-
                 "timestamp": datetime.utcnow().isoformat()
             }
 
