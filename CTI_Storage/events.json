@@ -1,5 +1,4 @@
 [
-
     {
         "event_type": "path_trigger",
         "token_profile": "ci_deploy",
@@ -63,5 +62,37 @@
         "ioc_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
         "ioc_endpoint": "/build_pipeline.env",
         "timestamp": "2026-03-23T09:35:16.393774"
+    },
+    {
+        "event_type": "path_trigger",
+        "token_profile": "ci_deploy",
+        "privilege_level": 2,
+        "ip": "2.90.199.227",
+        "country": "Saudi Arabia",
+        "city": "Jeddah",
+        "isp": "Saudinet",
+        "asn": "AS39891 Saudi Telecom Company JSC",
+        "continent": "Asia",
+        "timezone": "Asia/Riyadh",
+        "lat": 21.4913,
+        "lon": 39.1841,
+        "proxy_flag": true,
+        "hosting_flag": false,
+        "request_count": 1,
+        "burst_flag": false,
+        "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+        "automation_flag": false,
+        "automation_score": 0,
+        "hour_of_day": 10,
+        "day_of_week": "Monday",
+        "is_business_hours": true,
+        "attack_type": "config_access",
+        "attack_stage": "discovery",
+        "mitre_technique": "T1083",
+        "mitre_tactic": "Discovery",
+        "ioc_ip": "2.90.199.227",
+        "ioc_user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36",
+        "ioc_endpoint": "/build_pipeline.env",
+        "timestamp": "2026-03-23T10:08:18.131851"
     }
 ]
