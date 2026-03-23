@@ -8,8 +8,7 @@ import requests
 app = Flask(__name__)
 
 # =====================================================
-#  Credential Store (Honeytokens)
-
+# Credential Store (Honeytokens)
 
 CREDENTIAL_STORE = {
     "repo_admin": {
@@ -27,8 +26,7 @@ CREDENTIAL_STORE = {
 }
 
 # =====================================================
-#  IP Tracking
-
+# IP Tracking
 
 IP_TRACKER = {}
 
@@ -50,11 +48,10 @@ def track_ip(ip):
 # =====================================================
 # IP Enrichment
 
-
 def enrich_ip(ip):
     try:
         r = requests.get(
-            f"http://ip-api.com/json/{ip}?fields=status,country,city,isp,proxy,hosting,as",
+            f"http://ip-api.com/json/{ip}?fields=status,country,city,isp,proxy,hosting,as,continent,timezone,lat,lon",
             timeout=3
         )
         data = r.json()
@@ -65,8 +62,8 @@ def enrich_ip(ip):
     return {}
 
 # =====================================================
-#  Event Logging
-                                                                                                            
+# GitHub Logging
+
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_REPO = os.getenv("GITHUB_REPO")
 FILE_PATH = "CTI_Storage/events.json"
@@ -98,7 +95,7 @@ def log_event(event):
     ).decode()
 
     payload = {
-        "message": "Update events log",
+        "message": "Update CTI events log",
         "content": updated_content,
         "branch": "main"
     }
@@ -109,7 +106,90 @@ def log_event(event):
     requests.put(url, headers=headers, json=payload)
 
 # =====================================================
-# Production-style Auth Endpoint
+# Helper (File-based triggers)
+
+def build_path_event(profile_name, privilege_level, endpoint_name):
+    ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+    ip = ip.split(",")[0].strip()
+    ua = request.headers.get("User-Agent")
+
+    ip_data = track_ip(ip)
+    geo = enrich_ip(ip)
+
+    hour = datetime.utcnow().hour
+    is_weekend = datetime.utcnow().weekday() >= 5
+
+    automation_flag = any(
+        x in (ua or "").lower()
+        for x in ["curl", "bot", "python", "scanner"]
+    )
+
+    return {
+        "event_type": "path_trigger",
+        "token_profile": profile_name,
+        "privilege_level": privilege_level,
+
+        # Network
+        "ip": ip,
+        "country": geo.get("country"),
+        "city": geo.get("city"),
+        "isp": geo.get("isp"),
+        "asn": geo.get("as"),
+        "continent": geo.get("continent"),
+        "timezone": geo.get("timezone"),
+        "lat": geo.get("lat"),
+        "lon": geo.get("lon"),
+        "proxy_flag": bool(geo.get("proxy")),
+        "hosting_flag": bool(geo.get("hosting")),
+
+        # Behavior
+        "request_count": ip_data["count"],
+        "burst_flag": ip_data["count"] > 5,
+
+        # Automation
+        "user_agent": ua,
+        "automation_flag": automation_flag,
+        "automation_score": int(automation_flag) * 80,
+
+        # Time
+        "hour_of_day": hour,
+        "day_of_week": datetime.utcnow().strftime("%A"),
+        "is_business_hours": 9 <= hour <= 17,
+
+        # Threat Intel
+        "attack_type": "config_access",
+        "attack_stage": "discovery",
+        "mitre_technique": "T1083",
+        "mitre_tactic": "Discovery",
+
+        # IOC
+        "ioc_ip": ip,
+        "ioc_user_agent": ua,
+        "ioc_endpoint": endpoint_name,
+
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+# =====================================================
+# SCM Trigger
+
+@app.route("/legacy_internal_config.yaml", methods=["GET", "POST"])
+def scm_trigger():
+    event = build_path_event("legacy_registry", 1, "/legacy_internal_config.yaml")
+    log_event(event)
+    return jsonify({"status": "logged"}), 200
+
+# =====================================================
+# Build Trigger
+
+@app.route("/build_pipeline.env", methods=["GET", "POST"])
+def build_trigger():
+    event = build_path_event("ci_deploy", 2, "/build_pipeline.env")
+    log_event(event)
+    return jsonify({"status": "logged"}), 200
+
+# =====================================================
+# Repository Canary (Token Misuse)
 
 @app.route("/api/v1/session", methods=["POST"])
 def validate_session():
@@ -128,8 +208,6 @@ def validate_session():
 
         if provided_token == data["token"]:
 
-            privilege_level = data["privilege_level"]
-
             ip_data = track_ip(ip)
             geo = enrich_ip(ip)
 
@@ -141,41 +219,61 @@ def validate_session():
                 for x in ["curl", "bot", "python", "scanner"]
             )
 
-            proxy_flag = bool(geo.get("proxy"))
-            hosting_flag = bool(geo.get("hosting"))
-
             event = {
                 "event_type": "credential_misuse",
-                "token_profile": name,
-                "privilege_level": privilege_level,
+                "token_type": name,
+                "token_scope": name,
+                "token_length": len(provided_token),
+                "token_prefix": provided_token[:5],
+
+                # Network
                 "ip": ip,
                 "country": geo.get("country"),
                 "city": geo.get("city"),
                 "isp": geo.get("isp"),
                 "asn": geo.get("as"),
-                "proxy_flag": proxy_flag,
-                "hosting_flag": hosting_flag,
-                "ip_attempt_count": ip_data["count"],
-                "first_seen": ip_data["first_seen"].isoformat(),
-                "last_seen": ip_data["last_seen"].isoformat(),
-                "hour_of_day": hour,
-                "weekend_flag": is_weekend,
+                "continent": geo.get("continent"),
+                "timezone": geo.get("timezone"),
+                "lat": geo.get("lat"),
+                "lon": geo.get("lon"),
+                "proxy_flag": bool(geo.get("proxy")),
+                "hosting_flag": bool(geo.get("hosting")),
+
+                # Behavior
+                "request_count": ip_data["count"],
+                "burst_flag": ip_data["count"] > 5,
+
+                # Automation
+                "user_agent": ua,
                 "automation_flag": automation_flag,
-                "endpoint": "/api/v1/session",
-                "method": request.method,
-                "content_length": request.content_length,
-                "header_count": len(request.headers),
+                "automation_score": int(automation_flag) * 80,
+
+                # Time
+                "hour_of_day": hour,
+                "day_of_week": datetime.utcnow().strftime("%A"),
+                "is_business_hours": 9 <= hour <= 17,
+
+                # Threat
+                "attack_type": "token_misuse",
+                "attack_stage": "credential_access",
+                "mitre_technique": "T1552.001",
+                "mitre_tactic": "Credential Access",
+
+                # IOC
+                "ioc_ip": ip,
+                "ioc_user_agent": ua,
+                "ioc_endpoint": "/api/v1/session",
+
                 "timestamp": datetime.utcnow().isoformat()
             }
 
             log_event(event)
-
             return jsonify({"error": "Unauthorized"}), 401
 
     return jsonify({"status": "Invalid credentials"}), 403
 
 # =====================================================
-#  Events Viewer                                                             
+# Events Viewer
 
 @app.route("/api/v1/events", methods=["GET"])
 def get_events():
@@ -197,17 +295,17 @@ def get_events():
 
     return jsonify({"error": "Unable to fetch events"}), 500
 
-
 # =====================================================
-#  Health
+# Health
 
-@app.route("/health", methods=["GET"])
+@app.route("/health")
 def health():
-    return jsonify({"status": "ok"})
+    return {"status": "ok"}
 
 @app.route("/")
 def home():
     return {"status": "SSC Collector Running"}
+
 # =====================================================
 # Run
 
