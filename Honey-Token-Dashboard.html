@@ -2,282 +2,480 @@
 <html>
 
 <head>
-
 <meta charset="UTF-8">
 <title>SSC Events Dashboard</title>
 
 <style>
-
 body{
-background:#0f172a;
-color:white;
-font-family:Arial;
-padding:30px;
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    padding:30px;
+    margin:0;
+}
+
+h1,h3{
+    margin-top:0;
 }
 
 .grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
-gap:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+    gap:20px;
 }
 
 .card{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
+    background:#1e293b;
+    padding:20px;
+    border-radius:10px;
 }
 
 .list{
-background:#0b1220;
-padding:10px;
-border-radius:6px;
-max-height:250px;
-overflow:auto;
+    background:#0b1220;
+    padding:14px;
+    border-radius:8px;
+    max-height:420px;
+    overflow:auto;
 }
 
 .item{
-padding:10px;
-border-bottom:1px solid #333;
-font-size:14px;
-margin-bottom:6px;
+    padding:12px;
+    border-bottom:1px solid #2b3548;
+    font-size:14px;
+    margin-bottom:10px;
+    background:#07101f;
+    border-radius:8px;
+}
+
+.event-title{
+    font-size:20px;
+    font-weight:bold;
+    margin-bottom:12px;
 }
 
 .high{color:#ff4d4d;font-weight:bold}
 .medium{color:#ffd24d;font-weight:bold}
 .low{color:#4dff88;font-weight:bold}
 
-.key{
-color:#94a3b8;
-font-size:13px;
+.summary-line{
+    margin-bottom:6px;
+    font-size:16px;
 }
 
-</style>
+.empty{
+    color:#94a3b8;
+}
 
+.event-sections{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;
+    margin-top:12px;
+}
+
+.property-box{
+    background:#0b1220;
+    border:1px solid #243047;
+    border-radius:8px;
+    padding:12px;
+}
+
+.property-box-title{
+    color:#93c5fd;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:10px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.property-row{
+    margin-bottom:8px;
+    line-height:1.4;
+    word-break:break-word;
+}
+
+.property-key{
+    color:#94a3b8;
+    font-size:12px;
+    display:block;
+    margin-bottom:2px;
+}
+
+.property-value{
+    color:#ffffff;
+    font-size:14px;
+}
+
+.top-card{
+    margin-bottom:20px;
+}
+
+.badge{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:bold;
+    background:#132033;
+    border:1px solid #2c3c57;
+    margin-bottom:10px;
+}
+
+.mini-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;
+    margin-top:10px;
+}
+
+.mini-stat{
+    background:#0b1220;
+    border-radius:8px;
+    padding:12px;
+}
+
+.mini-stat-label{
+    color:#94a3b8;
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.mini-stat-value{
+    font-size:20px;
+    font-weight:bold;
+}
+
+::-webkit-scrollbar{
+    width:10px;
+}
+::-webkit-scrollbar-track{
+    background:#0b1220;
+    border-radius:8px;
+}
+::-webkit-scrollbar-thumb{
+    background:#475569;
+    border-radius:8px;
+}
+</style>
 </head>
 
 <body>
 
 <h1>SSC Honeytoken Events Dashboard</h1>
 
-<div class="card">
-
-Total Events: <span id="total"></span><br>
-Top Attacker IP: <span id="topip"></span><br>
-Most Targeted Token: <span id="toptoken"></span>
-
+<div class="card top-card">
+    <div class="mini-grid">
+        <div class="mini-stat">
+            <div class="mini-stat-label">Total Events</div>
+            <div class="mini-stat-value" id="total">0</div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-label">Top Attacker IP</div>
+            <div class="mini-stat-value" id="topip">-</div>
+        </div>
+        <div class="mini-stat">
+            <div class="mini-stat-label">Most Targeted Token</div>
+            <div class="mini-stat-value" id="toptoken">-</div>
+        </div>
+    </div>
 </div>
 
 <div class="grid">
 
-<div class="card">
-<h3>All Events (Full Data)</h3>
-<div id="events" class="list"></div>
-</div>
+    <div class="card">
+        <h3>All Events (Structured View)</h3>
+        <div id="events" class="list"></div>
+    </div>
 
-<div class="card">
-<h3>Top Attacking IPs</h3>
-<div id="ips" class="list"></div>
-</div>
+    <div class="card">
+        <h3>Top Attacking IPs</h3>
+        <div id="ips" class="list"></div>
+    </div>
 
-<div class="card">
-<h3>Tokens Activity</h3>
-<div id="tokens" class="list"></div>
-</div>
+    <div class="card">
+        <h3>Tokens Activity</h3>
+        <div id="tokens" class="list"></div>
+    </div>
 
-<div class="card">
-<h3>Stages (CI/CD)</h3>
-<div id="stages" class="list"></div>
-</div>
+    <div class="card">
+        <h3>Stages (CI/CD)</h3>
+        <div id="stages" class="list"></div>
+    </div>
 
-<div class="card">
-<h3>Timeline</h3>
-<div id="timeline" class="list"></div>
-</div>
+    <div class="card">
+        <h3>Timeline</h3>
+        <div id="timeline" class="list"></div>
+    </div>
 
 </div>
 
 <script>
-
 async function load(){
+    try{
+        const r = await fetch("CTI_Storage/events.json?t=" + Date.now());
+        const data = await r.json();
 
-try{
+        document.getElementById("total").textContent = Array.isArray(data) ? data.length : 0;
 
-const r = await fetch("CTI_Storage/events.json?t=" + Date.now())
-const data = await r.json()
-
-document.getElementById("total").textContent = data.length || 0
-
-renderEvents(data)
-renderTopIPs(data)
-renderTokens(data)
-renderStages(data)
-renderTimeline(data)
-
-}catch(err){
-console.error("Error loading events:", err)
+        renderEvents(data || []);
+        renderTopIPs(data || []);
+        renderTokens(data || []);
+        renderStages(data || []);
+        renderTimeline(data || []);
+    }catch(err){
+        console.error("Error loading events:", err);
+        document.getElementById("events").innerHTML = `<div class="item">Failed to load events.json</div>`;
+    }
 }
-
-}
-
-////////////////////////////////////////////////////
-// Dynamic Render 
-
 
 function renderEvents(data){
+    let p = document.getElementById("events");
+    p.innerHTML = "";
 
-let p = document.getElementById("events")
-p.innerHTML = ""
+    if(!Array.isArray(data) || data.length === 0){
+        p.innerHTML = `<div class="item empty">No events available</div>`;
+        return;
+    }
 
-data.forEach(e=>{
+    data.slice().reverse().forEach((e, index)=>{
+        const level = getLevelClass(e);
+        const grouped = groupEventFields(e);
 
-let level = e.ip_attempt_count > 3 ? "high" :
-            e.ip_attempt_count > 1 ? "medium" : "low"
+        let sectionsHtml = "";
 
-let content = ""
+        Object.entries(grouped).forEach(([sectionName, fields])=>{
+            if(Object.keys(fields).length === 0) return;
 
-for (let key in e){
+            sectionsHtml += `
+                <div class="property-box">
+                    <div class="property-box-title">${sectionName}</div>
+                    ${renderFieldRows(fields)}
+                </div>
+            `;
+        });
 
-content += `
-<div>
-<span class="key">${key}</span>:
-<span>${formatValue(e[key])}</span>
-</div>
-`
+        const title = e.event_type || `event_${index + 1}`;
 
+        p.innerHTML += `
+            <div class="item">
+                <div class="badge ${level}">${title}</div>
+
+                <div class="summary-line">
+                    <span class="${level}">Severity View</span>
+                </div>
+
+                <div class="event-sections">
+                    ${sectionsHtml}
+                </div>
+            </div>
+        `;
+    });
 }
 
-p.innerHTML += `
-<div class="item">
-<span class="${level}">[${e.event_type || "EVENT"}]</span>
-<br><br>
-${content}
-</div>
-`
+function renderFieldRows(obj){
+    let html = "";
 
-})
+    Object.entries(obj).forEach(([key, value])=>{
+        html += `
+            <div class="property-row">
+                <span class="property-key">${key}</span>
+                <span class="property-value">${formatValue(value)}</span>
+            </div>
+        `;
+    });
 
+    return html || `<div class="empty">No data</div>`;
 }
 
-////////////////////////////////////////////////////
-//  Format values
+function groupEventFields(event){
+    const groups = {
+        "Event Info": {},
+        "Token Details": {},
+        "Source / IP Intelligence": {},
+        "Location": {},
+        "Network / Provider": {},
+        "Scoring / Risk": {},
+        "Other": {}
+    };
 
+    const eventInfoKeys = [
+        "event_type","timestamp","stage","source","action","category"
+    ];
+
+    const tokenKeys = [
+        "token","token_id","token_profile","token_type","privilege_level","credential_type","secret_name"
+    ];
+
+    const sourceKeys = [
+        "ip","source_ip","destination_ip","user_agent","method","endpoint","path","url"
+    ];
+
+    const locationKeys = [
+        "country","city","continent","timezone","lat","lon","latitude","longitude"
+    ];
+
+    const networkKeys = [
+        "isp","asn","org","reverse_dns","proxy_flag","hosting_flag","mobile_flag","tor_flag","vpn_flag"
+    ];
+
+    const scoringKeys = [
+        "ip_attempt_count","risk_score","severity","confidence","score","priority"
+    ];
+
+    Object.entries(event).forEach(([key, value])=>{
+        if(eventInfoKeys.includes(key)){
+            groups["Event Info"][key] = value;
+        }else if(tokenKeys.includes(key)){
+            groups["Token Details"][key] = value;
+        }else if(sourceKeys.includes(key)){
+            groups["Source / IP Intelligence"][key] = value;
+        }else if(locationKeys.includes(key)){
+            groups["Location"][key] = value;
+        }else if(networkKeys.includes(key)){
+            groups["Network / Provider"][key] = value;
+        }else if(scoringKeys.includes(key)){
+            groups["Scoring / Risk"][key] = value;
+        }else{
+            groups["Other"][key] = value;
+        }
+    });
+
+    return groups;
+}
+
+function getLevelClass(e){
+    const attempts = Number(e.ip_attempt_count || 0);
+    const privilege = Number(e.privilege_level || 0);
+
+    if(attempts > 3 || privilege >= 3) return "high";
+    if(attempts > 1 || privilege === 2) return "medium";
+    return "low";
+}
 
 function formatValue(value){
+    if(value === null || value === undefined || value === ""){
+        return "-";
+    }
 
-if (Array.isArray(value)){
-return value.join(", ")
+    if(Array.isArray(value)){
+        if(value.length === 0) return "-";
+        return value.map(v => formatValue(v)).join(", ");
+    }
+
+    if(typeof value === "object"){
+        return Object.entries(value)
+            .map(([k,v]) => `${k}: ${formatValue(v)}`)
+            .join(" | ");
+    }
+
+    return String(value);
 }
-
-if (typeof value === "object" && value !== null){
-return JSON.stringify(value)
-}
-
-return value
-
-}
-
-////////////////////////////////////////////////////
-//  Top IPs
-
 
 function renderTopIPs(data){
+    let map = {};
 
-let map = {}
+    data.forEach(e=>{
+        const ip = e.ip || e.source_ip;
+        if(ip){
+            map[ip] = (map[ip] || 0) + 1;
+        }
+    });
 
-data.forEach(e=>{
-if(e.ip){
-map[e.ip] = (map[e.ip] || 0) + 1
+    let sorted = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+
+    let p = document.getElementById("ips");
+    p.innerHTML = "";
+
+    if(sorted.length === 0){
+        p.innerHTML = `<div class="item empty">No IP data available</div>`;
+        document.getElementById("topip").textContent = "-";
+        return;
+    }
+
+    sorted.slice(0,10).forEach(i=>{
+        p.innerHTML += `<div class="item">${i[0]} → ${i[1]} hits</div>`;
+    });
+
+    document.getElementById("topip").textContent = sorted[0][0];
 }
-})
-
-let sorted = Object.entries(map).sort((a,b)=>b[1]-a[1])
-
-let p = document.getElementById("ips")
-p.innerHTML = ""
-
-sorted.slice(0,5).forEach(i=>{
-p.innerHTML += `<div class="item">${i[0]} → ${i[1]} hits</div>`
-})
-
-document.getElementById("topip").textContent = sorted[0]?.[0] || "-"
-
-}
-
-////////////////////////////////////////////////////
-// Tokens
-
 
 function renderTokens(data){
+    let map = {};
 
-let map = {}
+    data.forEach(e=>{
+        const tokenName = e.token || e.token_id || e.token_profile;
+        if(tokenName){
+            map[tokenName] = (map[tokenName] || 0) + 1;
+        }
+    });
 
-data.forEach(e=>{
-if(e.token){
-map[e.token] = (map[e.token] || 0) + 1
+    let sorted = Object.entries(map).sort((a,b)=>b[1]-a[1]);
+
+    let p = document.getElementById("tokens");
+    p.innerHTML = "";
+
+    if(sorted.length === 0){
+        p.innerHTML = `<div class="item empty">No token data available</div>`;
+        document.getElementById("toptoken").textContent = "-";
+        return;
+    }
+
+    sorted.forEach(t=>{
+        p.innerHTML += `<div class="item">${t[0]} → ${t[1]} uses</div>`;
+    });
+
+    document.getElementById("toptoken").textContent = sorted[0][0];
 }
-})
-
-let sorted = Object.entries(map).sort((a,b)=>b[1]-a[1])
-
-let p = document.getElementById("tokens")
-p.innerHTML = ""
-
-sorted.forEach(t=>{
-p.innerHTML += `<div class="item">${t[0]} → ${t[1]} uses</div>`
-})
-
-document.getElementById("toptoken").textContent = sorted[0]?.[0] || "-"
-
-}
-
-////////////////////////////////////////////////////
-//  Stages
 
 function renderStages(data){
+    let map = {};
 
-let map = {}
+    data.forEach(e=>{
+        const stage = e.stage || e.token_profile || "unknown";
+        map[stage] = (map[stage] || 0) + 1;
+    });
 
-data.forEach(e=>{
-if(e.stage){
-map[e.stage] = (map[e.stage] || 0) + 1
+    let p = document.getElementById("stages");
+    p.innerHTML = "";
+
+    const entries = Object.entries(map);
+
+    if(entries.length === 0){
+        p.innerHTML = `<div class="item empty">No stage data available</div>`;
+        return;
+    }
+
+    entries.forEach(s=>{
+        p.innerHTML += `<div class="item">${s[0]} → ${s[1]}</div>`;
+    });
 }
-})
-
-let p = document.getElementById("stages")
-p.innerHTML = ""
-
-Object.entries(map).forEach(s=>{
-p.innerHTML += `<div class="item">${s[0]} → ${s[1]}</div>`
-})
-
-}
-
-////////////////////////////////////////////////////
-// Timeline
-
 
 function renderTimeline(data){
+    let p = document.getElementById("timeline");
+    p.innerHTML = "";
 
-let p = document.getElementById("timeline")
-p.innerHTML = ""
+    if(!Array.isArray(data) || data.length === 0){
+        p.innerHTML = `<div class="item empty">No timeline available</div>`;
+        return;
+    }
 
-data.slice().reverse().forEach(e=>{
-p.innerHTML += `
-<div class="item">
-${e.timestamp || "-"} → ${e.ip || "-"} (${e.event_type || "event"})
-</div>
-`
-})
+    data.slice().reverse().forEach(e=>{
+        const ts = e.timestamp || "-";
+        const ip = e.ip || e.source_ip || "-";
+        const type = e.event_type || "event";
 
+        p.innerHTML += `
+            <div class="item">
+                ${ts} → ${ip}<br>
+                (${type})
+            </div>
+        `;
+    });
 }
 
-////////////////////////////////////////////////////
-// run
-
-
-load()
-setInterval(load,8000)
-
+load();
+setInterval(load, 8000);
 </script>
 
 </body>
