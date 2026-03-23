@@ -139,7 +139,7 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
         "timezone": geo.get("timezone"),
         "lat": geo.get("lat"),
         "lon": geo.get("lon"),
-        "proxy_flag": bool(request.headers.get("X-Forwarded-For"))
+        "proxy_flag": bool(request.headers.get("X-Forwarded-For")),
         "hosting_flag": bool(geo.get("hosting")),
 
         # Behavior
