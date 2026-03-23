@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<title>SSC Events Dashboard</title>
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:Arial;
+padding:30px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+gap:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+}
+
+.list{
+background:#0b1220;
+padding:10px;
+border-radius:6px;
+max-height:250px;
+overflow:auto;
+}
+
+.item{
+padding:10px;
+border-bottom:1px solid #333;
+font-size:14px;
+margin-bottom:6px;
+}
+
+.high{color:#ff4d4d;font-weight:bold}
+.medium{color:#ffd24d;font-weight:bold}
+.low{color:#4dff88;font-weight:bold}
+
+.key{
+color:#94a3b8;
+font-size:13px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>SSC Honeytoken Events Dashboard</h1>
+
+<div class="card">
+
+Total Events: <span id="total"></span><br>
+Top Attacker IP: <span id="topip"></span><br>
+Most Targeted Token: <span id="toptoken"></span>
+
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>All Events (Full Data)</h3>
+<div id="events" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Top Attacking IPs</h3>
+<div id="ips" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Tokens Activity</h3>
+<div id="tokens" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Stages (CI/CD)</h3>
+<div id="stages" class="list"></div>
+</div>
+
+<div class="card">
+<h3>Timeline</h3>
+<div id="timeline" class="list"></div>
+</div>
+
+</div>
+
+<script>
+
+async function load(){
+
+try{
+
+const r = await fetch("events.json?t=" + Date.now())
+const data = await r.json()
+
+document.getElementById("total").textContent = data.length || 0
+
+renderEvents(data)
+renderTopIPs(data)
+renderTokens(data)
+renderStages(data)
+renderTimeline(data)
+
+}catch(err){
+console.error("Error loading events:", err)
+}
+
+}
+
+////////////////////////////////////////////////////
+// Dynamic Render 
+
+
+function renderEvents(data){
+
+let p = document.getElementById("events")
+p.innerHTML = ""
+
+data.forEach(e=>{
+
+let level = e.ip_attempt_count > 3 ? "high" :
+            e.ip_attempt_count > 1 ? "medium" : "low"
+
+let content = ""
+
+for (let key in e){
+
+content += `
+<div>
+<span class="key">${key}</span>:
+<span>${formatValue(e[key])}</span>
+</div>
+`
+
+}
+
+p.innerHTML += `
+<div class="item">
+<span class="${level}">[${e.event_type || "EVENT"}]</span>
+<br><br>
+${content}
+</div>
+`
+
+})
+
+}
+
+////////////////////////////////////////////////////
+//  Format values
+
+
+function formatValue(value){
+
+if (Array.isArray(value)){
+return value.join(", ")
+}
+
+if (typeof value === "object" && value !== null){
+return JSON.stringify(value)
+}
+
+return value
+
+}
+
+////////////////////////////////////////////////////
+//  Top IPs
+
+
+function renderTopIPs(data){
+
+let map = {}
+
+data.forEach(e=>{
+if(e.ip){
+map[e.ip] = (map[e.ip] || 0) + 1
+}
+})
+
+let sorted = Object.entries(map).sort((a,b)=>b[1]-a[1])
+
+let p = document.getElementById("ips")
+p.innerHTML = ""
+
+sorted.slice(0,5).forEach(i=>{
+p.innerHTML += `<div class="item">${i[0]} → ${i[1]} hits</div>`
+})
+
+document.getElementById("topip").textContent = sorted[0]?.[0] || "-"
+
+}
+
+////////////////////////////////////////////////////
+// Tokens
+
+
+function renderTokens(data){
+
+let map = {}
+
+data.forEach(e=>{
+if(e.token){
+map[e.token] = (map[e.token] || 0) + 1
+}
+})
+
+let sorted = Object.entries(map).sort((a,b)=>b[1]-a[1])
+
+let p = document.getElementById("tokens")
+p.innerHTML = ""
+
+sorted.forEach(t=>{
+p.innerHTML += `<div class="item">${t[0]} → ${t[1]} uses</div>`
+})
+
+document.getElementById("toptoken").textContent = sorted[0]?.[0] || "-"
+
+}
+
+////////////////////////////////////////////////////
+//  Stages
+
+function renderStages(data){
+
+let map = {}
+
+data.forEach(e=>{
+if(e.stage){
+map[e.stage] = (map[e.stage] || 0) + 1
+}
+})
+
+let p = document.getElementById("stages")
+p.innerHTML = ""
+
+Object.entries(map).forEach(s=>{
+p.innerHTML += `<div class="item">${s[0]} → ${s[1]}</div>`
+})
+
+}
+
+////////////////////////////////////////////////////
+// Timeline
+
+
+function renderTimeline(data){
+
+let p = document.getElementById("timeline")
+p.innerHTML = ""
+
+data.slice().reverse().forEach(e=>{
+p.innerHTML += `
+<div class="item">
+${e.timestamp || "-"} → ${e.ip || "-"} (${e.event_type || "event"})
+</div>
+`
+})
+
+}
+
+////////////////////////////////////////////////////
+// run
+
+
+load()
+setInterval(load,8000)
+
+</script>
+
+</body>
+</html>
