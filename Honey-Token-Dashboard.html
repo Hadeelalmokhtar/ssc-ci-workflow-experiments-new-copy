@@ -47,79 +47,16 @@ h1,h3{
     border-radius:8px;
 }
 
-.event-title{
-    font-size:20px;
-    font-weight:bold;
-    margin-bottom:12px;
-}
-
 .high{color:#ff4d4d;font-weight:bold}
 .medium{color:#ffd24d;font-weight:bold}
 .low{color:#4dff88;font-weight:bold}
-
-.summary-line{
-    margin-bottom:6px;
-    font-size:16px;
-}
 
 .empty{
     color:#94a3b8;
 }
 
-.event-sections{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
-    gap:12px;
-    margin-top:12px;
-}
-
-.property-box{
-    background:#0b1220;
-    border:1px solid #243047;
-    border-radius:8px;
-    padding:12px;
-}
-
-.property-box-title{
-    color:#93c5fd;
-    font-size:13px;
-    font-weight:bold;
-    margin-bottom:10px;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-}
-
-.property-row{
-    margin-bottom:8px;
-    line-height:1.4;
-    word-break:break-word;
-}
-
-.property-key{
-    color:#94a3b8;
-    font-size:12px;
-    display:block;
-    margin-bottom:2px;
-}
-
-.property-value{
-    color:#ffffff;
-    font-size:14px;
-}
-
 .top-card{
     margin-bottom:20px;
-}
-
-.badge{
-    display:inline-block;
-    padding:4px 10px;
-    border-radius:999px;
-    font-size:12px;
-    font-weight:bold;
-    background:#132033;
-    border:1px solid #2c3c57;
-    margin-bottom:10px;
 }
 
 .mini-grid{
@@ -144,6 +81,62 @@ h1,h3{
 .mini-stat-value{
     font-size:20px;
     font-weight:bold;
+}
+
+.grouped-sections{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:14px;
+}
+
+.group-box{
+    background:#07101f;
+    border:1px solid #243047;
+    border-radius:10px;
+    padding:14px;
+}
+
+.group-title{
+    color:#93c5fd;
+    font-size:15px;
+    font-weight:bold;
+    margin-bottom:12px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+.feature-block{
+    margin-bottom:12px;
+    padding-bottom:10px;
+    border-bottom:1px solid #1f2a3d;
+}
+
+.feature-block:last-child{
+    border-bottom:none;
+    margin-bottom:0;
+    padding-bottom:0;
+}
+
+.feature-name{
+    color:#94a3b8;
+    font-size:12px;
+    margin-bottom:6px;
+}
+
+.feature-values{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+}
+
+.value-chip{
+    background:#132033;
+    border:1px solid #2c3c57;
+    color:#ffffff;
+    padding:5px 10px;
+    border-radius:999px;
+    font-size:12px;
+    word-break:break-word;
 }
 
 ::-webkit-scrollbar{
@@ -184,7 +177,7 @@ h1,h3{
 <div class="grid">
 
     <div class="card">
-        <h3>All Events (Structured View)</h3>
+        <h3>All Events (Grouped Summary View)</h3>
         <div id="events" class="list"></div>
     </div>
 
@@ -218,7 +211,7 @@ async function load(){
 
         document.getElementById("total").textContent = Array.isArray(data) ? data.length : 0;
 
-        renderEvents(data || []);
+        renderGroupedEvents(data || []);
         renderTopIPs(data || []);
         renderTokens(data || []);
         renderStages(data || []);
@@ -229,7 +222,7 @@ async function load(){
     }
 }
 
-function renderEvents(data){
+function renderGroupedEvents(data){
     let p = document.getElementById("events");
     p.innerHTML = "";
 
@@ -238,65 +231,46 @@ function renderEvents(data){
         return;
     }
 
-    data.slice().reverse().forEach((e, index)=>{
-        const level = getLevelClass(e);
-        const grouped = groupEventFields(e);
+    const grouped = aggregateEventsByCategory(data);
 
-        let sectionsHtml = "";
+    let html = `<div class="grouped-sections">`;
 
-        Object.entries(grouped).forEach(([sectionName, fields])=>{
-            if(Object.keys(fields).length === 0) return;
+    Object.entries(grouped).forEach(([sectionName, fields])=>{
+        const keys = Object.keys(fields);
+        if(keys.length === 0) return;
 
-            sectionsHtml += `
-                <div class="property-box">
-                    <div class="property-box-title">${sectionName}</div>
-                    ${renderFieldRows(fields)}
+        html += `
+            <div class="group-box">
+                <div class="group-title">${sectionName}</div>
+        `;
+
+        keys.forEach(key=>{
+            html += `
+                <div class="feature-block">
+                    <div class="feature-name">${key}</div>
+                    <div class="feature-values">
+                        ${fields[key].map(v => `<span class="value-chip">${escapeHtml(v)}</span>`).join("")}
+                    </div>
                 </div>
             `;
         });
 
-        const title = e.event_type || `event_${index + 1}`;
-
-        p.innerHTML += `
-            <div class="item">
-                <div class="badge ${level}">${title}</div>
-
-                <div class="summary-line">
-                    <span class="${level}">Severity View</span>
-                </div>
-
-                <div class="event-sections">
-                    ${sectionsHtml}
-                </div>
-            </div>
-        `;
-    });
-}
-
-function renderFieldRows(obj){
-    let html = "";
-
-    Object.entries(obj).forEach(([key, value])=>{
-        html += `
-            <div class="property-row">
-                <span class="property-key">${key}</span>
-                <span class="property-value">${formatValue(value)}</span>
-            </div>
-        `;
+        html += `</div>`;
     });
 
-    return html || `<div class="empty">No data</div>`;
+    html += `</div>`;
+    p.innerHTML = html;
 }
 
-function groupEventFields(event){
-    const groups = {
+function aggregateEventsByCategory(events){
+    const grouped = {
         "Event Info": {},
         "Token Details": {},
         "Source / IP Intelligence": {},
         "Location": {},
         "Network / Provider": {},
         "Scoring / Risk": {},
-        "Other": {}
+        "Other Info": {}
     };
 
     const eventInfoKeys = [
@@ -323,53 +297,51 @@ function groupEventFields(event){
         "ip_attempt_count","risk_score","severity","confidence","score","priority"
     ];
 
-    Object.entries(event).forEach(([key, value])=>{
-        if(eventInfoKeys.includes(key)){
-            groups["Event Info"][key] = value;
-        }else if(tokenKeys.includes(key)){
-            groups["Token Details"][key] = value;
-        }else if(sourceKeys.includes(key)){
-            groups["Source / IP Intelligence"][key] = value;
-        }else if(locationKeys.includes(key)){
-            groups["Location"][key] = value;
-        }else if(networkKeys.includes(key)){
-            groups["Network / Provider"][key] = value;
-        }else if(scoringKeys.includes(key)){
-            groups["Scoring / Risk"][key] = value;
-        }else{
-            groups["Other"][key] = value;
-        }
+    events.forEach(event=>{
+        Object.entries(event).forEach(([key, value])=>{
+            const values = normalizeValue(value);
+            if(values.length === 0) return;
+
+            let section = "Other Info";
+
+            if(eventInfoKeys.includes(key)) section = "Event Info";
+            else if(tokenKeys.includes(key)) section = "Token Details";
+            else if(sourceKeys.includes(key)) section = "Source / IP Intelligence";
+            else if(locationKeys.includes(key)) section = "Location";
+            else if(networkKeys.includes(key)) section = "Network / Provider";
+            else if(scoringKeys.includes(key)) section = "Scoring / Risk";
+
+            if(!grouped[section][key]){
+                grouped[section][key] = new Set();
+            }
+
+            values.forEach(v => grouped[section][key].add(String(v)));
+        });
     });
 
-    return groups;
+    const finalGrouped = {};
+    Object.entries(grouped).forEach(([section, fields])=>{
+        finalGrouped[section] = {};
+        Object.entries(fields).forEach(([key, valueSet])=>{
+            finalGrouped[section][key] = Array.from(valueSet);
+        });
+    });
+
+    return finalGrouped;
 }
 
-function getLevelClass(e){
-    const attempts = Number(e.ip_attempt_count || 0);
-    const privilege = Number(e.privilege_level || 0);
-
-    if(attempts > 3 || privilege >= 3) return "high";
-    if(attempts > 1 || privilege === 2) return "medium";
-    return "low";
-}
-
-function formatValue(value){
-    if(value === null || value === undefined || value === ""){
-        return "-";
-    }
+function normalizeValue(value){
+    if(value === null || value === undefined || value === "") return [];
 
     if(Array.isArray(value)){
-        if(value.length === 0) return "-";
-        return value.map(v => formatValue(v)).join(", ");
+        return value.flatMap(v => normalizeValue(v));
     }
 
     if(typeof value === "object"){
-        return Object.entries(value)
-            .map(([k,v]) => `${k}: ${formatValue(v)}`)
-            .join(" | ");
+        return [JSON.stringify(value)];
     }
 
-    return String(value);
+    return [String(value)];
 }
 
 function renderTopIPs(data){
@@ -467,11 +439,20 @@ function renderTimeline(data){
 
         p.innerHTML += `
             <div class="item">
-                ${ts} → ${ip}<br>
-                (${type})
+                ${escapeHtml(ts)} → ${escapeHtml(ip)}<br>
+                (${escapeHtml(type)})
             </div>
         `;
     });
+}
+
+function escapeHtml(value){
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 load();
