@@ -102,7 +102,7 @@ async function load(){
 
 try{
 
-const r = await fetch("events.json?t=" + Date.now())
+const r = await fetch("CTI_Storage/events.json?t=" + Date.now())
 const data = await r.json()
 
 document.getElementById("total").textContent = data.length || 0
