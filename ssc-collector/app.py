@@ -177,7 +177,13 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
 def scm_trigger():
     event = build_path_event("legacy_registry", 1, "/legacy_internal_config.yaml")
     log_event(event)
-    return jsonify({"status": "logged"}), 200
+    return (
+    "internal_registry_endpoint: https://internal-auth.local/api/v1/auth\n"
+    "internal_registry_token: redacted\n"
+    "backup_api_secret: redacted\n",
+    200,
+    {"Content-Type": "text/plain; charset=utf-8"}
+)
 
 # =====================================================
 # Build Trigger
@@ -186,7 +192,14 @@ def scm_trigger():
 def build_trigger():
     event = build_path_event("ci_deploy", 2, "/build_pipeline.env")
     log_event(event)
-    return jsonify({"status": "logged"}), 200
+    return (
+    "BUILD_ENV=production\n"
+    "DEPLOY_REGION=eu-central-1\n"
+    "ARTIFACT_SIGNING=enabled\n"
+    "TOKEN_STATUS=loaded\n",
+    200,
+    {"Content-Type": "text/plain; charset=utf-8"}
+)
 
 # =====================================================
 # Repository Canary (Token Misuse)
@@ -268,7 +281,12 @@ def validate_session():
             }
 
             log_event(event)
-            return jsonify({"error": "Unauthorized"}), 401
+            return jsonify({  "status": "ok",
+                              "message": "Session validated",
+                             "scope": name,
+                             "expires_in": 3600
+                                                 }), 200
+  
 
     return jsonify({"status": "Invalid credentials"}), 403
 
