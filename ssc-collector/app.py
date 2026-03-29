@@ -187,20 +187,24 @@ def scm_trigger():
 
 # =====================================================
 # Build Trigger
+                                                                                              
+@app.route("/s3/<bucket>", methods=["GET", "POST", "PUT"])
+def fake_s3(bucket):
+    event = {
+        "type": "s3_access",
+        "bucket": bucket,
+        "method": request.method,
+        "ip": request.headers.get("X-Forwarded-For", request.remote_addr),
+        "timestamp": datetime.utcnow().isoformat()
+    }
 
-@app.route("/build_pipeline.env", methods=["GET", "POST"])
-def build_trigger():
-    event = build_path_event("ci_deploy", 2, "/build_pipeline.env")
     log_event(event)
-    return (
-    "BUILD_ENV=production\n"
-    "DEPLOY_REGION=eu-central-1\n"
-    "ARTIFACT_SIGNING=enabled\n"
-    "TOKEN_STATUS=loaded\n",
-    200,
-    {"Content-Type": "text/plain; charset=utf-8"}
-)
 
+    return (
+        f"<Error><Code>AccessDenied</Code><BucketName>{bucket}</BucketName></Error>",
+        403,
+        {"Content-Type": "application/xml"}
+    )
 # =====================================================
 # Repository Canary (Token Misuse)
 
