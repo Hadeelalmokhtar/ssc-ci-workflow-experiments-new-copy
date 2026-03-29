@@ -190,13 +190,34 @@ def scm_trigger():
                                                                                               
 @app.route("/s3/<bucket>", methods=["GET", "POST", "PUT"])
 def fake_s3(bucket):
-    event = {
-        "type": "s3_access",
-        "bucket": bucket,
-        "method": request.method,
-        "ip": request.headers.get("X-Forwarded-For", request.remote_addr),
-        "timestamp": datetime.utcnow().isoformat()
-    }
+
+    event = build_path_event("ci_deploy", 2, f"/s3/{bucket}")
+
+    event["event_type"] = "s3_access"
+    event["bucket"] = bucket
+    event["method"] = request.method
+
+    if request.method == "PUT":
+        event["attack_type"] = "malicious_upload_attempt"
+        event["mitre_technique"] = "T1105"
+        event["mitre_tactic"] = "Command and Control"
+        event["severity"] = "high"
+
+    elif request.method == "POST":
+        event["attack_type"] = "data_exfiltration_attempt"
+        event["mitre_technique"] = "T1041"
+        event["mitre_tactic"] = "Exfiltration"
+        event["severity"] = "medium"
+
+    else:
+        event["attack_type"] = "bucket_discovery"
+        event["mitre_technique"] = "T1083"
+        event["mitre_tactic"] = "Discovery"
+        event["severity"] = "low"
+
+    event["target_resource"] = f"s3://{bucket}"
+    event["service"] = "S3"
+    event["attack_surface"] = "cloud_storage"
 
     log_event(event)
 
@@ -205,6 +226,7 @@ def fake_s3(bucket):
         403,
         {"Content-Type": "application/xml"}
     )
+
 # =====================================================
 # Repository Canary (Token Misuse)
 
