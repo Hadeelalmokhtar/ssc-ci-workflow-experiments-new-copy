@@ -92,58 +92,11 @@ h1,h3{
     word-break:break-word;
 }
 
-.feature-block{
-    margin-bottom:14px;
-    padding-bottom:10px;
-    border-bottom:1px solid #1f2a3d;
-}
-
-.feature-block:last-child{
-    border-bottom:none;
-    margin-bottom:0;
-    padding-bottom:0;
-}
-
-.feature-name{
-    color:#94a3b8;
-    font-size:12px;
-    margin-bottom:8px;
-}
-
-.feature-values{
-    display:flex;
-    flex-wrap:wrap;
-    gap:6px;
-}
-
-.value-chip{
-    background:#132033;
-    border:1px solid #2c3c57;
-    color:#ffffff;
-    padding:6px 10px;
-    border-radius:999px;
-    font-size:12px;
-    word-break:break-word;
-    max-width:100%;
-}
-
 .section-title{
     color:#93c5fd;
     font-size:18px;
     font-weight:bold;
     margin-bottom:14px;
-}
-
-::-webkit-scrollbar{
-    width:10px;
-}
-::-webkit-scrollbar-track{
-    background:#0b1220;
-    border-radius:8px;
-}
-::-webkit-scrollbar-thumb{
-    background:#475569;
-    border-radius:8px;
 }
 </style>
 </head>
@@ -201,16 +154,15 @@ async function load(){
         const r = await fetch("CTI_Storage/events.json?t=" + Date.now());
         const data = await r.json();
 
-        document.getElementById("total").textContent = Array.isArray(data) ? data.length : 0;
+        document.getElementById("total").textContent = data.length;
 
-        renderGroupedEvents(data || []);
-        renderTopIPs(data || []);
-        renderTokens(data || []);
-        renderStages(data || []);
-        renderTimeline(data || []);
+        renderGroupedEvents(data);
+        renderTopIPs(data);
+        renderTokens(data);
+        renderStages(data);
+        renderTimeline(data);
     }catch(err){
-        console.error("Error loading events:", err);
-        document.getElementById("eventsGrid").innerHTML = `<div class="card">Failed to load events.json</div>`;
+        console.error(err);
     }
 }
 
@@ -218,118 +170,26 @@ function renderGroupedEvents(data){
     let container = document.getElementById("eventsGrid");
     container.innerHTML = "";
 
-    if(!Array.isArray(data) || data.length === 0){
-        container.innerHTML = `<div class="card">No events available</div>`;
-        return;
-    }
+    const grouped = {};
 
-    const grouped = aggregateEventsByCategory(data);
+    data.forEach(e=>{
+        Object.entries(e).forEach(([k,v])=>{
+            if(!grouped[k]) grouped[k] = new Set();
+            grouped[k].add(String(v));
+        });
+    });
 
-    Object.entries(grouped).forEach(([sectionName, fields])=>{
-        if(Object.keys(fields).length === 0) return;
-
+    Object.entries(grouped).forEach(([k,values])=>{
         let card = document.createElement("div");
         card.className = "card";
 
-        let html = `<div class="section-title">${escapeHtml(sectionName)}</div>`;
+        card.innerHTML = `
+            <div class="section-title">${k}</div>
+            ${[...values].map(v=>`<div>${v}</div>`).join("")}
+        `;
 
-        Object.entries(fields).forEach(([key, values])=>{
-            html += `
-                <div class="feature-block">
-                    <div class="feature-name">${escapeHtml(key)}</div>
-                    <div class="feature-values">
-                        ${values.map(v => `<span class="value-chip">${escapeHtml(v)}</span>`).join("")}
-                    </div>
-                </div>
-            `;
-        });
-
-        card.innerHTML = html;
         container.appendChild(card);
     });
-}
-
-function aggregateEventsByCategory(events){
-    const grouped = {
-        "Event Info": {},
-        "Token Details": {},
-        "Source / IP Intelligence": {},
-        "Location": {},
-        "Network / Provider": {},
-        "Scoring / Risk": {},
-        "Other Info": {}
-    };
-
-    const eventInfoKeys = [
-        "event_type","timestamp","stage","source","action","category"
-    ];
-
-    const tokenKeys = [
-        "token","token_id","token_profile","token_type","privilege_level","credential_type","secret_name"
-    ];
-
-    const sourceKeys = [
-        "ip","source_ip","destination_ip","user_agent","method","endpoint","path","url"
-    ];
-
-    const locationKeys = [
-        "country","city","continent","timezone","lat","lon","latitude","longitude"
-    ];
-
-    const networkKeys = [
-        "isp","asn","org","reverse_dns","proxy_flag","hosting_flag","mobile_flag","tor_flag","vpn_flag"
-    ];
-
-    const scoringKeys = [
-        "ip_attempt_count","risk_score","severity","confidence","score","priority"
-    ];
-
-    events.forEach(event=>{
-        Object.entries(event).forEach(([key, value])=>{
-            const values = normalizeValue(value);
-            if(values.length === 0) return;
-
-            let section = "Other Info";
-
-            if(eventInfoKeys.includes(key)) section = "Event Info";
-            else if(tokenKeys.includes(key)) section = "Token Details";
-            else if(sourceKeys.includes(key)) section = "Source / IP Intelligence";
-            else if(locationKeys.includes(key)) section = "Location";
-            else if(networkKeys.includes(key)) section = "Network / Provider";
-            else if(scoringKeys.includes(key)) section = "Scoring / Risk";
-
-            if(!grouped[section][key]){
-                grouped[section][key] = new Set();
-            }
-
-            values.forEach(v => grouped[section][key].add(String(v)));
-        });
-    });
-
-    const finalGrouped = {};
-
-    Object.entries(grouped).forEach(([section, fields])=>{
-        finalGrouped[section] = {};
-        Object.entries(fields).forEach(([key, valueSet])=>{
-            finalGrouped[section][key] = Array.from(valueSet);
-        });
-    });
-
-    return finalGrouped;
-}
-
-function normalizeValue(value){
-    if(value === null || value === undefined || value === "") return [];
-
-    if(Array.isArray(value)){
-        return value.flatMap(v => normalizeValue(v));
-    }
-
-    if(typeof value === "object"){
-        return [JSON.stringify(value)];
-    }
-
-    return [String(value)];
 }
 
 function renderTopIPs(data){
@@ -348,13 +208,12 @@ function renderTopIPs(data){
     p.innerHTML = "";
 
     if(sorted.length === 0){
-        p.innerHTML = `<div class="item empty">No IP data available</div>`;
-        document.getElementById("topip").textContent = "-";
+        p.innerHTML = `<div class="item empty">No IP data</div>`;
         return;
     }
 
-    sorted.slice(0,10).forEach(i=>{
-        p.innerHTML += `<div class="item">${escapeHtml(i[0])} → ${i[1]} hits</div>`;
+    sorted.forEach(i=>{
+        p.innerHTML += `<div class="item">${i[0]} → ${i[1]}</div>`;
     });
 
     document.getElementById("topip").textContent = sorted[0][0];
@@ -364,9 +223,9 @@ function renderTokens(data){
     let map = {};
 
     data.forEach(e=>{
-        const tokenName = e.token || e.token_id || e.token_profile;
-        if(tokenName){
-            map[tokenName] = (map[tokenName] || 0) + 1;
+        const token = e.token || e.token_id;
+        if(token){
+            map[token] = (map[token] || 0) + 1;
         }
     });
 
@@ -376,13 +235,12 @@ function renderTokens(data){
     p.innerHTML = "";
 
     if(sorted.length === 0){
-        p.innerHTML = `<div class="item empty">No token data available</div>`;
-        document.getElementById("toptoken").textContent = "-";
+        p.innerHTML = `<div class="item empty">No token activity</div>`;
         return;
     }
 
     sorted.forEach(t=>{
-        p.innerHTML += `<div class="item">${escapeHtml(t[0])} → ${t[1]} uses</div>`;
+        p.innerHTML += `<div class="item">${t[0]} → ${t[1]}</div>`;
     });
 
     document.getElementById("toptoken").textContent = sorted[0][0];
@@ -392,22 +250,16 @@ function renderStages(data){
     let map = {};
 
     data.forEach(e=>{
-        const stage = e.stage || e.token_profile || "unknown";
+        // 🔥 التعديل هنا
+        const stage = e.stage || e.event_type || "unknown";
         map[stage] = (map[stage] || 0) + 1;
     });
 
     let p = document.getElementById("stages");
     p.innerHTML = "";
 
-    const entries = Object.entries(map);
-
-    if(entries.length === 0){
-        p.innerHTML = `<div class="item empty">No stage data available</div>`;
-        return;
-    }
-
-    entries.forEach(s=>{
-        p.innerHTML += `<div class="item">${escapeHtml(s[0])} → ${s[1]}</div>`;
+    Object.entries(map).forEach(s=>{
+        p.innerHTML += `<div class="item">${s[0]} → ${s[1]}</div>`;
     });
 }
 
@@ -415,36 +267,25 @@ function renderTimeline(data){
     let p = document.getElementById("timeline");
     p.innerHTML = "";
 
-    if(!Array.isArray(data) || data.length === 0){
-        p.innerHTML = `<div class="item empty">No timeline available</div>`;
-        return;
-    }
-
     data.slice().reverse().forEach(e=>{
         const ts = e.timestamp || "-";
-        const ip = e.ip || e.source_ip || "-";
-        const type = e.event_type || "event";
+        const ip = e.ip || "-";
+
+        // 🔥 التعديل هنا
+        const type = e.event_type || e.method || "event";
 
         p.innerHTML += `
             <div class="item">
-                ${escapeHtml(ts)} → ${escapeHtml(ip)}<br>
-                (${escapeHtml(type)})
+                ${ts} → ${ip}<br>
+                (${type})
+                ${e.bucket ? `<br>Bucket: ${e.bucket}` : ""}
             </div>
         `;
     });
 }
 
-function escapeHtml(value){
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-
 load();
-setInterval(load, 8000);
+setInterval(load, 5000);
 </script>
 
 </body>
