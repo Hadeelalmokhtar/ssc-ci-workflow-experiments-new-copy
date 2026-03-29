@@ -191,7 +191,9 @@ def scm_trigger():
 @app.route("/s3/<bucket>", methods=["GET", "POST", "PUT"])
 def fake_s3(bucket):
 
-    event = build_path_event("ci_deploy", 2, f"/s3/{bucket}")
+    token_name = f"s3_{bucket}"
+
+    event = build_path_event(token_name, 3, f"/s3/{bucket}")
 
     event["event_type"] = "s3_access"
     event["bucket"] = bucket
