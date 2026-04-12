@@ -57,9 +57,8 @@ else:
     package_root = file_path
 
 # ======================================
-# SELECT CORRECT EXTRACTOR (STABLE FIX)
+# SELECT CORRECT EXTRACTOR
 # ======================================
-
 def contains_package_json(path):
     for root, _, files in os.walk(path):
         if "package.json" in files:
@@ -73,7 +72,9 @@ else:
     extractor = PyPI_Feature_Extractor()
     repo_name = "PyPI"
 
-# IMPORTANT: ALWAYS DEFINE FEATURES
+# ======================================
+# FEATURE EXTRACTION
+# ======================================
 features = extractor.extract_features(package_root)
 features["Package Repository"] = repo_name
 
@@ -90,6 +91,39 @@ proba = float(model.predict_proba(X)[0][1]) if hasattr(model, "predict_proba") e
 
 print("Prediction:", pred)
 print("Malicious Probability:", proba)
+
+# ======================================
+# DEBUG: PRINT FEATURES
+# ======================================
+print("\n=== FEATURES ===")
+try:
+    print(features.to_dict())
+except:
+    print(features)
+
+# ======================================
+# DEBUG: SHAP EXPLANATION
+# ======================================
+top_shap = []
+
+try:
+    import shap
+
+    explainer = shap.Explainer(model)
+    shap_values = explainer(X)
+
+    feature_names = preprocess.get_feature_names_out()
+
+    shap_dict = dict(zip(feature_names, shap_values.values[0]))
+
+    top_shap = sorted(shap_dict.items(), key=lambda x: abs(x[1]), reverse=True)[:10]
+
+    print("\n=== TOP SHAP FEATURES ===")
+    for k, v in top_shap:
+        print(f"{k}: {v}")
+
+except Exception as e:
+    print("SHAP error:", e)
 
 # ======================================
 # FIND EXECUTABLE FILE FOR DYNAMIC
@@ -164,7 +198,8 @@ dynamic_log = {
     "prediction": pred,
     "file_entropy": file_entropy,
     "execution_time": execution_time,
-    "timestamp": datetime.utcnow().isoformat()
+    "timestamp": datetime.utcnow().isoformat(),
+    "top_shap": top_shap  # 🔥 مهم جدًا
 }
 
 with open(f"decoy_logs/log_{run_id}.json", "w") as f:
