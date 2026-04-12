@@ -82,7 +82,7 @@ jobs:
           echo "package_path=$PACKAGE" >> $GITHUB_OUTPUT
 
       # =========================
-      # ML GATE (EXIT CODE)
+      # ML GATE (FIXED EXIT CODE)
       # =========================
       - name: ML Security Gate
         id: ml_scan
@@ -91,9 +91,9 @@ jobs:
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)
 
-          python -m scripts.run_analysis "${{ steps.detect_pkg.outputs.package_path }}"
+          RESULT=0
 
-          RESULT=$?
+          python -m scripts.run_analysis "${{ steps.detect_pkg.outputs.package_path }}" || RESULT=$?
 
           echo "ML_EXIT_CODE=$RESULT"
           echo "ml_result=$RESULT" >> $GITHUB_OUTPUT
@@ -134,7 +134,6 @@ jobs:
         if: steps.detect_pkg.outputs.skip_pipeline == 'false'
         run: |
 
-          
           if [ "${{ steps.ml_scan.outputs.ml_result }}" = "0" ]; then
             echo "ML says CLEAN → releasing directly"
 
