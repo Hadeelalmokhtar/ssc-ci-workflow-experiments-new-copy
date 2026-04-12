@@ -4,15 +4,18 @@ async function load(){
 
 try{
 
-const res = await fetch(
-"https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json",
-{ mode: "cors" }
-)
+const url = "https://api.allorigins.win/get?url=" +
+encodeURIComponent("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json")
 
-// نقرأ كنص بدل JSON (حل CORS)
-const text = await res.text()
+const res = await fetch(url)
 
-const data = JSON.parse(text)
+if(!res.ok){
+throw new Error("proxy failed")
+}
+
+const proxyData = await res.json()
+
+const data = JSON.parse(proxyData.contents)
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
@@ -68,7 +71,7 @@ document.getElementById("timeline").innerHTML +=
 
 }catch(e){
 console.error(e)
-alert("❌ CORS blocked or JSON parse failed")
+alert("❌ Proxy failed (check internet or JSON)")
 }
 
 }
