@@ -192,14 +192,14 @@ os.makedirs("decoy_logs", exist_ok=True)
 run_id = str(int(time.time()))
 
 dynamic_log = {
-    "run_id": run_id,
-    "package": original_input,
-    "risk_probability": proba,
-    "prediction": pred,
-    "file_entropy": file_entropy,
-    "execution_time": execution_time,
-    "timestamp": datetime.utcnow().isoformat(),
-    "top_shap": top_shap  # 🔥 مهم جدًا
+    "run_id": str(run_id),
+    "package": str(original_input),
+    "risk_probability": float(proba),
+    "prediction": int(pred),
+    "file_entropy": float(file_entropy),
+    "execution_time": float(execution_time),
+    "timestamp": str(datetime.utcnow().isoformat()),
+    "top_shap": [(str(k), float(v)) for k, v in top_shap]
 }
 
 with open(f"decoy_logs/log_{run_id}.json", "w") as f:
