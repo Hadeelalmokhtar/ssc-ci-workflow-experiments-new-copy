@@ -185,10 +185,11 @@ except subprocess.TimeoutExpired:
 execution_time = round(time.time() - start_time, 3)
 
 # ======================================
-# SAVE LOG
+# SAVE LOG (FINAL FIX)
 # ======================================
-os.makedirs("Logs", exist_ok=True)
-os.makedirs("Logs/ML_logs", exist_ok=True)
+
+os.makedirs("decoy_logs", exist_ok=True)
+os.makedirs("decoy_logs/ml_logs", exist_ok=True)
 
 run_id = str(int(time.time()))
 
@@ -203,15 +204,15 @@ dynamic_log = {
     "top_shap": [(str(k), float(v)) for k, v in top_shap]
 }
 
-with open(f"Logs/ML_logs/log_{run_id}.json", "w") as f:
+with open(f"decoy_logs/ml_logs/log_{run_id}.json", "w") as f:
     json.dump(dynamic_log, f, indent=4)
 
 
-with open("Logs/latest.json", "w") as f:
+with open("decoy_logs/latest.json", "w") as f:
     json.dump(dynamic_log, f, indent=4)
 
-print(f"Saved ML log: Logs/ML_logs/log_{run_id}.json")
-print("Updated Logs/latest.json")
+print(f"Saved ML log: decoy_logs/ml_logs/log_{run_id}.json")
+print("Updated decoy_logs/latest.json")
 
-# exit code 
+# exit code
 sys.exit(1 if pred == 1 else 0)
