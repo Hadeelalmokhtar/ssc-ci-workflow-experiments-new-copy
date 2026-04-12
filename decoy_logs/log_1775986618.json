@@ -1,0 +1,12 @@
+{
+    "run_id": "1775986618",
+    "package": "animejs-3.2.1.tgz",
+    "risk_probability": 0.004227159544825554,
+    "prediction": 0,
+    "file_entropy": 4.9126,
+    "execution_time": 0.808,
+    "timestamp": "2026-04-12T09:36:58.422682",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            
