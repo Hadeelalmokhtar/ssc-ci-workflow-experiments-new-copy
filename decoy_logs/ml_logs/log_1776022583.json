@@ -1,0 +1,51 @@
+{
+    "run_id": "1776022583",
+    "package": "confirmedbywaseem-1.0.0.tar.gz",
+    "risk_probability": 0.996758759021759,
+    "prediction": 1,
+    "file_entropy": 4.7558,
+    "execution_time": 1.157,
+    "timestamp": "2026-04-12T19:36:23.699539",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.7684954404830933
+        ],
+        [
+            "num__Number of lines in source code",
+            1.3262419700622559
+        ],
+        [
+            "num__.md",
+            0.8668506145477295
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.6113364100456238
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5971097350120544
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5869330763816833
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            0.5479736924171448
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5102657675743103
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.4662110507488251
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.46324422955513
+        ]
+    ]
+}
