@@ -4,9 +4,15 @@ async function load(){
 
 try{
 
-const r = await fetch("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json")
+const res = await fetch(
+"https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json",
+{ mode: "cors" }
+)
 
-const data = await r.json()
+// نقرأ كنص بدل JSON (حل CORS)
+const text = await res.text()
+
+const data = JSON.parse(text)
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
@@ -62,7 +68,7 @@ document.getElementById("timeline").innerHTML +=
 
 }catch(e){
 console.error(e)
-alert("❌ Failed to load JSON")
+alert("❌ CORS blocked or JSON parse failed")
 }
 
 }
