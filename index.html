@@ -2,28 +2,18 @@
 
 async function load(){
 
-let url = "https://hadeelalmokhtar.github.io/ssc-ci-workflow-experiments-new-copy/decoy_logs/latest.json?t=" + Date.now()
-
-try{
-    let res = await fetch(url)
-
-    if(!res.ok){
-        throw "pages failed"
-    }
-
-}catch{
-    url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json?t=" + Date.now()
-}
-
 try{
 
-const r = await fetch(url)
+const url = "https://api.allorigins.win/raw?url=" +
+encodeURIComponent("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json")
 
-if(!r.ok){
-throw new Error("Failed to load JSON")
+const res = await fetch(url)
+
+if(!res.ok){
+throw new Error("Fetch failed")
 }
 
-const data = await r.json()
+const data = await res.json()
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
@@ -31,14 +21,10 @@ document.getElementById(id).innerHTML=""
 })
 
 // BASIC
-document.getElementById("pkg").textContent = data.package || "No data"
+document.getElementById("pkg").textContent = data.package || "-"
 document.getElementById("score").textContent = data.score ?? 0
 
 // PROCESSES
-if(!data.processes?.length){
-document.getElementById("proc").innerHTML = "<div class='item'>No processes</div>"
-}
-
 (data.processes || []).forEach(p=>{
 document.getElementById("proc").innerHTML += `<div class="item">${p}</div>`
 })
@@ -81,35 +67,9 @@ document.getElementById("timeline").innerHTML +=
 `<div class="item">[${t.time}s] → ${t.event}</div>`
 })
 
-// GRAPH
-let nodes=[]
-let edges=[]
-let id=1
-
-nodes.push({id:id,label:"Package"})
-let root=id
-
-;(data.processes || []).forEach(p=>{
-id++
-nodes.push({id:id,label:p})
-edges.push({from:root,to:id})
-})
-
-;(data.domains || []).forEach(d=>{
-id++
-nodes.push({id:id,label:d})
-edges.push({from:root,to:id})
-})
-
-new vis.Network(
-document.getElementById("graph"),
-{nodes:new vis.DataSet(nodes),edges:new vis.DataSet(edges)},
-{}
-)
-
 }catch(e){
 console.error(e)
-alert("❌ Failed to load data from BOTH sources")
+alert("❌ Failed even with proxy")
 }
 
 }
