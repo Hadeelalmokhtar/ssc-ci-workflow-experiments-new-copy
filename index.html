@@ -2,7 +2,6 @@
 <html>
 
 <head>
-
 <meta charset="UTF-8">
 <title>Decoy System Dashboard</title>
 
@@ -10,7 +9,6 @@
 <link href="https://cdn.jsdelivr.net/npm/vis-network/styles/vis-network.min.css" rel="stylesheet">
 
 <style>
-
 body{
 background:#0f172a;
 color:white;
@@ -54,10 +52,6 @@ overflow:auto;
 padding:6px;
 border-bottom:1px solid #333;
 }
-
-.verdict-clean{color:#4dff88}
-.verdict-mal{color:#ff4d4d}
-
 </style>
 
 </head>
@@ -74,12 +68,7 @@ border-bottom:1px solid #333;
 </div>
 
 <div class="card">
-<div class="title">Threat Classification Result</div>
-<div id="verdict" class="big"></div>
-</div>
-
-<div class="card">
-<div class="title">Behavior Risk Score</div>
+<div class="title">Behavior Score</div>
 <div id="score" class="big"></div>
 </div>
 
@@ -109,19 +98,12 @@ border-bottom:1px solid #333;
 </div>
 
 <div class="card">
-<div class="title">Decoded Payloads (Clean Only)</div>
-<div id="payloads" class="list"></div>
-</div>
-
-
-<div class="card">
-<div class="title">Network Intelligence (IP + Geo Info)</div>
+<div class="title">Network Intelligence</div>
 <div id="net" class="list"></div>
 </div>
 
-
 <div class="card">
-<div class="title">Execution Timeline (Step-by-step Behavior)</div>
+<div class="title">Execution Timeline</div>
 <div id="timeline" class="list"></div>
 </div>
 
@@ -139,75 +121,59 @@ async function load(){
 const r=await fetch("decoy_logs/latest.json?t="+Date.now())
 const data=await r.json()
 
-//  CLEAR BEFORE RENDER (IMPORTANT)
-document.getElementById("proc").innerHTML=""
-document.getElementById("fs").innerHTML=""
-document.getElementById("domains").innerHTML=""
-document.getElementById("dns").innerHTML=""
-document.getElementById("http").innerHTML=""
-document.getElementById("payloads").innerHTML=""
-document.getElementById("net").innerHTML=""
-document.getElementById("timeline").innerHTML=""
+// CLEAR
+["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
+document.getElementById(id).innerHTML=""
+})
 
-// basic
-document.getElementById("pkg").textContent=data.package
-document.getElementById("score").textContent=data.score
+// BASIC
+document.getElementById("pkg").textContent=data.package || "-"
+document.getElementById("score").textContent=data.score ?? 0
 
-// verdict
-let v=data.verdict
-document.getElementById("verdict").innerHTML=
-`<span class="${v=="MALICIOUS"?"verdict-mal":"verdict-clean"}">${v}</span>`
-
-// processes
-data.processes.forEach(p=>{
+// PROCESSES
+(data.processes || []).forEach(p=>{
 document.getElementById("proc").innerHTML+=`<div class="item">${p}</div>`
 })
 
-// files
-data.files.forEach(f=>{
+// FILES
+(data.files || []).forEach(f=>{
 document.getElementById("fs").innerHTML+=`<div class="item">${f}</div>`
 })
 
-// domains
-data.domains.forEach(d=>{
+// DOMAINS
+(data.domains || []).forEach(d=>{
 document.getElementById("domains").innerHTML+=`<div class="item">${d}</div>`
 })
 
-// dns
-data.dns.forEach(d=>{
+// DNS
+(data.dns || []).forEach(d=>{
 document.getElementById("dns").innerHTML+=`<div class="item">${d}</div>`
 })
 
-// http
-data.http_requests.forEach(h=>{
+// HTTP
+(data.http_requests || []).forEach(h=>{
 document.getElementById("http").innerHTML+=
 `<div class="item">${h.method} → ${h.path}</div>`
 })
 
-// payloads
-data.decoded_payloads.forEach(p=>{
-document.getElementById("payloads").innerHTML+=
-`<div class="item">${p}</div>`
-})
-
-//  NETWORK DETAILS
-data.network_details.forEach(n=>{
+// NETWORK
+(data.network_details || []).forEach(n=>{
 document.getElementById("net").innerHTML+=`
 <div class="item">
 IP: ${n.ip}<br>
-Country: ${n.country}<br>
-ISP: ${n.isp}<br>
-Org: ${n.org}
+Country: ${n.country || "-"}<br>
+ISP: ${n.isp || "-"}<br>
+Org: ${n.org || "-"}
 </div>`
 })
 
-//  TIMELINE
-data.timeline.forEach(t=>{
+// TIMELINE
+(data.timeline || []).forEach(t=>{
 document.getElementById("timeline").innerHTML+=
 `<div class="item">[${t.time}s] → ${t.event}</div>`
 })
 
-// graph
+// GRAPH
 let nodes=[]
 let edges=[]
 let id=1
@@ -215,13 +181,13 @@ let id=1
 nodes.push({id:id,label:"Package"})
 let root=id
 
-data.processes.forEach(p=>{
+;(data.processes || []).forEach(p=>{
 id++
 nodes.push({id:id,label:p})
 edges.push({from:root,to:id})
 })
 
-data.domains.forEach(d=>{
+;(data.domains || []).forEach(d=>{
 id++
 nodes.push({id:id,label:d})
 edges.push({from:root,to:id})
