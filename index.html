@@ -4,16 +4,9 @@ async function load(){
 
 try{
 
-const url = "https://api.allorigins.win/raw?url=" +
-encodeURIComponent("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json")
+const r = await fetch("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json")
 
-const res = await fetch(url)
-
-if(!res.ok){
-throw new Error("Fetch failed")
-}
-
-const data = await res.json()
+const data = await r.json()
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
@@ -69,7 +62,7 @@ document.getElementById("timeline").innerHTML +=
 
 }catch(e){
 console.error(e)
-alert("❌ Failed even with proxy")
+alert("❌ Failed to load JSON")
 }
 
 }
