@@ -2,15 +2,28 @@
 
 async function load(){
 
+let url = "https://hadeelalmokhtar.github.io/ssc-ci-workflow-experiments-new-copy/decoy_logs/latest.json?t=" + Date.now()
+
+try{
+    let res = await fetch(url)
+
+    if(!res.ok){
+        throw "pages failed"
+    }
+
+}catch{
+    url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json?t=" + Date.now()
+}
+
 try{
 
-const res = await fetch("https://hadeelalmokhtar.github.io/ssc-ci-workflow-experiments-new-copy/decoy_logs/latest.json?t="+Date.now())
+const r = await fetch(url)
 
-if(!res.ok){
+if(!r.ok){
 throw new Error("Failed to load JSON")
 }
 
-const data = await res.json()
+const data = await r.json()
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
@@ -18,42 +31,42 @@ document.getElementById(id).innerHTML=""
 })
 
 // BASIC
-document.getElementById("pkg").textContent=data.package || "No data"
-document.getElementById("score").textContent=data.score ?? 0
+document.getElementById("pkg").textContent = data.package || "No data"
+document.getElementById("score").textContent = data.score ?? 0
 
 // PROCESSES
 if(!data.processes?.length){
-document.getElementById("proc").innerHTML="<div class='item'>No processes</div>"
+document.getElementById("proc").innerHTML = "<div class='item'>No processes</div>"
 }
 
 (data.processes || []).forEach(p=>{
-document.getElementById("proc").innerHTML+=`<div class="item">${p}</div>`
+document.getElementById("proc").innerHTML += `<div class="item">${p}</div>`
 })
 
 // FILES
 (data.files || []).forEach(f=>{
-document.getElementById("fs").innerHTML+=`<div class="item">${f}</div>`
+document.getElementById("fs").innerHTML += `<div class="item">${f}</div>`
 })
 
 // DOMAINS
 (data.domains || []).forEach(d=>{
-document.getElementById("domains").innerHTML+=`<div class="item">${d}</div>`
+document.getElementById("domains").innerHTML += `<div class="item">${d}</div>`
 })
 
 // DNS
 (data.dns || []).forEach(d=>{
-document.getElementById("dns").innerHTML+=`<div class="item">${d}</div>`
+document.getElementById("dns").innerHTML += `<div class="item">${d}</div>`
 })
 
 // HTTP
 (data.http_requests || []).forEach(h=>{
-document.getElementById("http").innerHTML+=
+document.getElementById("http").innerHTML +=
 `<div class="item">${h.method} → ${h.path}</div>`
 })
 
 // NETWORK
 (data.network_details || []).forEach(n=>{
-document.getElementById("net").innerHTML+=`
+document.getElementById("net").innerHTML += `
 <div class="item">
 IP: ${n.ip}<br>
 Country: ${n.country || "-"}<br>
@@ -64,7 +77,7 @@ Org: ${n.org || "-"}
 
 // TIMELINE
 (data.timeline || []).forEach(t=>{
-document.getElementById("timeline").innerHTML+=
+document.getElementById("timeline").innerHTML +=
 `<div class="item">[${t.time}s] → ${t.event}</div>`
 })
 
@@ -96,7 +109,7 @@ document.getElementById("graph"),
 
 }catch(e){
 console.error(e)
-alert("❌ Failed to load data. Check GitHub path.")
+alert("❌ Failed to load data from BOTH sources")
 }
 
 }
