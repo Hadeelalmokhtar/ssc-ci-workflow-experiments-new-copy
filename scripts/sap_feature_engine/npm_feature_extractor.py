@@ -94,8 +94,7 @@ class NPM_Feature_Extractor:
         '''
 
         files_path = utilities_functions.find_files_of_ext(self.path_to_scan, ".js")
-        files_path += utilities_functions.find_files_of_ext(self.path_to_scan, ".mjs")
-        files_path += utilities_functions.find_files_of_ext(self.path_to_scan, ".cjs")
+
 
         #initialize the lists 
         Package=list()
