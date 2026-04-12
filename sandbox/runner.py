@@ -240,12 +240,14 @@ if score > 10:
     verdict = "MALICIOUS"
 
 # ============================
-# SAVE (KEEP LATEST + ARCHIVE)
+# SAVE (FINAL FIX)
 # ============================
 
 import time
 
-os.makedirs("Logs/decoy_logs", exist_ok=True)
+# إنشاء الفولدر
+os.makedirs("decoy_logs", exist_ok=True)
+os.makedirs("decoy_logs/decoy_runs", exist_ok=True)
 
 log = {
     "package": os.path.basename(original_input),
@@ -261,14 +263,16 @@ log = {
     "timeline": timeline[:100]
 }
 
+# archive (كل run ملف جديد)
 run_id = str(int(time.time()))
-archive_file = f"Logs/decoy_logs/decoy_log_{run_id}.json"
+archive_file = f"decoy_logs/decoy_runs/decoy_log_{run_id}.json"
 
 with open(archive_file, "w") as f:
     json.dump(log, f, indent=4)
 
-with open("Logs/decoy_logs/latest.json", "w") as f:
+# latest (الداشبورد)
+with open("decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
 print(f"Saved archive log: {archive_file}")
-print("Updated latest.json")
+print("Updated decoy_logs/latest.json")
