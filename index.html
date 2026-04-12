@@ -1,3 +1,5 @@
+<script>
+
 async function load(){
 
 try{
@@ -21,7 +23,7 @@ document.getElementById(id).innerHTML=""
 document.getElementById("pkg").textContent = data.package || "-"
 document.getElementById("score").textContent = data.behavior_score ?? 0
 
-// PROCESSES (لاحظ التعديل)
+// PROCESSES
 (data.process_activity || []).forEach(p=>{
 document.getElementById("proc").innerHTML += `<div class="item">${p}</div>`
 })
@@ -60,3 +62,5 @@ alert("❌ Failed to load JSON")
 }
 
 load()
+
+</script>
