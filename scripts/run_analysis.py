@@ -187,7 +187,7 @@ execution_time = round(time.time() - start_time, 3)
 # ======================================
 # SAVE LOG
 # ======================================
-os.makedirs("decoy_logs", exist_ok=True)
+os.makedirs("Logs/ML_logs", exist_ok=True)
 
 run_id = str(int(time.time()))
 
@@ -202,10 +202,10 @@ dynamic_log = {
     "top_shap": [(str(k), float(v)) for k, v in top_shap]
 }
 
-with open(f"decoy_logs/log_{run_id}.json", "w") as f:
+with open(f"Logs/ML_logs/log_{run_id}.json", "w") as f:
     json.dump(dynamic_log, f, indent=4)
 
-with open("decoy_logs/latest.json", "w") as f:
+with open("Logs/latest.json", "w") as f:
     json.dump(dynamic_log, f, indent=4)
 
 print("Logs saved.")
