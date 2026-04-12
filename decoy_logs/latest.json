@@ -1,142 +1,573 @@
 {
-    "package": "package_89.tgz",
+    "package": "package_90.tgz",
     "verdict": "MALICIOUS",
-    "score": 62,
+    "score": 31,
     "processes": [
         "node"
     ],
-    "files": [
-        "*",
-        "\\1\\0\\0\\0\\0\\0\\0\\0",
-        "\\1\\0\\0\\0\\0\\0\\0\\0",
-        "\\26\\3\\1\\6:\\1\\0\\0066\\3\\3j\\2\\274\\254\\344\\23K\\20]\\264\\223t\\240q\\360\\363X:I\\313h",
-        "\\24\\3\\3\\0\\1\\1\\27\\3\\3\\0E\\10)I\\220]\\245\\365\\203\\215\\v;\\316A\\334zym\\262e\\302\\317",
-        "Consulta DNS enviada: [ '3.248.3",
-        "\\1\\0\\0\\0\\0\\0\\0\\0"
-    ],
+    "files": [],
     "domains": [
-        "libbrotlidec.so",
-        "state.raise",
-        "h.nocaseMagicOnly",
-        "libicui18n.so",
-        "this.name",
-        "this.options.ecmaV",
-        "position.position",
-        "libzstd.so",
-        "buffer.byteLength",
-        "s.sortedMap",
-        "s.BINARY",
-        "s.next",
-        "this.eat",
-        "gai.conf",
-        "tp.malloc",
-        "1.braceL",
-        "er.state",
-        "node.loca",
-        "stream2.socket",
-        "this.checkPatternErrors",
-        "st.redirect",
-        "libcares.so",
-        "this.lastTokStartLoc",
-        "ld.so.preload",
-        "index.js",
-        "tail.next",
-        "e.startsWith",
         "cert.pem",
-        "d.key.start",
-        "openssl.cnf",
-        "exports2.STATUSES.WEB",
-        "input.length",
-        "headers.length",
-        "this.nam",
-        "memory.max",
-        "libm.so",
-        "index.bundle.js",
-        "svc.conf",
-        "libnode.so",
-        "zoneinfo64.res",
-        "...connect",
+        "crypto.randomF",
         "libbrotlicommon.so",
+        "this.type",
+        "stream2.socket",
+        "state.origin",
+        "package.json",
+        "libbrotlienc.so",
+        "index.bundle.js",
+        "libicuuc.so",
+        "position.position",
+        "this.next",
+        "libicui18n.so",
+        "input.leng",
+        "this.nam",
+        "openssl.cnf",
+        "body.byteLength",
+        "s.BINARY",
+        "node.loca",
+        "zoneinfo64.res",
+        "his.parseMaybeDefault",
+        "libnghttp2.so",
+        "www.ecma-international.org",
+        "i.push",
+        "response.socke",
+        "this.lastTokStartLoc",
+        "input.length",
+        "libnode.so",
+        "response.statusText",
+        "source.sta",
+        "handler.onBodySent",
+        "alue.name",
+        "libssl.so",
+        "libcares.so",
+        "exports.TokContext",
+        "this.regexp",
+        "refDestructuringErrors.trailin",
+        "his.signal.aborted",
+        "ld.so.cache",
+        "buffer.byteLength",
+        "libm.so",
+        "lexer.js",
+        "response.body.str",
+        "headers.length",
+        "this.lab",
+        "tring.fromCharCode",
+        "libbrotlidec.so",
+        "state.eat",
+        "this.name",
+        "handler.socket",
+        "this.ne",
+        "list.length",
+        "this.start",
+        "tail.next",
+        "ld.so.preload",
+        "opts.origin",
+        "t.length",
+        "libzstd.so",
+        "exports.init",
+        "1.braceL",
+        "svc.conf",
+        "this.checkPatternErrors",
+        "Symbol.toStringT",
+        "memory.max",
+        "host.conf",
+        "init.ca",
+        "r.expression",
+        "netsvc.conf",
+        "source.startsWith",
+        "ns.ecmaVersion",
+        "this.readTmplToken",
+        "s.so",
+        "this.re",
+        "til.addListener",
+        "ce.lastIndex",
+        "...connect",
+        "libz.so",
+        "libcrypto.so",
+        "this.options.ecmaV",
+        "gai.conf",
+        "bidl.converters.TypedArray",
+        "walk.js",
+        "undici-fetch.js",
+        "libc.so",
+        "st.redirect",
+        "resolv.conf",
+        "tp.malloc",
+        "libicudata.so",
+        "h.nocaseMagicOnly",
+        "dMetadata.length",
+        "on.position",
+        "s.sortedMap",
+        "icommon.so",
+        "this.body",
         "libuv.so",
         "acorn.js",
-        "source.startsWith",
-        "input.leng",
-        "this.ne",
-        "his.parseMaybeDefault",
-        "netsvc.conf",
-        "exports2.METH",
-        "handler.onBodySent",
-        "this.next",
-        "response.socke",
-        "this.regexp",
-        "libc.so",
-        "ld.so.cache",
-        "s.so",
-        "his.signal.aborted",
-        "libnghttp2.so",
-        "tring.fromCharCode",
-        "exports.init",
-        "ns.ecmaVersion",
-        "this.lab",
-        "opts.origin",
-        "util.destroy",
-        "init.ca",
-        "lexer.js",
-        "libssl.so",
-        "ce.lastIndex",
-        "undici-fetch.js",
-        "state.origin",
-        "response.statusText",
-        "refDestructuringErrors.trailin",
-        "this.type",
-        "bidl.converters.TypedArray",
-        "www.ecma-international.org",
-        "libbrotlienc.so",
-        "crypto.randomF",
-        "handler.socket",
-        "Symbol.toStringT",
-        "ject.closeState.has",
-        "this.re",
-        "i.push",
-        "resolv.conf",
-        "package.json",
-        "state.eat",
-        "libicudata.so",
-        "libcrypto.so",
-        "alue.name",
-        "til.addListener",
-        "t.length",
-        "dMetadata.length",
-        "memory.high",
-        "icommon.so",
-        "r.expression",
-        "list.length",
-        "libicuuc.so",
-        "source.sta",
-        "this.body",
-        "body.byteLength",
-        "libz.so",
-        "host.conf",
-        "walk.js",
-        "nsswitch.conf",
         "his.startNode",
-        "this.readTmplToken",
-        "response.body.str",
-        "this.start",
-        "exports.TokContext",
-        "on.position"
+        "this.eat",
+        "util.destroy",
+        "ject.closeState.has",
+        "exports2.STATUSES.WEB",
+        "index.js",
+        "exports2.METH",
+        "e.startsWith",
+        "nsswitch.conf",
+        "d.key.start",
+        "memory.high",
+        "s.next",
+        "state.raise",
+        "er.state"
     ],
     "dns": [],
     "http_requests": [],
     "decoded_payloads": [
-        "\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000@\u0000@@@@@@",
-        "\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t\u0000\t",
-        "I\u0015\u0010\u0001A\u0005e5\u00159Q}I\u0015EU%I\u0015\u0010\u0001AI\u0015",
-        "MQ}!\u0015\u0005\u0011\u0015I}Q==}1\u0005I\u001d\u0014\u0001A\u0005e1",
-        "0\\\u0006\b+\u0006\u0001\u0005\u0005\u0007\u0002\u00020P\u001eN\u0000P\u0000a\u0000s\u0000e",
         "ign Root R460\u001e\u0017\r19032000",
-        "09094834Z\u0017\r420509095833Z",
-        "\u0004\u0006\u0013\u0002RO1\u00140\u0012\u0006\u0003U\u0004\n\u0013\u000bCERTSIG"
+        "09094834Z\u0017\r420509095833Z"
     ],
-    "timestamp": "2026-04-12T09:23:49.755926"
+    "network_details": [
+        {
+            "ip": "168.63.129.16",
+            "country": "Hong Kong",
+            "isp": "Microsoft Corporation",
+            "org": "Microsoft Corp"
+        },
+        {
+            "ip": "172.17.255.255",
+            "country": null,
+            "isp": null,
+            "org": null
+        },
+        {
+            "ip": "127.0.0.1",
+            "country": null,
+            "isp": null,
+            "org": null
+        },
+        {
+            "ip": "104.26.12.205",
+            "country": "Canada",
+            "isp": "Cloudflare, Inc.",
+            "org": "Cloudflare, Inc."
+        },
+        {
+            "ip": "172.17.0.2",
+            "country": null,
+            "isp": null,
+            "org": null
+        },
+        {
+            "ip": "104.26.13.205",
+            "country": "Canada",
+            "isp": "Cloudflare, Inc.",
+            "org": "Cloudflare, Inc."
+        },
+        {
+            "ip": "172.67.74.152",
+            "country": "Canada",
+            "isp": "Cloudflare, Inc.",
+            "org": "Cloudflare, Inc."
+        }
+    ],
+    "timeline": [
+        {
+            "time": 0.52,
+            "event": "execve(\"/usr/bin/node\", [\"node\", \"/tmp/tmp6nqz5xru/package/index.j\"...], 0x7fff4ab57a30 /* 11 vars */) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "brk(NULL)                               = 0x559af3082000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f90289ed000"
+        },
+        {
+            "time": 0.52,
+            "event": "readlinkat(AT_FDCWD, \"/proc/self/exe\", \"/usr/bin/node\", 4096) = 13"
+        },
+        {
+            "time": 0.52,
+            "event": "access(\"/etc/ld.so.preload\", R_OK)      = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v3/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "newfstatat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v3/\", 0x7ffd9cbdd7d0, 0) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v2/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "newfstatat(AT_FDCWD, \"/usr/bin/../lib/glibc-hwcaps/x86-64-v2/\", 0x7ffd9cbdd7d0, 0) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/../lib/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "newfstatat(AT_FDCWD, \"/usr/bin/../lib/\", {st_mode=S_IFDIR|0755, st_size=4096, ...}, 0) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v3/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "newfstatat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v3/\", 0x7ffd9cbdd7d0, 0) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v2/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "newfstatat(AT_FDCWD, \"/usr/bin/glibc-hwcaps/x86-64-v2/\", 0x7ffd9cbdd7d0, 0) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/libnode.so.115\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "newfstatat(AT_FDCWD, \"/usr/bin/\", {st_mode=S_IFDIR|0755, st_size=12288, ...}, 0) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/etc/ld.so.cache\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=22819, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 22819, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f90289e7000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libnode.so.115\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\3\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=55158632, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 55308408, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f9025527000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025ed9000, 34992128, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x9b2000) = 0x7f9025ed9000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9028038000, 9043968, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2b11000) = 0x7f9028038000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90288d8000, 954368, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x33b1000) = 0x7f90288d8000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90289c1000, 151672, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f90289c1000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/../lib/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/usr/bin/libc.so.6\", O_RDONLY|O_CLOEXEC) = -1 ENOENT (No such file or directory)"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libc.so.6\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\3\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0p\\236\\2\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "pread64(3, \"\\6\\0\\0\\0\\4\\0\\0\\0@\\0\\0\\0\\0\\0\\0\\0@\\0\\0\\0\\0\\0\\0\\0@\\0\\0\\0\\0\\0\\0\\0\"..., 840, 64) = 840"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0755, st_size=1995216, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "pread64(3, \"\\6\\0\\0\\0\\4\\0\\0\\0@\\0\\0\\0\\0\\0\\0\\0@\\0\\0\\0\\0\\0\\0\\0@\\0\\0\\0\\0\\0\\0\\0\"..., 840, 64) = 840"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 2047568, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f9025333000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f902535b000, 1454080, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7f902535b000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90254be000, 352256, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x18b000) = 0x7f90254be000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025514000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e0000) = 0x7f9025514000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f902551a000, 52816, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f902551a000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libz.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=125376, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 127376, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f9025313000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025316000, 81920, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x3000) = 0x7f9025316000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f902532a000, 28672, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17000) = 0x7f902532a000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025331000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1d000) = 0x7f9025331000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libuv.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=213424, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 217136, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f90252dd000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90252e5000, 131072, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x8000) = 0x7f90252e5000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025305000, 45056, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x28000) = 0x7f9025305000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025310000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x32000) = 0x7f9025310000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025312000, 48, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f9025312000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libbrotlidec.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=51376, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7f90252db000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 53368, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f90252cd000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90252ce000, 32768, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7f90252ce000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90252d6000, 12288, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x9000) = 0x7f90252d6000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90252d9000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xb000) = 0x7f90252d9000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libbrotlienc.so.1\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=670376, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 672456, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f9025228000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025229000, 327680, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1000) = 0x7f9025229000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025279000, 335872, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x51000) = 0x7f9025279000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90252cb000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xa2000) = 0x7f90252cb000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libcares.so.2\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=239552, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 237608, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f90251ed000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90251f5000, 155648, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x8000) = 0x7f90251f5000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f902521b000, 45056, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2e000) = 0x7f902521b000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025226000, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x39000) = 0x7f9025226000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libnghttp2.so.14\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=199152, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 201232, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f90251bb000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90251c1000, 98304, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x6000) = 0x7f90251c1000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90251d9000, 65536, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1e000) = 0x7f90251d9000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f90251e9000, 16384, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x2d000) = 0x7f90251e9000"
+        },
+        {
+            "time": 0.52,
+            "event": "close(3)                                = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "openat(AT_FDCWD, \"/lib/x86_64-linux-gnu/libcrypto.so.3\", O_RDONLY|O_CLOEXEC) = 3"
+        },
+        {
+            "time": 0.52,
+            "event": "read(3, \"\\177ELF\\2\\1\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\3\\0>\\0\\1\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\\0\"..., 832) = 832"
+        },
+        {
+            "time": 0.52,
+            "event": "fstat(3, {st_mode=S_IFREG|0644, st_size=6513216, ...}) = 0"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(NULL, 6523944, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x7f9024b82000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9024c79000, 3678208, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0xf7000) = 0x7f9024c79000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9024ffb000, 1273856, PROT_READ, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x479000) = 0x7f9024ffb000"
+        },
+        {
+            "time": 0.52,
+            "event": "mmap(0x7f9025132000, 548864, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x5b0000) = 0x7f9025132000"
+        }
+    ]
 }
