@@ -240,8 +240,10 @@ if score > 10:
     verdict = "MALICIOUS"
 
 # ============================
-# SAVE
+# SAVE (KEEP LATEST + ARCHIVE)
 # ============================
+
+import time
 
 os.makedirs("decoy_logs", exist_ok=True)
 
@@ -259,7 +261,16 @@ log = {
     "timeline": timeline[:100]
 }
 
+# (archive)
+run_id = str(int(time.time()))
+archive_file = f"decoy_logs/decoy_log_{run_id}.json"
+
+with open(archive_file, "w") as f:
+    json.dump(log, f, indent=4)
+
+# 
 with open("decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
-print("DONE")
+print(f"Saved archive log: {archive_file}")
+print("Updated latest.json")
