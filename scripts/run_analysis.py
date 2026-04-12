@@ -187,6 +187,7 @@ execution_time = round(time.time() - start_time, 3)
 # ======================================
 # SAVE LOG
 # ======================================
+os.makedirs("Logs", exist_ok=True)
 os.makedirs("Logs/ML_logs", exist_ok=True)
 
 run_id = str(int(time.time()))
@@ -205,9 +206,12 @@ dynamic_log = {
 with open(f"Logs/ML_logs/log_{run_id}.json", "w") as f:
     json.dump(dynamic_log, f, indent=4)
 
+
 with open("Logs/latest.json", "w") as f:
     json.dump(dynamic_log, f, indent=4)
 
-print("Logs saved.")
+print(f"Saved ML log: Logs/ML_logs/log_{run_id}.json")
+print("Updated Logs/latest.json")
 
+# exit code 
 sys.exit(1 if pred == 1 else 0)
