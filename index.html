@@ -4,7 +4,7 @@ async function load(){
 
 try{
 
-const res = await fetch("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json?t="+Date.now())
+const res = await fetch("https://hadeelalmokhtar.github.io/ssc-ci-workflow-experiments-new-copy/decoy_logs/latest.json?t="+Date.now())
 
 if(!res.ok){
 throw new Error("Failed to load JSON")
