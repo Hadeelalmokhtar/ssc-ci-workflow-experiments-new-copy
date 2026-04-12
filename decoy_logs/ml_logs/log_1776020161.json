@@ -1,0 +1,51 @@
+{
+    "run_id": "1776020161",
+    "package": "libs-1.0.3.tgz",
+    "risk_probability": 0.9960863590240479,
+    "prediction": 1,
+    "file_entropy": 4.8007,
+    "execution_time": 0.292,
+    "timestamp": "2026-04-12T18:56:01.351021",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.181288242340088
+        ],
+        [
+            "num__Number of lines in metadata",
+            0.880736231803894
+        ],
+        [
+            "num__.md",
+            -0.7599701881408691
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.6550807952880859
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5692514777183533
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.5678909420967102
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5205426812171936
+        ],
+        [
+            "num__Number of lines in source code",
+            0.5160270929336548
+        ],
+        [
+            "num__plus ratio max",
+            0.4617141783237457
+        ],
+        [
+            "num__shannon mean string source code",
+            0.4204573929309845
+        ]
+    ]
+}
