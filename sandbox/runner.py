@@ -8,6 +8,8 @@ import tarfile
 import tempfile
 import base64
 import threading
+import urllib.request
+import string
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from datetime import datetime
 from collections import defaultdict
@@ -20,28 +22,22 @@ captured_requests = []
 captured_dns = []
 
 # ============================
-# FAKE API + TLS INTERCEPTION SIMULATION
+# FAKE INTERNET + API
 # ============================
 
 class FakeHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-
         entry = {
             "method": "GET",
             "path": self.path,
             "headers": dict(self.headers)
         }
 
-        #  Fake API responses
+        response = {"status": "ok"}
+
         if "/api/config" in self.path:
-            response = {"mode": "active", "task": "collect_data"}
-
-        elif "/api/command" in self.path:
-            response = {"cmd": "exfiltrate"}
-
-        else:
-            response = {"status": "ok"}
+            response = {"mode": "active"}
 
         entry["response"] = response
         captured_requests.append(entry)
@@ -51,29 +47,18 @@ class FakeHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
-
         length = int(self.headers.get('Content-Length', 0))
         body = self.rfile.read(length).decode()
 
-        entry = {
+        captured_requests.append({
             "method": "POST",
             "path": self.path,
             "body": body
-        }
-
-        #  Fake login / token API
-        if "/login" in self.path:
-            response = {"token": "FAKE_TOKEN_123"}
-
-        else:
-            response = {"status": "received"}
-
-        entry["response"] = response
-        captured_requests.append(entry)
+        })
 
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(json.dumps(response).encode())
+        self.wfile.write(b"OK")
 
 
 def start_http():
@@ -81,7 +66,6 @@ def start_http():
     server.serve_forever()
 
 threading.Thread(target=start_http, daemon=True).start()
-print(" Fake Internet + API running on 8080")
 
 # ============================
 # FAKE DNS
@@ -93,7 +77,6 @@ from dnslib import RR, A
 class FakeResolver(BaseResolver):
     def resolve(self, request, handler):
         qname = str(request.q.qname)
-
         captured_dns.append(qname)
 
         reply = request.reply()
@@ -106,14 +89,10 @@ def start_dns():
     server.start()
 
 threading.Thread(target=start_dns, daemon=True).start()
-print(" Fake DNS running")
 
 # ============================
 # INPUT
 # ============================
-
-if len(sys.argv) < 2:
-    sys.exit(1)
 
 original_input = sys.argv[1]
 
@@ -136,7 +115,6 @@ file_path = extract_package_if_needed(original_input)
 # ============================
 
 targets = []
-
 for root, _, files in os.walk(file_path):
     for f in files:
         if f.endswith(".js") or f.endswith(".py"):
@@ -147,45 +125,56 @@ for root, _, files in os.walk(file_path):
 # ============================
 
 env = os.environ.copy()
-
 env["HTTP_PROXY"] = "http://127.0.0.1:8080"
 env["HTTPS_PROXY"] = "http://127.0.0.1:8080"
-
-env["API_KEY"] = "FAKE_API"
-env["TOKEN"] = "FAKE_TOKEN"
+env["NO_PROXY"] = ""
 
 # ============================
-# ANALYSIS
+# HELPERS
 # ============================
 
-commands = set()
-ips = set()
-domains = set()
-files = []
-processes = []
-timeline = []
-syscalls = defaultdict(int)
-decoded_payloads = []
+def is_readable(s):
+    printable = set(string.printable)
+    return sum(c in printable for c in s) / len(s) > 0.85
 
 def try_decode_base64(s):
     try:
-        d = base64.b64decode(s).decode()
-        if len(d) > 10:
+        d = base64.b64decode(s).decode("utf-8", errors="ignore")
+        if len(d) > 20 and is_readable(d):
             return d
     except:
         pass
     return None
 
-print(" ULTIMATE SANDBOX STARTED")
+def enrich_ip(ip):
+    try:
+        url = f"http://ip-api.com/json/{ip}"
+        data = json.loads(urllib.request.urlopen(url).read())
+        return {
+            "ip": ip,
+            "country": data.get("country"),
+            "isp": data.get("isp"),
+            "org": data.get("org")
+        }
+    except:
+        return {"ip": ip}
+
+# ============================
+# ANALYSIS
+# ============================
+
+ips = set()
+domains = set()
+files = []
+processes = []
+timeline = []
+decoded_payloads = []
 
 start = time.time()
 
 for target in targets:
 
-    if target.endswith(".js"):
-        run_cmd = ["node", target]
-    else:
-        run_cmd = ["python3", target]
+    run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
 
     process = subprocess.Popen(
         ["strace", "-f", "-e", "trace=all"] + run_cmd,
@@ -198,7 +187,7 @@ for target in targets:
 
     try:
         stdout, stderr = process.communicate(input="trigger\n", timeout=60)
-    except subprocess.TimeoutExpired:
+    except:
         process.kill()
         stdout, stderr = process.communicate()
 
@@ -207,7 +196,12 @@ for target in targets:
         if not line:
             continue
 
-        timeline.append(line)
+        timestamp = time.time() - start
+
+        timeline.append({
+            "time": round(timestamp, 2),
+            "event": line[:200]
+        })
 
         if "execve(" in line:
             m = re.search(r'execve\("([^"]+)"', line)
@@ -220,7 +214,7 @@ for target in targets:
         for d in re.findall(r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line):
             domains.add(d)
 
-        if any(x in line for x in ["open(", "write(", "unlink(", "rename("]):
+        if "open(" in line:
             f = re.search(r'"([^"]+)"', line)
             if f:
                 files.append(f.group(1))
@@ -232,10 +226,12 @@ for target in targets:
                 decoded_payloads.append(d)
 
 # ============================
-# SCORE
+# FINAL DATA
 # ============================
 
-score = len(processes)*2 + len(ips)*3 + len(files) + len(decoded_payloads)*4 + len(captured_requests)*5
+network_details = [enrich_ip(ip) for ip in ips]
+
+score = len(processes)*2 + len(ips)*3 + len(decoded_payloads)*4
 
 verdict = "CLEAN"
 if score > 5:
@@ -259,10 +255,11 @@ log = {
     "dns": captured_dns,
     "http_requests": captured_requests,
     "decoded_payloads": decoded_payloads,
-    "timestamp": datetime.utcnow().isoformat()
+    "network_details": network_details,
+    "timeline": timeline[:100]
 }
 
 with open("decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
-print(" ULTIMATE SANDBOX COMPLETE")
+print("DONE")
