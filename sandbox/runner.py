@@ -6,22 +6,119 @@ import time
 import re
 import tarfile
 import tempfile
-import urllib.request
+import base64
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from datetime import datetime
 from collections import defaultdict
+
+# ============================
+# STORAGE
+# ============================
+
+captured_requests = []
+captured_dns = []
+
+# ============================
+# FAKE API + TLS INTERCEPTION SIMULATION
+# ============================
+
+class FakeHandler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+
+        entry = {
+            "method": "GET",
+            "path": self.path,
+            "headers": dict(self.headers)
+        }
+
+        #  Fake API responses
+        if "/api/config" in self.path:
+            response = {"mode": "active", "task": "collect_data"}
+
+        elif "/api/command" in self.path:
+            response = {"cmd": "exfiltrate"}
+
+        else:
+            response = {"status": "ok"}
+
+        entry["response"] = response
+        captured_requests.append(entry)
+
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(json.dumps(response).encode())
+
+    def do_POST(self):
+
+        length = int(self.headers.get('Content-Length', 0))
+        body = self.rfile.read(length).decode()
+
+        entry = {
+            "method": "POST",
+            "path": self.path,
+            "body": body
+        }
+
+        #  Fake login / token API
+        if "/login" in self.path:
+            response = {"token": "FAKE_TOKEN_123"}
+
+        else:
+            response = {"status": "received"}
+
+        entry["response"] = response
+        captured_requests.append(entry)
+
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(json.dumps(response).encode())
+
+
+def start_http():
+    server = HTTPServer(("0.0.0.0", 8080), FakeHandler)
+    server.serve_forever()
+
+threading.Thread(target=start_http, daemon=True).start()
+print(" Fake Internet + API running on 8080")
+
+# ============================
+# FAKE DNS
+# ============================
+
+from dnslib.server import DNSServer, BaseResolver
+from dnslib import RR, A
+
+class FakeResolver(BaseResolver):
+    def resolve(self, request, handler):
+        qname = str(request.q.qname)
+
+        captured_dns.append(qname)
+
+        reply = request.reply()
+        reply.add_answer(RR(qname, rdata=A("127.0.0.1"), ttl=60))
+        return reply
+
+def start_dns():
+    resolver = FakeResolver()
+    server = DNSServer(resolver, port=5353, address="0.0.0.0")
+    server.start()
+
+threading.Thread(target=start_dns, daemon=True).start()
+print(" Fake DNS running")
 
 # ============================
 # INPUT
 # ============================
 
 if len(sys.argv) < 2:
-    print("Usage: python runner.py <file>")
     sys.exit(1)
 
 original_input = sys.argv[1]
 
 # ============================
-# EXTRACT PACKAGE
+# EXTRACT
 # ============================
 
 def extract_package_if_needed(path):
@@ -35,315 +132,137 @@ def extract_package_if_needed(path):
 file_path = extract_package_if_needed(original_input)
 
 # ============================
-# FIND EXECUTABLE
+# FIND FILES
 # ============================
 
-analysis_target = None
+targets = []
 
-for root, dirs, files in os.walk(file_path):
+for root, _, files in os.walk(file_path):
     for f in files:
         if f.endswith(".js") or f.endswith(".py"):
-            analysis_target = os.path.join(root, f)
-            break
-    if analysis_target:
-        break
-
-if analysis_target is None:
-    print("No executable file found")
-    sys.exit(0)
+            targets.append(os.path.join(root, f))
 
 # ============================
-# THREAT INTEL LOOKUP
+# ENV
 # ============================
 
-def enrich_ip(ip):
-    try:
-        url = f"http://ip-api.com/json/{ip}"
-        response = urllib.request.urlopen(url, timeout=3)
-        data = json.loads(response.read().decode())
+env = os.environ.copy()
 
-        return {
-            "ip": ip,
-            "country": data.get("country"),
-            "asn": data.get("as"),
-            "org": data.get("org"),
-            "isp": data.get("isp")
-        }
+env["HTTP_PROXY"] = "http://127.0.0.1:8080"
+env["HTTPS_PROXY"] = "http://127.0.0.1:8080"
 
-    except:
-        return {"ip": ip}
+env["API_KEY"] = "FAKE_API"
+env["TOKEN"] = "FAKE_TOKEN"
 
 # ============================
-# MALWARE FAMILY HINT
-# ============================
-
-def detect_family(commands):
-    for c in commands:
-
-        if "curl" in c or "wget" in c:
-            return "Downloader"
-
-        if "xmrig" in c:
-            return "Crypto Miner"
-
-        if "nc" in c or "netcat" in c:
-            return "Backdoor"
-
-    return "Unknown"
-
-# ============================
-# SANDBOX EXECUTION
-# ============================
-
-print("Starting dynamic analysis")
-
-start = time.time()
-
-# ---------- TCPDUMP (OPTIONAL) ----------
-pcap_file = "network_capture.pcap"
-tcpdump = None
-
-try:
-    tcpdump = subprocess.Popen(
-        ["tcpdump", "-i", "any", "-w", pcap_file],
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
-    )
-except FileNotFoundError:
-    print("tcpdump not available in sandbox - skipping capture")
-
-# ---------- Runtime ----------
-
-if analysis_target.endswith(".js"):
-    run_cmd = ["node", analysis_target]
-else:
-    run_cmd = ["python3", analysis_target]
-
-process = subprocess.Popen(
-
-    ["strace", "-f", "-e", "trace=execve,open,connect,write,sendto"] + run_cmd,
-
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    text=True
-
-)
-
-try:
-    stdout, stderr = process.communicate(timeout=20)
-
-except subprocess.TimeoutExpired:
-    process.kill()
-    stdout, stderr = process.communicate()
-
-if tcpdump:
-    tcpdump.kill()
-
-runtime = round(time.time() - start, 3)
-
-# ============================
-# PARSE EVENTS
+# ANALYSIS
 # ============================
 
 commands = set()
 ips = set()
 domains = set()
-
-dns_activity = []
-processes = []
 files = []
+processes = []
 timeline = []
 syscalls = defaultdict(int)
-sensitive = []
+decoded_payloads = []
 
-sensitive_paths = [
-    "/etc/passwd",
-    "/etc/shadow",
-    ".ssh",
-    "/root",
-    ".env",
-    "id_rsa"
-]
+def try_decode_base64(s):
+    try:
+        d = base64.b64decode(s).decode()
+        if len(d) > 10:
+            return d
+    except:
+        pass
+    return None
 
-ip_regex = r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
-domain_regex = r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+print(" ULTIMATE SANDBOX STARTED")
 
-for line in stderr.split("\n"):
-    if not line:
-        continue
+start = time.time()
 
-    timeline.append(line)
+for target in targets:
 
-    parts = line.split("(")[0].split()
+    if target.endswith(".js"):
+        run_cmd = ["node", target]
+    else:
+        run_cmd = ["python3", target]
 
-    if parts:
-        syscall = parts[-1]
-        syscalls[syscall] += 1
+    process = subprocess.Popen(
+        ["strace", "-f", "-e", "trace=all"] + run_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        stdin=subprocess.PIPE,
+        text=True,
+        env=env
+    )
 
-    # PROCESS
-    if "execve(" in line:
+    try:
+        stdout, stderr = process.communicate(input="trigger\n", timeout=60)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        stdout, stderr = process.communicate()
 
-        m = re.search(r'execve\("([^"]+)"', line)
+    for line in stderr.split("\n"):
 
-        if m:
-            proc = os.path.basename(m.group(1))
-            processes.append(proc)
-            commands.add(proc)
+        if not line:
+            continue
 
-    # NETWORK IP
-    ips_found = re.findall(ip_regex, line)
-    for ip in ips_found:
-        ips.add(ip)
+        timeline.append(line)
 
-    # DOMAIN IOC
-    dom = re.findall(domain_regex, line)
-    for d in dom:
-        domains.add(d)
+        if "execve(" in line:
+            m = re.search(r'execve\("([^"]+)"', line)
+            if m:
+                processes.append(os.path.basename(m.group(1)))
 
-    # DNS
-    if "sendto(" in line:
-        dns_activity.append("DNS query detected")
+        for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
+            ips.add(ip)
 
-    # FILE
-    if "open(" in line:
+        for d in re.findall(r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line):
+            domains.add(d)
 
-        f = re.search(r'"([^"]+)"', line)
+        if any(x in line for x in ["open(", "write(", "unlink(", "rename("]):
+            f = re.search(r'"([^"]+)"', line)
+            if f:
+                files.append(f.group(1))
 
-        if f:
-            path = f.group(1)
-            files.append(path)
-
-            for s in sensitive_paths:
-                if s in path:
-                    sensitive.append(path)
-
-# ============================
-# ENRICH IPS
-# ============================
-
-network_details = []
-
-for ip in ips:
-    network_details.append(enrich_ip(ip))
+        strings = re.findall(r'[A-Za-z0-9+/=]{20,}', line)
+        for s in strings:
+            d = try_decode_base64(s)
+            if d:
+                decoded_payloads.append(d)
 
 # ============================
-# MITRE MAPPING
+# SCORE
 # ============================
 
-mitre = []
-
-if ips:
-    mitre.append("T1071 Application Layer Protocol")
-
-if commands:
-    mitre.append("T1059 Command Interpreter")
-
-if sensitive:
-    mitre.append("T1005 Data from Local System")
-
-if dns_activity:
-    mitre.append("T1046 Network Discovery")
-
-# ============================
-# BEHAVIOR SCORE
-# ============================
-
-score = len(ips)*3 + len(commands)*2 + len(sensitive)*4 + len(domains)*2
+score = len(processes)*2 + len(ips)*3 + len(files) + len(decoded_payloads)*4 + len(captured_requests)*5
 
 verdict = "CLEAN"
-
 if score > 5:
     verdict = "SUSPICIOUS"
-
 if score > 10:
     verdict = "MALICIOUS"
 
-family = detect_family(commands)
-
 # ============================
-# ATTACK GRAPH
-# ============================
-
-nodes = [{"id": 1, "label": "Package"}]
-edges = []
-
-i = 2
-
-for p in processes:
-
-    nodes.append({"id": i, "label": p})
-    edges.append({"from": 1, "to": i})
-
-    i += 1
-
-attack_graph = {
-    "nodes": nodes,
-    "edges": edges
-}
-
-# ============================
-# IOC
-# ============================
-
-ioc = {
-    "ips": list(ips),
-    "domains": list(domains)
-}
-
-# ============================
-# SAVE LOG
+# SAVE
 # ============================
 
 os.makedirs("decoy_logs", exist_ok=True)
 
-run_id = str(int(time.time()))
-mitre = list(set(mitre))
 log = {
-
-    "run_id": run_id,
-
-    "package": {
-        "name": os.path.basename(original_input)
-    },
-
-    "runtime": runtime,
-
-    "behavior_score": score,
-
-    "malware_family_hint": family,
-
-    "threat_verdict": verdict,
-
-    "ioc": ioc,
-
-    "commands_detected": list(commands),
-
-    "network_activity": {
-        "details": network_details
-    },
-
-    "dns_activity": dns_activity,
-
-    "process_activity": processes,
-
-    "filesystem": files,
-
-    "sensitive_access": sensitive,
-
-    "mitre": mitre,
-
-    "attack_graph": attack_graph,
-
-    "timeline": timeline[:40],
-
+    "package": os.path.basename(original_input),
+    "verdict": verdict,
+    "score": score,
+    "processes": processes,
+    "files": files,
+    "domains": list(domains),
+    "dns": captured_dns,
+    "http_requests": captured_requests,
+    "decoded_payloads": decoded_payloads,
     "timestamp": datetime.utcnow().isoformat()
-
 }
-
-with open(f"decoy_logs/log_{run_id}.json", "w") as f:
-    json.dump(log, f, indent=4)
 
 with open("decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
-print("Analysis finished")
+print(" ULTIMATE SANDBOX COMPLETE")
