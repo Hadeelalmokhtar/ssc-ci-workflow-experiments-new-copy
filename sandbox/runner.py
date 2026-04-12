@@ -6,13 +6,9 @@ import time
 import re
 import tarfile
 import tempfile
-import base64
 import threading
 import urllib.request
-import string
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from datetime import datetime
-from collections import defaultdict
 
 # ============================
 # STORAGE
@@ -22,29 +18,20 @@ captured_requests = []
 captured_dns = []
 
 # ============================
-# FAKE INTERNET + API
+# FAKE HTTP SERVER
 # ============================
 
 class FakeHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        entry = {
+        captured_requests.append({
             "method": "GET",
-            "path": self.path,
-            "headers": dict(self.headers)
-        }
-
-        response = {"status": "ok"}
-
-        if "/api/config" in self.path:
-            response = {"mode": "active"}
-
-        entry["response"] = response
-        captured_requests.append(entry)
+            "path": self.path
+        })
 
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(json.dumps(response).encode())
+        self.wfile.write(b"OK")
 
     def do_POST(self):
         length = int(self.headers.get('Content-Length', 0))
@@ -125,26 +112,10 @@ for root, _, files in os.walk(file_path):
 # ============================
 
 env = os.environ.copy()
-env["HTTP_PROXY"] = "http://127.0.0.1:8080"
-env["HTTPS_PROXY"] = "http://127.0.0.1:8080"
-env["NO_PROXY"] = ""
 
 # ============================
-# HELPERS
+# NETWORK ENRICHMENT
 # ============================
-
-def is_readable(s):
-    printable = set(string.printable)
-    return sum(c in printable for c in s) / len(s) > 0.85
-
-def try_decode_base64(s):
-    try:
-        d = base64.b64decode(s).decode("utf-8", errors="ignore")
-        if len(d) > 20 and is_readable(d):
-            return d
-    except:
-        pass
-    return None
 
 def enrich_ip(ip):
     try:
@@ -168,7 +139,6 @@ domains = set()
 files = []
 processes = []
 timeline = []
-decoded_payloads = []
 
 start = time.time()
 
@@ -196,10 +166,8 @@ for target in targets:
         if not line:
             continue
 
-        timestamp = time.time() - start
-
         timeline.append({
-            "time": round(timestamp, 2),
+            "time": round(time.time() - start, 2),
             "event": line[:200]
         })
 
@@ -219,60 +187,44 @@ for target in targets:
             if f:
                 files.append(f.group(1))
 
-        strings = re.findall(r'[A-Za-z0-9+/=]{20,}', line)
-        for s in strings:
-            d = try_decode_base64(s)
-            if d:
-                decoded_payloads.append(d)
-
 # ============================
-# FINAL DATA
+# NETWORK DETAILS
 # ============================
 
 network_details = [enrich_ip(ip) for ip in ips]
 
-score = len(processes)*2 + len(ips)*3 + len(decoded_payloads)*4
-
-verdict = "CLEAN"
-if score > 5:
-    verdict = "SUSPICIOUS"
-if score > 10:
-    verdict = "MALICIOUS"
-
 # ============================
-# SAVE (FINAL FIX)
+# SCORE
 # ============================
 
-import time
+score = len(processes) + len(ips)*2
 
-# إنشاء الفولدر
+# ============================
+# SAVE
+# ============================
+
 os.makedirs("decoy_logs", exist_ok=True)
 os.makedirs("decoy_logs/decoy_runs", exist_ok=True)
 
 log = {
     "package": os.path.basename(original_input),
-    "verdict": verdict,
     "score": score,
     "processes": processes,
     "files": files,
     "domains": list(domains),
     "dns": captured_dns,
     "http_requests": captured_requests,
-    "decoded_payloads": decoded_payloads,
     "network_details": network_details,
     "timeline": timeline[:100]
 }
 
-# archive (كل run ملف جديد)
 run_id = str(int(time.time()))
-archive_file = f"decoy_logs/decoy_runs/decoy_log_{run_id}.json"
+archive_file = f"decoy_logs/decoy_runs/log_{run_id}.json"
 
 with open(archive_file, "w") as f:
     json.dump(log, f, indent=4)
 
-# latest (الداشبورد)
 with open("decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
-print(f"Saved archive log: {archive_file}")
-print("Updated decoy_logs/latest.json")
+print("Saved:", archive_file)
