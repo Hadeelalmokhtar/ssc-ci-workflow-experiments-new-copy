@@ -1,0 +1,51 @@
+{
+    "run_id": "1776002538",
+    "package": "reference-implementation-1.0.1.tgz",
+    "risk_probability": 0.9981644749641418,
+    "prediction": 1,
+    "file_entropy": 4.8559,
+    "execution_time": 0.145,
+    "timestamp": "2026-04-12T14:02:18.262264",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.0785324573516846
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.1603283882141113
+        ],
+        [
+            "num__.md",
+            0.8398483991622925
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.6979377269744873
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5775017738342285
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5737273693084717
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5659739971160889
+        ],
+        [
+            "num__shannon std string source code",
+            -0.5465593934059143
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5415642857551575
+        ],
+        [
+            "num__Number of lines in source code",
+            0.5375845432281494
+        ]
+    ]
+}
