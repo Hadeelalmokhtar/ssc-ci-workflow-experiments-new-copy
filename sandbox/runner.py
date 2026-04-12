@@ -245,7 +245,7 @@ if score > 10:
 
 import time
 
-os.makedirs("decoy_logs", exist_ok=True)
+os.makedirs("Logs/decoy_logs", exist_ok=True)
 
 log = {
     "package": os.path.basename(original_input),
@@ -263,13 +263,13 @@ log = {
 
 # (archive)
 run_id = str(int(time.time()))
-archive_file = f"decoy_logs/decoy_log_{run_id}.json"
+archive_file = f"Logs/decoy_logs/decoy_log_{run_id}.json"
 
 with open(archive_file, "w") as f:
     json.dump(log, f, indent=4)
 
 # 
-with open("decoy_logs/latest.json", "w") as f:
+with open("Logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
 print(f"Saved archive log: {archive_file}")
