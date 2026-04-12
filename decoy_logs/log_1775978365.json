@@ -1,0 +1,12 @@
+{
+    "run_id": "1775978365",
+    "package": "32red-cloud-999.9.9.tgz",
+    "risk_probability": 0.9905394315719604,
+    "prediction": 1,
+    "file_entropy": 4.7744,
+    "execution_time": 1.133,
+    "timestamp": "2026-04-12T07:19:25.680949",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            
