@@ -261,15 +261,13 @@ log = {
     "timeline": timeline[:100]
 }
 
-# (archive)
 run_id = str(int(time.time()))
 archive_file = f"Logs/decoy_logs/decoy_log_{run_id}.json"
 
 with open(archive_file, "w") as f:
     json.dump(log, f, indent=4)
 
-# 
-with open("Logs/latest.json", "w") as f:
+with open("Logs/decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
 print(f"Saved archive log: {archive_file}")
