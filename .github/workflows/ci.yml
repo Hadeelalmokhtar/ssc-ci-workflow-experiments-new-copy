@@ -28,23 +28,19 @@ jobs:
         with:
           fetch-depth: 0
 
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-
       - name: Download NLTK Data
         run: |
           python -c "import nltk; nltk.download('stopwords')"
-
 
       - name: Detect Package
         id: detect_pkg
@@ -85,37 +81,44 @@ jobs:
           echo "skip_pipeline=false" >> $GITHUB_OUTPUT
           echo "package_path=$PACKAGE" >> $GITHUB_OUTPUT
 
-
-
+      # =========================
+      # ML GATE (EXIT CODE)
+      # =========================
       - name: ML Security Gate
         id: ml_scan
         if: steps.detect_pkg.outputs.skip_pipeline == 'false'
         continue-on-error: true
         run: |
           export PYTHONPATH=$PYTHONPATH:$(pwd)
+
           python -m scripts.run_analysis "${{ steps.detect_pkg.outputs.package_path }}"
 
+          RESULT=$?
 
+          echo "ML_EXIT_CODE=$RESULT"
+          echo "ml_result=$RESULT" >> $GITHUB_OUTPUT
 
+      # =========================
+      # MOVE TO DECOY (ONLY IF MALICIOUS)
+      # =========================
       - name: Move Package to Decoy
-        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false' && steps.ml_scan.outputs.ml_result != '0'
         run: |
           mkdir -p packages/decoy
 
           mv -f "${{ steps.detect_pkg.outputs.package_path }}" \
           packages/decoy/package_${{ github.run_number }}.tgz
 
-
-
+      # =========================
+      # SANDBOX ONLY IF MALICIOUS
+      # =========================
       - name: Build Sandbox Image
-        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false' && steps.ml_scan.outputs.ml_result != '0'
         run: |
           docker build -t ssc-sandbox -f sandbox/Dockerfile .
 
-
-
       - name: Run Dynamic Analysis
-        if: steps.detect_pkg.outputs.skip_pipeline == 'false'
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false' && steps.ml_scan.outputs.ml_result != '0'
         continue-on-error: true
         run: |
           docker run --rm \
@@ -124,11 +127,24 @@ jobs:
           python sandbox/runner.py \
           packages/decoy/package_${{ github.run_number }}.tgz
 
-
-
-      - name: Release Package if Clean
+      # =========================
+      # RELEASE LOGIC
+      # =========================
+      - name: Release Package
         if: steps.detect_pkg.outputs.skip_pipeline == 'false'
-        run: | 
+        run: |
+
+          
+          if [ "${{ steps.ml_scan.outputs.ml_result }}" = "0" ]; then
+            echo "ML says CLEAN → releasing directly"
+
+            mkdir -p packages/releases
+
+            mv "${{ steps.detect_pkg.outputs.package_path }}" \
+            packages/releases/package_${{ github.run_number }}.tgz
+
+            exit 0
+          fi
 
           LOG_FILE="decoy_logs/latest.json"
 
@@ -137,13 +153,13 @@ jobs:
             exit 0
           fi
 
-          VERDICT=$(python -c "import json;print(json.load(open('decoy_logs/latest.json')).get('threat_verdict','UNKNOWN'))")
+          VERDICT=$(python -c "import json;print(json.load(open('$LOG_FILE')).get('threat_verdict','UNKNOWN'))")
 
           echo "Sandbox verdict: $VERDICT"
 
           if [ "$VERDICT" = "CLEAN" ]; then
 
-            echo "Package confirmed safe → releasing"
+            echo "Sandbox says CLEAN → releasing"
 
             mkdir -p packages/releases
 
@@ -151,13 +167,12 @@ jobs:
             packages/releases/package_${{ github.run_number }}.tgz
 
           else
-
-            echo "Package not safe → staying in decoy"
-
+            echo "Still malicious → staying in decoy"
           fi
 
-
-
+      # =========================
+      # COMMIT
+      # =========================
       - name: Commit Results
         run: |
           git config user.name "github-actions[bot]"
