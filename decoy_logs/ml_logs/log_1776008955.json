@@ -1,0 +1,51 @@
+{
+    "run_id": "1776008955",
+    "package": "crayons-0.4.0.tar.gz",
+    "risk_probability": 0.8775211572647095,
+    "prediction": 1,
+    "file_entropy": 4.8436,
+    "execution_time": 1.337,
+    "timestamp": "2026-04-12T15:49:15.701476",
+    "top_shap": [
+        [
+            "num__.md",
+            0.9983858466148376
+        ],
+        [
+            "num__shannon std string source code",
+            -0.7471867203712463
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.6106427311897278
+        ],
+        [
+            "num__Number of lines in source code",
+            0.602158784866333
+        ],
+        [
+            "num__shannon std ID source code",
+            0.5619394183158875
+        ],
+        [
+            "num__Number of lines in metadata",
+            -0.5283972024917603
+        ],
+        [
+            "num__presence of installation script",
+            -0.5036978125572205
+        ],
+        [
+            "num__shannon max ID metadata",
+            0.3769787847995758
+        ],
+        [
+            "num__URLs in source code",
+            -0.3575949966907501
+        ],
+        [
+            "num__Number of Words in metadata",
+            -0.3551318943500519
+        ]
+    ]
+}
