@@ -1,0 +1,51 @@
+{
+    "run_id": "1776022813",
+    "package": "bsb_family_pack-1.0.0.tar.gz",
+    "risk_probability": 0.7602453231811523,
+    "prediction": 1,
+    "file_entropy": 4.4582,
+    "execution_time": 1.386,
+    "timestamp": "2026-04-12T19:40:13.762085",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.4020512104034424
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0691773891448975
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.9754607677459717
+        ],
+        [
+            "num__.md",
+            -0.8650314807891846
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.6193625330924988
+        ],
+        [
+            "num__shannon mean ID metadata",
+            -0.568327009677887
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5450057983398438
+        ],
+        [
+            "num__presence of installation script",
+            -0.5316809415817261
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.5050572752952576
+        ],
+        [
+            "num__plus ratio mean",
+            -0.47203904390335083
+        ]
+    ]
+}
