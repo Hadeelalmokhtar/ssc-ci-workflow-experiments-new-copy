@@ -1,0 +1,51 @@
+{
+    "run_id": "1776023572",
+    "package": "ddim-9.6.tar.gz",
+    "risk_probability": 0.896345317363739,
+    "prediction": 1,
+    "file_entropy": 4.5143,
+    "execution_time": 272.454,
+    "timestamp": "2026-04-12T19:52:52.572005",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.0265443325042725
+        ],
+        [
+            "num__bracket ratio max",
+            -0.9342353940010071
+        ],
+        [
+            "num__Number of lines in source code",
+            0.8367301225662231
+        ],
+        [
+            "num__.md",
+            0.8007970452308655
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5455846786499023
+        ],
+        [
+            "num__bracket ratio q3",
+            -0.543217658996582
+        ],
+        [
+            "num__shannon std string source code",
+            -0.4331340193748474
+        ],
+        [
+            "num__plus ratio mean",
+            -0.3944334387779236
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.38210323452949524
+        ],
+        [
+            "num__eq ratio q3",
+            -0.37143343687057495
+        ]
+    ]
+}
