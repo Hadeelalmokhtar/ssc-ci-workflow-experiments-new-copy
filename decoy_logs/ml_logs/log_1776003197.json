@@ -1,0 +1,51 @@
+{
+    "run_id": "1776003197",
+    "package": "1337qq-js-1.0.10.tgz",
+    "risk_probability": 0.992180347442627,
+    "prediction": 1,
+    "file_entropy": 4.7374,
+    "execution_time": 0.141,
+    "timestamp": "2026-04-12T14:13:17.422549",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.8519095182418823
+        ],
+        [
+            "num__Number of lines in source code",
+            1.27413809299469
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0609785318374634
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.9098787307739258
+        ],
+        [
+            "num__.md",
+            0.8222416639328003
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6581830382347107
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5290281772613525
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5084300637245178
+        ],
+        [
+            "num__plus ratio mean",
+            -0.46541035175323486
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.4283454716205597
+        ]
+    ]
+}
