@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,13 +16,15 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 .big{font-size:22px;font-weight:bold}
 .list{background:#0b1220;padding:10px;border-radius:8px;max-height:250px;overflow:auto}
 .item{padding:6px;border-bottom:1px solid #333}
+.bad{color:#ef4444}
+.good{color:#22c55e}
 </style>
 
 </head>
 
 <body>
 
-<h1>Decoy System Dashboard</h1>
+<h1>🔥 Decoy Threat Dashboard</h1>
 
 <div class="grid">
 
@@ -32,7 +33,7 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 
 <div class="card"><div class="title">Processes</div><div id="proc" class="list"></div></div>
 <div class="card"><div class="title">Filesystem</div><div id="fs" class="list"></div></div>
-<div class="card"><div class="title">Domains</div><div id="domains" class="list"></div></div>
+<div class="card"><div class="title">Domains (All)</div><div id="domains" class="list"></div></div>
 <div class="card"><div class="title">DNS</div><div id="dns" class="list"></div></div>
 <div class="card"><div class="title">HTTP Requests</div><div id="http" class="list"></div></div>
 <div class="card"><div class="title">Network</div><div id="net" class="list"></div></div>
@@ -51,31 +52,21 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 
 function safeSet(id, html){
 const el = document.getElementById(id)
-if(el){
-el.innerHTML += html
-}
+if(el) el.innerHTML += html
 }
 
 function safeClear(id){
 const el = document.getElementById(id)
-if(el){
-el.innerHTML = ""
-}
+if(el) el.innerHTML = ""
 }
 
-// ================= DOMAIN FILTER =================
+// ================= CLASSIFY DOMAIN =================
 
-function isRealDomain(d){
-if(!d) return false
-
-const blacklist = [
-".js",".so",".json",".node",".bundle",
-".length",".position",".start",".end"
-]
-
-if(blacklist.some(x=>d.includes(x))) return false
-
-return /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(d)
+function classifyDomain(d){
+if(d.endsWith(".js") || d.endsWith(".json")) return "code"
+if(d.endsWith(".so")) return "lib"
+if(d.includes(".")) return "domain"
+return "other"
 }
 
 // ================= MAIN =================
@@ -87,80 +78,91 @@ const url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-e
 try{
 
 const r = await fetch(url, {cache:"no-store"})
-
-if(!r.ok){
-throw new Error("HTTP " + r.status)
-}
-
 const text = await r.text()
+
 console.log("RAW:", text)
 
 const data = JSON.parse(text)
+
 console.log("PARSED:", data)
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(safeClear)
 
-// BASIC
-const pkg = document.getElementById("pkg")
-if(pkg) pkg.textContent = data.package || "-"
+// ================= BASIC =================
 
-const score = document.getElementById("score")
-if(score) score.textContent = data.score ?? 0
+document.getElementById("pkg").textContent = data.package || "-"
+document.getElementById("score").textContent = data.score ?? 0
 
-// PROCESSES
+// ================= PROCESSES =================
+
 if((data.processes || []).length === 0){
 safeSet("proc","<div class='item'>No processes</div>")
 }
 
-(data.processes || []).forEach(p=>{
+data.processes?.forEach(p=>{
 safeSet("proc", `<div class="item">${p}</div>`)
 })
 
-// FILES
+// ================= FILES =================
+
 if((data.files || []).length === 0){
 safeSet("fs","<div class='item'>No file activity</div>")
 }
 
-(data.files || []).forEach(f=>{
+data.files?.forEach(f=>{
 safeSet("fs", `<div class="item">${f}</div>`)
 })
 
-// DOMAINS
-const cleanDomains = (data.domains || []).filter(isRealDomain)
+// ================= DOMAINS (NO FILTER) =================
 
-if(cleanDomains.length === 0){
-safeSet("domains","<div class='item'>No real domains</div>")
+if((data.domains || []).length === 0){
+safeSet("domains","<div class='item'>No domains</div>")
 }
 
-cleanDomains.forEach(d=>{
-safeSet("domains", `<div class="item">${d}</div>`)
+data.domains?.forEach(d=>{
+
+let type = classifyDomain(d)
+
+let color = "white"
+if(type === "domain") color = "#22c55e"
+if(type === "code") color = "#3b82f6"
+if(type === "lib") color = "#f59e0b"
+
+safeSet("domains", `
+<div class="item" style="color:${color}">
+${d}
+</div>`)
+
 })
 
-// DNS
+// ================= DNS =================
+
 if((data.dns || []).length === 0){
 safeSet("dns","<div class='item'>No DNS activity</div>")
 }
 
-(data.dns || []).forEach(d=>{
+data.dns?.forEach(d=>{
 safeSet("dns", `<div class="item">${d}</div>`)
 })
 
-// HTTP
+// ================= HTTP =================
+
 if((data.http_requests || []).length === 0){
 safeSet("http","<div class='item'>No HTTP traffic</div>")
 }
 
-(data.http_requests || []).forEach(h=>{
+data.http_requests?.forEach(h=>{
 safeSet("http", `<div class="item">${h.method} → ${h.path}</div>`)
 })
 
-// NETWORK
+// ================= NETWORK =================
+
 if((data.network_details || []).length === 0){
 safeSet("net","<div class='item'>No network activity</div>")
 }
 
-(data.network_details || []).forEach(n=>{
+data.network_details?.forEach(n=>{
 safeSet("net", `
 <div class="item">
 IP: ${n.ip}<br>
@@ -169,16 +171,18 @@ ISP: ${n.isp || "-"}
 </div>`)
 })
 
-// TIMELINE
+// ================= TIMELINE =================
+
 if((data.timeline || []).length === 0){
 safeSet("timeline","<div class='item'>No timeline</div>")
 }
 
-(data.timeline || []).forEach(t=>{
+data.timeline?.forEach(t=>{
 safeSet("timeline", `<div class="item">[${t.time}s] → ${t.event}</div>`)
 })
 
-// GRAPH
+// ================= GRAPH =================
+
 const graphEl = document.getElementById("graph")
 
 if(graphEl){
@@ -190,13 +194,15 @@ let id=1
 nodes.push({id:id,label:"Package"})
 let root=id
 
-(data.processes || []).forEach(p=>{
+// processes
+data.processes?.forEach(p=>{
 id++
-nodes.push({id:id,label:p})
+nodes.push({id:id,label:p,color:"#3b82f6"})
 edges.push({from:root,to:id})
 })
 
-cleanDomains.forEach(d=>{
+// domains
+data.domains?.forEach(d=>{
 id++
 nodes.push({id:id,label:d})
 edges.push({from:root,to:id})
@@ -223,7 +229,6 @@ window.addEventListener("DOMContentLoaded", () => {
 console.log("✅ DOM READY")
 
 load()
-
 setInterval(load, 7000)
 
 })
