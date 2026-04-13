@@ -218,10 +218,10 @@ if(Array.isArray(data.network_details) && data.network_details.length > 0){
 data.network_details.forEach(n=>{
 document.getElementById("net").innerHTML += `
 <div class="item">
-🌐 IP: ${n.ip || "-"}<br>
-🌍 Country: ${n.country || "-"}<br>
-📡 ISP: ${n.isp || "-"}<br>
-🏢 Org: ${n.org || "-"}
+ IP: ${n.ip || "-"}<br>
+ Country: ${n.country || "-"}<br>
+ ISP: ${n.isp || "-"}<br>
+ Org: ${n.org || "-"}
 </div>`
 })
 }else{
@@ -233,7 +233,7 @@ document.getElementById("net").innerHTML =
 if(Array.isArray(data.timeline)){
 data.timeline.forEach(t=>{
 document.getElementById("timeline").innerHTML +=
-`<div class="item">⏱️ [${t.time || 0}s] → ${t.event || "-"}</div>`
+`<div class="item"> [${t.time || 0}s] → ${t.event || "-"}</div>`
 })
 }
 
