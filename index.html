@@ -63,7 +63,7 @@ border-bottom:1px solid #333;
 
 <body>
 
-<h1>🔥 Decoy System Dashboard</h1>
+<h1> Decoy System Dashboard</h1>
 
 <div class="grid">
 
@@ -82,12 +82,16 @@ border-bottom:1px solid #333;
 <div id="score" class="big"></div>
 </div>
 
+<div class="card">
+<div class="title">Threat Reason</div>
+<div id="reason" class="list"></div>
+</div>
+
 <div class="card"><div class="title">Processes</div><div id="proc" class="list"></div></div>
 <div class="card"><div class="title">Filesystem</div><div id="fs" class="list"></div></div>
 <div class="card"><div class="title">Domains</div><div id="domains" class="list"></div></div>
 <div class="card"><div class="title">DNS</div><div id="dns" class="list"></div></div>
 <div class="card"><div class="title">HTTP</div><div id="http" class="list"></div></div>
-<div class="card"><div class="title">Payloads</div><div id="payloads" class="list"></div></div>
 <div class="card"><div class="title">Network</div><div id="net" class="list"></div></div>
 <div class="card"><div class="title">Timeline</div><div id="timeline" class="list"></div></div>
 
@@ -120,7 +124,7 @@ return
 }
 
 // CLEAR
-["proc","fs","domains","dns","http","payloads","net","timeline"].forEach(id=>{
+["proc","fs","domains","dns","http","net","timeline","reason"].forEach(id=>{
 document.getElementById(id).innerHTML=""
 })
 
@@ -128,11 +132,50 @@ document.getElementById(id).innerHTML=""
 document.getElementById("pkg").textContent = data.package || "-"
 document.getElementById("score").textContent = data.score ?? 0
 
-// VERDICT
-let verdict = (data.score || 0) > 10 ? "MALICIOUS" : "CLEAN"
+//  SMART VERDICT
+let score = data.score || 0
+let verdict = "LOW RISK"
+let verdictClass = "verdict-clean"
+
+if(score >= 8){
+    verdict = "HIGH RISK"
+    verdictClass = "verdict-mal"
+}
+else if(score >= 4){
+    verdict = "MEDIUM RISK"
+    verdictClass = "verdict-mal"
+}
 
 document.getElementById("verdict").innerHTML =
-`<span class="${verdict==="MALICIOUS"?"verdict-mal":"verdict-clean"}">${verdict}</span>`
+`<span class="${verdictClass}">${verdict}</span>`
+
+//  REASONS
+let reasons = []
+
+if((data.processes || []).length > 3){
+    reasons.push("Multiple processes")
+}
+
+if((data.network_details || []).length > 0){
+    reasons.push("External connections detected")
+}
+
+if((data.domains || []).length > 3){
+    reasons.push("Multiple domains")
+}
+
+if((data.files || []).length > 10){
+    reasons.push("Heavy file access")
+}
+
+if(reasons.length === 0){
+    reasons.push("No suspicious behavior")
+}
+
+reasons.forEach(r=>{
+document.getElementById("reason").innerHTML +=
+`<div class="item">${r}</div>`
+})
 
 // PROCESSES
 if(Array.isArray(data.processes)){
@@ -170,32 +213,27 @@ document.getElementById("http").innerHTML +=
 })
 }
 
-// PAYLOADS
-if(Array.isArray(data.decoded_payloads)){
-data.decoded_payloads.forEach(p=>{
-document.getElementById("payloads").innerHTML +=
-`<div class="item">${p}</div>`
-})
-}
-
-// NETWORK
-if(Array.isArray(data.network_details)){
+//  NETWORK IMPROVED
+if(Array.isArray(data.network_details) && data.network_details.length > 0){
 data.network_details.forEach(n=>{
 document.getElementById("net").innerHTML += `
 <div class="item">
-IP: ${n.ip || "-"}<br>
-Country: ${n.country || "-"}<br>
-ISP: ${n.isp || "-"}<br>
-Org: ${n.org || "-"}
+🌐 IP: ${n.ip || "-"}<br>
+🌍 Country: ${n.country || "-"}<br>
+📡 ISP: ${n.isp || "-"}<br>
+🏢 Org: ${n.org || "-"}
 </div>`
 })
+}else{
+document.getElementById("net").innerHTML =
+"<div class='item'>No network activity</div>"
 }
 
-// TIMELINE
+//  TIMELINE IMPROVED
 if(Array.isArray(data.timeline)){
 data.timeline.forEach(t=>{
 document.getElementById("timeline").innerHTML +=
-`<div class="item">[${t.time || 0}s] → ${t.event || "-"}</div>`
+`<div class="item">⏱️ [${t.time || 0}s] → ${t.event || "-"}</div>`
 })
 }
 
