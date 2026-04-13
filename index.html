@@ -86,7 +86,7 @@ async function load(){
 
 try{
 
-const r = await fetch("decoy_logs/latest.json?t=" + Date.now())
+const r = await fetch("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json")
 
 if(!r.ok){
 throw new Error("JSON not found")
