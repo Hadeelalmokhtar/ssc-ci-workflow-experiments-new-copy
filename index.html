@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -66,8 +67,14 @@ el.innerHTML = ""
 
 function isRealDomain(d){
 if(!d) return false
-const blacklist = [".js",".so",".json",".node",".bundle",".length",".position"]
+
+const blacklist = [
+".js",".so",".json",".node",".bundle",
+".length",".position",".start",".end"
+]
+
 if(blacklist.some(x=>d.includes(x))) return false
+
 return /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(d)
 }
 
@@ -85,27 +92,87 @@ if(!r.ok){
 throw new Error("HTTP " + r.status)
 }
 
-const data = JSON.parse(await r.text())
+const text = await r.text()
+console.log("RAW:", text)
 
+const data = JSON.parse(text)
+console.log("PARSED:", data)
+
+// CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(safeClear)
 
 // BASIC
-document.getElementById("pkg").textContent = data.package || "-"
-document.getElementById("score").textContent = data.score ?? 0
+const pkg = document.getElementById("pkg")
+if(pkg) pkg.textContent = data.package || "-"
 
-// DATA
-(data.processes || []).forEach(p=> safeSet("proc", `<div class="item">${p}</div>`))
-(data.files || []).forEach(f=> safeSet("fs", `<div class="item">${f}</div>`))
+const score = document.getElementById("score")
+if(score) score.textContent = data.score ?? 0
 
+// PROCESSES
+if((data.processes || []).length === 0){
+safeSet("proc","<div class='item'>No processes</div>")
+}
+
+(data.processes || []).forEach(p=>{
+safeSet("proc", `<div class="item">${p}</div>`)
+})
+
+// FILES
+if((data.files || []).length === 0){
+safeSet("fs","<div class='item'>No file activity</div>")
+}
+
+(data.files || []).forEach(f=>{
+safeSet("fs", `<div class="item">${f}</div>`)
+})
+
+// DOMAINS
 const cleanDomains = (data.domains || []).filter(isRealDomain)
-cleanDomains.forEach(d=> safeSet("domains", `<div class="item">${d}</div>`))
 
-(data.dns || []).forEach(d=> safeSet("dns", `<div class="item">${d}</div>`))
-(data.http_requests || []).forEach(h=> safeSet("http", `<div class="item">${h.method} → ${h.path}</div>`))
+if(cleanDomains.length === 0){
+safeSet("domains","<div class='item'>No real domains</div>")
+}
+
+cleanDomains.forEach(d=>{
+safeSet("domains", `<div class="item">${d}</div>`)
+})
+
+// DNS
+if((data.dns || []).length === 0){
+safeSet("dns","<div class='item'>No DNS activity</div>")
+}
+
+(data.dns || []).forEach(d=>{
+safeSet("dns", `<div class="item">${d}</div>`)
+})
+
+// HTTP
+if((data.http_requests || []).length === 0){
+safeSet("http","<div class='item'>No HTTP traffic</div>")
+}
+
+(data.http_requests || []).forEach(h=>{
+safeSet("http", `<div class="item">${h.method} → ${h.path}</div>`)
+})
+
+// NETWORK
+if((data.network_details || []).length === 0){
+safeSet("net","<div class='item'>No network activity</div>")
+}
 
 (data.network_details || []).forEach(n=>{
-safeSet("net", `<div class="item">IP: ${n.ip}<br>Country: ${n.country || "-"}<br>ISP: ${n.isp || "-"}</div>`)
+safeSet("net", `
+<div class="item">
+IP: ${n.ip}<br>
+Country: ${n.country || "-"}<br>
+ISP: ${n.isp || "-"}
+</div>`)
 })
+
+// TIMELINE
+if((data.timeline || []).length === 0){
+safeSet("timeline","<div class='item'>No timeline</div>")
+}
 
 (data.timeline || []).forEach(t=>{
 safeSet("timeline", `<div class="item">[${t.time}s] → ${t.event}</div>`)
@@ -135,8 +202,13 @@ nodes.push({id:id,label:d})
 edges.push({from:root,to:id})
 })
 
-new vis.Network(graphEl,{nodes,edges},{})
+new vis.Network(graphEl,{
+nodes:new vis.DataSet(nodes),
+edges:new vis.DataSet(edges)
+},{})
 }
+
+console.log("✅ Dashboard Updated")
 
 }catch(e){
 console.error("❌ ERROR:", e)
@@ -144,7 +216,17 @@ console.error("❌ ERROR:", e)
 
 }
 
+// ================= START =================
+
+window.addEventListener("DOMContentLoaded", () => {
+
+console.log("✅ DOM READY")
+
 load()
+
+setInterval(load, 7000)
+
+})
 
 </script>
 
