@@ -46,28 +46,35 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 
 <script>
 
+// فلترة الدومينات
 function isRealDomain(d){
 if(!d) return false
-
 const blacklist = [".js",".so",".json",".node",".bundle",".length",".position"]
 if(blacklist.some(x=>d.includes(x))) return false
-
 return /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(d)
 }
 
+// تحميل البيانات مع retry
 async function load(){
-
-try{
 
 const url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json?cache=" + Date.now()
 
-const r = await fetch(url)
+try{
+
+const r = await fetch(url, {
+cache: "no-store"
+})
 
 if(!r.ok){
-throw new Error("HTTP ERROR: " + r.status)
+throw new Error("HTTP " + r.status)
 }
 
+// 👇 مهم: نقرأ كنص أول
 const text = await r.text()
+
+// debug
+console.log("RAW:", text)
+
 const data = JSON.parse(text)
 
 // CLEAR
@@ -89,7 +96,7 @@ document.getElementById("proc").innerHTML += `<div class="item">${p}</div>`
 document.getElementById("fs").innerHTML += `<div class="item">${f}</div>`
 })
 
-// DOMAINS ( filtered)
+// DOMAINS
 const cleanDomains = (data.domains || []).filter(isRealDomain)
 
 cleanDomains.forEach(d=>{
@@ -123,7 +130,7 @@ document.getElementById("timeline").innerHTML +=
 `<div class="item">[${t.time}s] → ${t.event}</div>`
 })
 
-// GRAPH (clean only)
+// GRAPH
 let nodes=[]
 let edges=[]
 let id=1
@@ -131,14 +138,12 @@ let id=1
 nodes.push({id:id,label:"Package"})
 let root=id
 
-// processes
 (data.processes || []).forEach(p=>{
 id++
 nodes.push({id:id,label:p})
 edges.push({from:root,to:id})
 })
 
-// domains clean only
 cleanDomains.forEach(d=>{
 id++
 nodes.push({id:id,label:d})
@@ -151,9 +156,13 @@ document.getElementById("graph"),
 {}
 )
 
+console.log("✅ Loaded successfully")
+
 }catch(e){
-console.error("FULL ERROR:", e)
-alert("❌ ERROR: " + e.message)
+
+console.error("❌ ERROR:", e)
+
+
 }
 
 }
