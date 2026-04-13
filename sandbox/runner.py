@@ -24,11 +24,7 @@ captured_dns = []
 class FakeHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        captured_requests.append({
-            "method": "GET",
-            "path": self.path
-        })
-
+        captured_requests.append({"method": "GET","path": self.path})
         self.send_response(200)
         self.end_headers()
         self.wfile.write(b"OK")
@@ -48,13 +44,12 @@ class FakeHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"OK")
 
 def start_http():
-    server = HTTPServer(("0.0.0.0", 8080), FakeHandler)
-    server.serve_forever()
+    HTTPServer(("0.0.0.0", 8080), FakeHandler).serve_forever()
 
 threading.Thread(target=start_http, daemon=True).start()
 
 # ============================
-# FAKE DNS
+# DNS
 # ============================
 
 from dnslib.server import DNSServer, BaseResolver
@@ -70,9 +65,7 @@ class FakeResolver(BaseResolver):
         return reply
 
 def start_dns():
-    resolver = FakeResolver()
-    server = DNSServer(resolver, port=5353, address="0.0.0.0")
-    server.start()
+    DNSServer(FakeResolver(), port=5353, address="0.0.0.0").start()
 
 threading.Thread(target=start_dns, daemon=True).start()
 
@@ -109,23 +102,6 @@ for root, _, files in os.walk(file_path):
 env = os.environ.copy()
 
 # ============================
-# ENRICH IP
-# ============================
-
-def enrich_ip(ip):
-    try:
-        url = f"http://ip-api.com/json/{ip}"
-        data = json.loads(urllib.request.urlopen(url).read())
-        return {
-            "ip": ip,
-            "country": data.get("country"),
-            "isp": data.get("isp"),
-            "org": data.get("org")
-        }
-    except:
-        return {"ip": ip}
-
-# ============================
 # ANALYSIS
 # ============================
 
@@ -135,7 +111,7 @@ files = []
 processes = []
 timeline = []
 
-start = time.time()
+last_time = time.time()
 
 for target in targets:
 
@@ -145,30 +121,32 @@ for target in targets:
         ["strace", "-f", "-e", "trace=all"] + run_cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        stdin=subprocess.PIPE,
         text=True,
         env=env
     )
 
     try:
-        stdout, stderr = process.communicate(input="trigger\n", timeout=60)
+        _, stderr = process.communicate(timeout=60)
     except:
         process.kill()
-        stdout, stderr = process.communicate()
+        _, stderr = process.communicate()
 
     for line in stderr.split("\n"):
 
         if not line:
             continue
 
+        #  TIMELINE FIX
+        now = time.time()
         timeline.append({
-            "time": round(time.time() - start, 2),
+            "time": round(now - last_time, 2),
             "event": line[:200]
         })
+        last_time = now
 
-        # PROCESS
-        if "execve(" in line:
-            m = re.search(r'execve\("([^"]+)"', line)
+        #  PROCESS FIX
+        if any(x in line for x in ["execve", "clone", "fork", "vfork"]):
+            m = re.search(r'"([^"]+)"', line)
             if m:
                 processes.append(os.path.basename(m.group(1)))
 
@@ -176,14 +154,13 @@ for target in targets:
         for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
             ips.add(ip)
 
-        # ✅ FIXED DOMAIN EXTRACTION
+        #  DOMAIN FIX
         for d in re.findall(r'\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}\b', line):
 
-            # فلترة أشياء مو دومينات
             if d.endswith((".js",".so",".json",".node",".length",".map",".bundle")):
                 continue
 
-            if d.startswith(("lib", "this", "state", "input")):
+            if any(x in d for x in ["Listener","buffer","state","input"]):
                 continue
 
             domains.add(d)
@@ -194,17 +171,64 @@ for target in targets:
             if f:
                 files.append(f.group(1))
 
+        # ETWORK DETECTION
+        if "connect(" in line:
+            timeline.append({
+                "time": 0,
+                "event": "NETWORK CONNECTION DETECTED"
+            })
+
 # ============================
 # NETWORK DETAILS
 # ============================
 
+def enrich_ip(ip):
+    try:
+        data = json.loads(urllib.request.urlopen(f"http://ip-api.com/json/{ip}").read())
+        return {
+            "ip": ip,
+            "country": data.get("country"),
+            "isp": data.get("isp"),
+            "org": data.get("org")
+        }
+    except:
+        return {"ip": ip}
+
 network_details = [enrich_ip(ip) for ip in ips]
 
 # ============================
-# SCORE
+#  SMART THREAT SCORING
 # ============================
 
-score = len(processes) + len(ips)*2
+score = 0
+reasons = []
+
+if len(processes) > 3:
+    score += 3
+    reasons.append("Multiple processes")
+
+if len(ips) > 0:
+    score += 4
+    reasons.append("External connections")
+
+if len(domains) > 3:
+    score += 2
+    reasons.append("Multiple domains")
+
+if len(files) > 10:
+    score += 2
+    reasons.append("Heavy file access")
+
+# ============================
+# THREAT LEVEL
+# ============================
+
+if score >= 7:
+    threat_level = "HIGH RISK"
+elif score >= 4:
+    threat_level = "MEDIUM RISK"
+else:
+    threat_level = "LOW RISK"
 
 # ============================
 # SAVE
@@ -216,6 +240,8 @@ os.makedirs("decoy_logs/decoy_runs", exist_ok=True)
 log = {
     "package": os.path.basename(original_input),
     "score": score,
+    "threat_level": threat_level,
+    "reasons": reasons,
     "processes": processes,
     "files": files,
     "domains": list(domains),
