@@ -28,7 +28,6 @@ gap:20px;
 background:#1e293b;
 padding:20px;
 border-radius:12px;
-box-shadow:0 0 10px rgba(0,0,0,0.4);
 }
 
 .title{
@@ -64,66 +63,33 @@ border-bottom:1px solid #333;
 
 <body>
 
-<h1>Decoy System Dashboard</h1>
+<h1>🔥 Decoy System Dashboard</h1>
 
 <div class="grid">
 
 <div class="card">
-<div class="title">Analyzed Package</div>
+<div class="title">Package</div>
 <div id="pkg" class="big"></div>
 </div>
 
 <div class="card">
-<div class="title">Threat Classification Result</div>
+<div class="title">Verdict</div>
 <div id="verdict" class="big"></div>
 </div>
 
 <div class="card">
-<div class="title">Behavior Risk Score</div>
+<div class="title">Score</div>
 <div id="score" class="big"></div>
 </div>
 
-<div class="card">
-<div class="title">Executed Processes</div>
-<div id="proc" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">File System Activity</div>
-<div id="fs" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Detected Domains</div>
-<div id="domains" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Captured DNS Queries</div>
-<div id="dns" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Captured HTTP Requests</div>
-<div id="http" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Decoded Payloads (Clean Only)</div>
-<div id="payloads" class="list"></div>
-</div>
-
-
-<div class="card">
-<div class="title">Network Intelligence (IP + Geo Info)</div>
-<div id="net" class="list"></div>
-</div>
-
-
-<div class="card">
-<div class="title">Execution Timeline (Step-by-step Behavior)</div>
-<div id="timeline" class="list"></div>
-</div>
+<div class="card"><div class="title">Processes</div><div id="proc" class="list"></div></div>
+<div class="card"><div class="title">Filesystem</div><div id="fs" class="list"></div></div>
+<div class="card"><div class="title">Domains</div><div id="domains" class="list"></div></div>
+<div class="card"><div class="title">DNS</div><div id="dns" class="list"></div></div>
+<div class="card"><div class="title">HTTP</div><div id="http" class="list"></div></div>
+<div class="card"><div class="title">Payloads</div><div id="payloads" class="list"></div></div>
+<div class="card"><div class="title">Network</div><div id="net" class="list"></div></div>
+<div class="card"><div class="title">Timeline</div><div id="timeline" class="list"></div></div>
 
 <div class="card">
 <div class="title">Attack Graph</div>
@@ -136,78 +102,104 @@ border-bottom:1px solid #333;
 
 async function load(){
 
-const r=await fetch("decoy_logs/latest.json?t="+Date.now())
-const data=await r.json()
+try{
 
-//  CLEAR BEFORE RENDER (IMPORTANT)
-document.getElementById("proc").innerHTML=""
-document.getElementById("fs").innerHTML=""
-document.getElementById("domains").innerHTML=""
-document.getElementById("dns").innerHTML=""
-document.getElementById("http").innerHTML=""
-document.getElementById("payloads").innerHTML=""
-document.getElementById("net").innerHTML=""
-document.getElementById("timeline").innerHTML=""
+const r = await fetch("decoy_logs/latest.json?t="+Date.now())
 
-// basic
-document.getElementById("pkg").textContent=data.package
-document.getElementById("score").textContent=data.score
+if(!r.ok){
+throw new Error("HTTP " + r.status)
+}
 
-// verdict
-let v=data.verdict
-document.getElementById("verdict").innerHTML=
-`<span class="${v=="MALICIOUS"?"verdict-mal":"verdict-clean"}">${v}</span>`
+let data = {}
 
-// processes
+try{
+data = await r.json()
+}catch(e){
+console.error("JSON error", e)
+return
+}
+
+// CLEAR
+["proc","fs","domains","dns","http","payloads","net","timeline"].forEach(id=>{
+document.getElementById(id).innerHTML=""
+})
+
+// BASIC
+document.getElementById("pkg").textContent = data.package || "-"
+document.getElementById("score").textContent = data.score ?? 0
+
+// VERDICT
+let verdict = (data.score || 0) > 10 ? "MALICIOUS" : "CLEAN"
+
+document.getElementById("verdict").innerHTML =
+`<span class="${verdict==="MALICIOUS"?"verdict-mal":"verdict-clean"}">${verdict}</span>`
+
+// PROCESSES
+if(Array.isArray(data.processes)){
 data.processes.forEach(p=>{
-document.getElementById("proc").innerHTML+=`<div class="item">${p}</div>`
+document.getElementById("proc").innerHTML += `<div class="item">${p}</div>`
 })
+}
 
-// files
+// FILES
+if(Array.isArray(data.files)){
 data.files.forEach(f=>{
-document.getElementById("fs").innerHTML+=`<div class="item">${f}</div>`
+document.getElementById("fs").innerHTML += `<div class="item">${f}</div>`
 })
+}
 
-// domains
+// DOMAINS
+if(Array.isArray(data.domains)){
 data.domains.forEach(d=>{
-document.getElementById("domains").innerHTML+=`<div class="item">${d}</div>`
+document.getElementById("domains").innerHTML += `<div class="item">${d}</div>`
 })
+}
 
-// dns
+// DNS
+if(Array.isArray(data.dns)){
 data.dns.forEach(d=>{
-document.getElementById("dns").innerHTML+=`<div class="item">${d}</div>`
+document.getElementById("dns").innerHTML += `<div class="item">${d}</div>`
 })
+}
 
-// http
+// HTTP
+if(Array.isArray(data.http_requests)){
 data.http_requests.forEach(h=>{
-document.getElementById("http").innerHTML+=
+document.getElementById("http").innerHTML +=
 `<div class="item">${h.method} → ${h.path}</div>`
 })
+}
 
-// payloads
+// PAYLOADS
+if(Array.isArray(data.decoded_payloads)){
 data.decoded_payloads.forEach(p=>{
-document.getElementById("payloads").innerHTML+=
+document.getElementById("payloads").innerHTML +=
 `<div class="item">${p}</div>`
 })
+}
 
-//  NETWORK DETAILS
+// NETWORK
+if(Array.isArray(data.network_details)){
 data.network_details.forEach(n=>{
-document.getElementById("net").innerHTML+=`
+document.getElementById("net").innerHTML += `
 <div class="item">
-IP: ${n.ip}<br>
-Country: ${n.country}<br>
-ISP: ${n.isp}<br>
-Org: ${n.org}
+IP: ${n.ip || "-"}<br>
+Country: ${n.country || "-"}<br>
+ISP: ${n.isp || "-"}<br>
+Org: ${n.org || "-"}
 </div>`
 })
+}
 
-//  TIMELINE
+// TIMELINE
+if(Array.isArray(data.timeline)){
 data.timeline.forEach(t=>{
-document.getElementById("timeline").innerHTML+=
-`<div class="item">[${t.time}s] → ${t.event}</div>`
+document.getElementById("timeline").innerHTML +=
+`<div class="item">[${t.time || 0}s] → ${t.event || "-"}</div>`
 })
+}
 
-// graph
+// GRAPH
 let nodes=[]
 let edges=[]
 let id=1
@@ -215,17 +207,21 @@ let id=1
 nodes.push({id:id,label:"Package"})
 let root=id
 
+if(Array.isArray(data.processes)){
 data.processes.forEach(p=>{
 id++
 nodes.push({id:id,label:p})
 edges.push({from:root,to:id})
 })
+}
 
+if(Array.isArray(data.domains)){
 data.domains.forEach(d=>{
 id++
 nodes.push({id:id,label:d})
 edges.push({from:root,to:id})
 })
+}
 
 new vis.Network(
 document.getElementById("graph"),
@@ -233,9 +229,15 @@ document.getElementById("graph"),
 {}
 )
 
+}catch(e){
+console.error("ERROR:", e)
+alert("Error: " + e.message)
+}
+
 }
 
 load()
+setInterval(load, 5000)
 
 </script>
 
