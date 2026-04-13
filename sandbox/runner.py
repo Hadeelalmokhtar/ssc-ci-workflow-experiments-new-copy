@@ -49,7 +49,7 @@ def start_http():
 threading.Thread(target=start_http, daemon=True).start()
 
 # ============================
-# DNS
+# DNS SERVER
 # ============================
 
 from dnslib.server import DNSServer, BaseResolver
@@ -126,17 +126,6 @@ for target in targets:
         env=env
     )
 
-    #  PROCESS MONITOR
-    def monitor_process(pid):
-        for _ in range(5):
-            try:
-                subprocess.check_output(["ps","-ef"])
-            except:
-                pass
-            time.sleep(2)
-
-    threading.Thread(target=monitor_process, args=(process.pid,), daemon=True).start()
-
     try:
         _, stderr = process.communicate(timeout=60)
     except:
@@ -156,32 +145,40 @@ for target in targets:
         })
         last_time = now
 
-        # PROCESS
-        if any(x in line for x in ["execve", "clone", "fork", "vfork"]):
-            m = re.search(r'"([^"]+)"', line)
+        if "execve(" in line:
+            m = re.search(r'execve\("([^"]+)"', line)
             if m:
                 processes.append(os.path.basename(m.group(1)))
 
-        # COMMANDS 
+        #  COMMANDS
         if "execve(" in line or "system(" in line:
             m = re.search(r'"([^"]+)"', line)
             if m:
                 commands.append(m.group(1))
 
+        if "getaddrinfo" in line or "resolv" in line:
+            d = re.findall(r'"([^"]+)"', line)
+            for x in d:
+                if "." in x:
+                    captured_dns.append(x)
+
         # IP
         for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
             ips.add(ip)
 
-        # DOMAIN FIX 
-        for d in re.findall(r'\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}\b', line):
+        #  DOMAIN FIX 
+        for d in re.findall(r'([a-zA-Z0-9-]+\.[a-zA-Z]{2,})', line):
 
-            if not re.match(r'^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$', d):
+            if d.endswith((".so",".cnf",".conf",".cfg",".ini",".res",".node")):
+                continue
+
+            if any(x in d for x in ["lib","usr","bin","etc"]):
                 continue
 
             domains.add(d)
 
-        # FILES
-        if "open(" in line:
+        #  FILESYSTEM 
+        if any(x in line for x in ["open(", "read(", "write(", "access("]):
             f = re.search(r'"([^"]+)"', line)
             if f:
                 files.append(f.group(1))
@@ -212,13 +209,13 @@ def enrich_ip(ip):
 network_details = [enrich_ip(ip) for ip in ips]
 
 # ============================
-# THREAT SCORING
+# SCORING
 # ============================
 
 score = 0
 reasons = []
 
-if len(processes) > 3:
+if len(processes) > 2:
     score += 3
     reasons.append("Multiple processes")
 
@@ -226,13 +223,13 @@ if len(ips) > 0:
     score += 4
     reasons.append("External connections")
 
-if len(domains) > 3:
+if len(domains) > 2:
     score += 2
     reasons.append("Multiple domains")
 
-if len(files) > 10:
+if len(files) > 5:
     score += 2
-    reasons.append("Heavy file access")
+    reasons.append("File activity detected")
 
 # ============================
 # LEVEL
@@ -258,7 +255,7 @@ log = {
     "threat_level": threat_level,
     "reasons": reasons,
     "processes": processes,
-    "commands": commands,   #  NEW
+    "commands": commands,
     "files": files,
     "domains": list(domains),
     "dns": captured_dns,
