@@ -110,6 +110,7 @@ domains = set()
 files = []
 processes = []
 timeline = []
+commands = []
 
 last_time = time.time()
 
@@ -118,12 +119,23 @@ for target in targets:
     run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
 
     process = subprocess.Popen(
-        ["strace", "-f", "-e", "trace=all"] + run_cmd,
+        ["strace", "-ff", "-s", "200", "-e", "trace=process,network,file"] + run_cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         env=env
     )
+
+    #  PROCESS MONITOR
+    def monitor_process(pid):
+        for _ in range(5):
+            try:
+                subprocess.check_output(["ps","-ef"])
+            except:
+                pass
+            time.sleep(2)
+
+    threading.Thread(target=monitor_process, args=(process.pid,), daemon=True).start()
 
     try:
         _, stderr = process.communicate(timeout=60)
@@ -136,7 +148,7 @@ for target in targets:
         if not line:
             continue
 
-        #  TIMELINE FIX
+        # TIMELINE
         now = time.time()
         timeline.append({
             "time": round(now - last_time, 2),
@@ -144,23 +156,26 @@ for target in targets:
         })
         last_time = now
 
-        #  PROCESS FIX
+        # PROCESS
         if any(x in line for x in ["execve", "clone", "fork", "vfork"]):
             m = re.search(r'"([^"]+)"', line)
             if m:
                 processes.append(os.path.basename(m.group(1)))
 
+        # COMMANDS 
+        if "execve(" in line or "system(" in line:
+            m = re.search(r'"([^"]+)"', line)
+            if m:
+                commands.append(m.group(1))
+
         # IP
         for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
             ips.add(ip)
 
-        #  DOMAIN FIX
+        # DOMAIN FIX 
         for d in re.findall(r'\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}\b', line):
 
-            if d.endswith((".js",".so",".json",".node",".length",".map",".bundle")):
-                continue
-
-            if any(x in d for x in ["Listener","buffer","state","input"]):
+            if not re.match(r'^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$', d):
                 continue
 
             domains.add(d)
@@ -171,7 +186,7 @@ for target in targets:
             if f:
                 files.append(f.group(1))
 
-        # ETWORK DETECTION
+        # NETWORK
         if "connect(" in line:
             timeline.append({
                 "time": 0,
@@ -197,7 +212,7 @@ def enrich_ip(ip):
 network_details = [enrich_ip(ip) for ip in ips]
 
 # ============================
-#  SMART THREAT SCORING
+# THREAT SCORING
 # ============================
 
 score = 0
@@ -220,7 +235,7 @@ if len(files) > 10:
     reasons.append("Heavy file access")
 
 # ============================
-# THREAT LEVEL
+# LEVEL
 # ============================
 
 if score >= 7:
@@ -243,6 +258,7 @@ log = {
     "threat_level": threat_level,
     "reasons": reasons,
     "processes": processes,
+    "commands": commands,   #  NEW
     "files": files,
     "domains": list(domains),
     "dns": captured_dns,
