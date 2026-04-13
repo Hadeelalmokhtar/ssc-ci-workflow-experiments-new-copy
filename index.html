@@ -16,8 +16,6 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 .big{font-size:22px;font-weight:bold}
 .list{background:#0b1220;padding:10px;border-radius:8px;max-height:250px;overflow:auto}
 .item{padding:6px;border-bottom:1px solid #333}
-.verdict-clean{color:#4dff88}
-.verdict-mal{color:#ff4d4d}
 </style>
 
 </head>
@@ -28,50 +26,16 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 
 <div class="grid">
 
-<div class="card">
-<div class="title">Package</div>
-<div id="pkg" class="big"></div>
-</div>
+<div class="card"><div class="title">Package</div><div id="pkg" class="big"></div></div>
+<div class="card"><div class="title">Threat Score</div><div id="score" class="big"></div></div>
 
-<div class="card">
-<div class="title">Threat Score</div>
-<div id="score" class="big"></div>
-</div>
-
-<div class="card">
-<div class="title">Processes</div>
-<div id="proc" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Filesystem</div>
-<div id="fs" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Domains</div>
-<div id="domains" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">DNS</div>
-<div id="dns" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">HTTP Requests</div>
-<div id="http" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Network</div>
-<div id="net" class="list"></div>
-</div>
-
-<div class="card">
-<div class="title">Timeline</div>
-<div id="timeline" class="list"></div>
-</div>
+<div class="card"><div class="title">Processes</div><div id="proc" class="list"></div></div>
+<div class="card"><div class="title">Filesystem</div><div id="fs" class="list"></div></div>
+<div class="card"><div class="title">Domains</div><div id="domains" class="list"></div></div>
+<div class="card"><div class="title">DNS</div><div id="dns" class="list"></div></div>
+<div class="card"><div class="title">HTTP Requests</div><div id="http" class="list"></div></div>
+<div class="card"><div class="title">Network</div><div id="net" class="list"></div></div>
+<div class="card"><div class="title">Timeline</div><div id="timeline" class="list"></div></div>
 
 <div class="card">
 <div class="title">Attack Graph</div>
@@ -82,17 +46,29 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 
 <script>
 
+function isRealDomain(d){
+if(!d) return false
+
+const blacklist = [".js",".so",".json",".node",".bundle",".length",".position"]
+if(blacklist.some(x=>d.includes(x))) return false
+
+return /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(d)
+}
+
 async function load(){
 
 try{
 
-const r = await fetch("https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json")
+const url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json?cache=" + Date.now()
+
+const r = await fetch(url)
 
 if(!r.ok){
-throw new Error("JSON not found")
+throw new Error("HTTP ERROR: " + r.status)
 }
 
-const data = await r.json()
+const text = await r.text()
+const data = JSON.parse(text)
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
@@ -113,8 +89,10 @@ document.getElementById("proc").innerHTML += `<div class="item">${p}</div>`
 document.getElementById("fs").innerHTML += `<div class="item">${f}</div>`
 })
 
-// DOMAINS
-(data.domains || []).forEach(d=>{
+// DOMAINS ( filtered)
+const cleanDomains = (data.domains || []).filter(isRealDomain)
+
+cleanDomains.forEach(d=>{
 document.getElementById("domains").innerHTML += `<div class="item">${d}</div>`
 })
 
@@ -145,7 +123,7 @@ document.getElementById("timeline").innerHTML +=
 `<div class="item">[${t.time}s] → ${t.event}</div>`
 })
 
-// GRAPH
+// GRAPH (clean only)
 let nodes=[]
 let edges=[]
 let id=1
@@ -153,13 +131,15 @@ let id=1
 nodes.push({id:id,label:"Package"})
 let root=id
 
+// processes
 (data.processes || []).forEach(p=>{
 id++
 nodes.push({id:id,label:p})
 edges.push({from:root,to:id})
 })
 
-(data.domains || []).forEach(d=>{
+// domains clean only
+cleanDomains.forEach(d=>{
 id++
 nodes.push({id:id,label:d})
 edges.push({from:root,to:id})
@@ -172,14 +152,13 @@ document.getElementById("graph"),
 )
 
 }catch(e){
-console.error(e)
-alert("❌ Failed to load JSON")
+console.error("FULL ERROR:", e)
+alert("❌ ERROR: " + e.message)
 }
 
 }
 
 load()
-
 
 </script>
 
