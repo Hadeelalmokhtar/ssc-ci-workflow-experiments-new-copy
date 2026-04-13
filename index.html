@@ -24,7 +24,7 @@ body{background:#0f172a;color:white;font-family:Arial;padding:30px}
 
 <body>
 
-<h1>Decoy System Dashboard</h1>
+<h1>🔥 Decoy System Dashboard</h1>
 
 <div class="grid">
 
@@ -73,18 +73,20 @@ return "other"
 
 async function load(){
 
-const url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json?cache=" + Date.now()
+const url = "https://hadeelalmokhtar.github.io/ssc-ci-workflow-experiments-new-copy/decoy_logs/latest.json?cache=" + Date.now()
 
 try{
 
-const r = await fetch(url, {cache:"no-store"})
-const text = await r.text()
+const r = await fetch(url)
 
-console.log("RAW:", text)
+if(!r.ok){
+throw new Error("HTTP " + r.status)
+}
 
-const data = JSON.parse(text)
+// ✅ الحل هنا
+const data = await r.json()
 
-console.log("PARSED:", data)
+console.log("DATA:", data)
 
 // CLEAR
 ["proc","fs","domains","dns","http","net","timeline"].forEach(safeClear)
@@ -114,7 +116,7 @@ data.files?.forEach(f=>{
 safeSet("fs", `<div class="item">${f}</div>`)
 })
 
-// ================= DOMAINS (NO FILTER) =================
+// ================= DOMAINS =================
 
 if((data.domains || []).length === 0){
 safeSet("domains","<div class='item'>No domains</div>")
@@ -194,14 +196,12 @@ let id=1
 nodes.push({id:id,label:"Package"})
 let root=id
 
-// processes
 data.processes?.forEach(p=>{
 id++
 nodes.push({id:id,label:p,color:"#3b82f6"})
 edges.push({from:root,to:id})
 })
 
-// domains
 data.domains?.forEach(d=>{
 id++
 nodes.push({id:id,label:d})
@@ -214,10 +214,11 @@ edges:new vis.DataSet(edges)
 },{})
 }
 
-console.log(" Dashboard Updated")
+console.log("✅ Dashboard Updated")
 
 }catch(e){
-console.error(" ERROR:", e)
+console.error("❌ ERROR:", e)
+alert("Fetch failed: " + e.message)
 }
 
 }
@@ -226,9 +227,12 @@ console.error(" ERROR:", e)
 
 window.addEventListener("DOMContentLoaded", () => {
 
-console.log(" DOM READY")
+console.log("✅ DOM READY")
 
 load()
+
+// auto refresh
+setInterval(load, 5000)
 
 })
 
