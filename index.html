@@ -1,3 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SSC Dashboard</title>
+
+<style>
+body {
+    background:#0f172a;
+    color:white;
+    font-family:Arial;
+    padding:20px;
+}
+.card {
+    background:#1e293b;
+    padding:15px;
+    margin:10px;
+    border-radius:10px;
+}
+.title {
+    font-weight:bold;
+    margin-bottom:10px;
+}
+.item {
+    background:#334155;
+    padding:5px;
+    margin:3px;
+    border-radius:5px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🚨 SSC Security Dashboard</h1>
+
+<div class="card">
+<div class="title">Package</div>
+<div id="pkg">-</div>
+</div>
+
+<div class="card">
+<div class="title">Threat Score</div>
+<div id="score">0</div>
+</div>
+
+<div class="card">
+<div class="title">Processes</div>
+<div id="proc"></div>
+</div>
+
+<div class="card">
+<div class="title">Filesystem</div>
+<div id="fs"></div>
+</div>
+
+<div class="card">
+<div class="title">DNS Activity</div>
+<div id="dns"></div>
+</div>
+
+<div class="card">
+<div class="title">Network</div>
+<div id="net"></div>
+</div>
+
+<div class="card">
+<div class="title">Timeline</div>
+<div id="timeline"></div>
+</div>
+
 <script>
 
 async function load(){
@@ -6,16 +78,25 @@ try{
 
 const url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json"
 
+// DEBUG
+console.log("Fetching:", url)
+
 const res = await fetch(url)
 
+console.log("Status:", res.status)
+
 if(!res.ok){
-throw new Error("fetch failed")
+throw new Error("Fetch failed: " + res.status)
 }
 
-const data = await res.json()
+const text = await res.text()
+console.log("RAW DATA:", text)
+
+// تحويل JSON
+const data = JSON.parse(text)
 
 // CLEAR
-["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
+["proc","fs","dns","net","timeline"].forEach(id=>{
 document.getElementById(id).innerHTML=""
 })
 
@@ -55,8 +136,8 @@ document.getElementById("timeline").innerHTML +=
 })
 
 }catch(e){
-console.error(e)
-alert("❌ Failed to load JSON")
+console.error("ERROR:", e)
+alert("❌ Failed to load JSON (check console)")
 }
 
 }
@@ -64,3 +145,6 @@ alert("❌ Failed to load JSON")
 load()
 
 </script>
+
+</body>
+</html>
