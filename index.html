@@ -1,21 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>SSC Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/vis-network/styles/vis-network.min.css" rel="stylesheet">
+
+<style>
+body{background:#0f172a;color:white;font-family:Arial;padding:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:20px}
+.card{background:#1e293b;padding:20px;border-radius:12px}
+.title{font-size:14px;opacity:0.7;margin-bottom:8px}
+.big{font-size:22px;font-weight:bold}
+.list{background:#0b1220;padding:10px;border-radius:8px;max-height:250px;overflow:auto}
+.item{padding:6px;border-bottom:1px solid #333}
+.verdict-clean{color:#4dff88}
+.verdict-mal{color:#ff4d4d}
+</style>
+
+</head>
+
+<body>
+
+<h1>Decoy System Dashboard</h1>
+
+<div class="grid">
+
+<div class="card">
+<div class="title">Package</div>
+<div id="pkg" class="big"></div>
+</div>
+
+<div class="card">
+<div class="title">Threat Score</div>
+<div id="score" class="big"></div>
+</div>
+
+<div class="card">
+<div class="title">Processes</div>
+<div id="proc" class="list"></div>
+</div>
+
+<div class="card">
+<div class="title">Filesystem</div>
+<div id="fs" class="list"></div>
+</div>
+
+<div class="card">
+<div class="title">Domains</div>
+<div id="domains" class="list"></div>
+</div>
+
+<div class="card">
+<div class="title">DNS</div>
+<div id="dns" class="list"></div>
+</div>
+
+<div class="card">
+<div class="title">HTTP Requests</div>
+<div id="http" class="list"></div>
+</div>
+
+<div class="card">
+<div class="title">Network</div>
+<div id="net" class="list"></div>
+</div>
+
+<div class="card">
+<div class="title">Timeline</div>
+<div id="timeline" class="list"></div>
+</div>
+
+<div class="card">
+<div class="title">Attack Graph</div>
+<div id="graph" style="height:300px"></div>
+</div>
+
+</div>
+
 <script>
 
 async function load(){
 
 try{
 
-const url = "https://raw.githubusercontent.com/hadeelalmokhtar/ssc-ci-workflow-experiments-new-copy/main/decoy_logs/latest.json"
+const r = await fetch("decoy_logs/latest.json?t=" + Date.now())
 
-const res = await fetch(url)
-
-if(!res.ok){
-throw new Error("fetch failed")
+if(!r.ok){
+throw new Error("JSON not found")
 }
 
-const data = await res.json()
+const data = await r.json()
 
 // CLEAR
-["proc","fs","dns","net","timeline"].forEach(id=>{
+["proc","fs","domains","dns","http","net","timeline"].forEach(id=>{
 document.getElementById(id).innerHTML=""
 })
 
@@ -23,22 +103,33 @@ document.getElementById(id).innerHTML=""
 document.getElementById("pkg").textContent = data.package || "-"
 document.getElementById("score").textContent = data.score ?? 0
 
-// ✅ PROCESSES (تم التعديل)
+// PROCESSES
 (data.processes || []).forEach(p=>{
 document.getElementById("proc").innerHTML += `<div class="item">${p}</div>`
 })
 
-// ✅ FILES
+// FILES
 (data.files || []).forEach(f=>{
 document.getElementById("fs").innerHTML += `<div class="item">${f}</div>`
 })
 
-// ✅ DNS
+// DOMAINS
+(data.domains || []).forEach(d=>{
+document.getElementById("domains").innerHTML += `<div class="item">${d}</div>`
+})
+
+// DNS
 (data.dns || []).forEach(d=>{
 document.getElementById("dns").innerHTML += `<div class="item">${d}</div>`
 })
 
-// ✅ NETWORK
+// HTTP
+(data.http_requests || []).forEach(h=>{
+document.getElementById("http").innerHTML +=
+`<div class="item">${h.method} → ${h.path}</div>`
+})
+
+// NETWORK
 (data.network_details || []).forEach(n=>{
 document.getElementById("net").innerHTML += `
 <div class="item">
@@ -48,11 +139,37 @@ ISP: ${n.isp || "-"}
 </div>`
 })
 
-// ✅ TIMELINE (هذا صحيح عندك أصلاً)
+// TIMELINE
 (data.timeline || []).forEach(t=>{
 document.getElementById("timeline").innerHTML +=
 `<div class="item">[${t.time}s] → ${t.event}</div>`
 })
+
+// GRAPH
+let nodes=[]
+let edges=[]
+let id=1
+
+nodes.push({id:id,label:"Package"})
+let root=id
+
+(data.processes || []).forEach(p=>{
+id++
+nodes.push({id:id,label:p})
+edges.push({from:root,to:id})
+})
+
+(data.domains || []).forEach(d=>{
+id++
+nodes.push({id:id,label:d})
+edges.push({from:root,to:id})
+})
+
+new vis.Network(
+document.getElementById("graph"),
+{nodes:new vis.DataSet(nodes),edges:new vis.DataSet(edges)},
+{}
+)
 
 }catch(e){
 console.error(e)
@@ -63,4 +180,8 @@ alert("❌ Failed to load JSON")
 
 load()
 
+
 </script>
+
+</body>
+</html>
