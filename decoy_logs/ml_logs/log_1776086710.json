@@ -1,0 +1,51 @@
+{
+    "run_id": "1776086710",
+    "package": "0g-da-contract-2.0.0.tgz",
+    "risk_probability": 0.9158644676208496,
+    "prediction": 1,
+    "file_entropy": 4.5521,
+    "execution_time": 0.147,
+    "timestamp": "2026-04-13T13:25:10.999749",
+    "top_shap": [
+        [
+            "num__Number of lines in metadata",
+            1.114638090133667
+        ],
+        [
+            "num__.md",
+            1.0035475492477417
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.9131258726119995
+        ],
+        [
+            "num__Number of lines in source code",
+            0.7782172560691833
+        ],
+        [
+            "num__presence of installation script",
+            -0.5804567337036133
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5651146769523621
+        ],
+        [
+            "num__shannon std string source code",
+            -0.5478714108467102
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5358807444572449
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.47397956252098083
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4445073902606964
+        ]
+    ]
+}
