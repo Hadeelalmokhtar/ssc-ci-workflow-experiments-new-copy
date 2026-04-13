@@ -145,39 +145,46 @@ for target in targets:
         })
         last_time = now
 
-        if "execve(" in line:
+        # ✅ 1. PROCESS DETECTION (UPDATED)
+        if any(x in line for x in ["execve", "clone", "fork", "vfork"]):
             m = re.search(r'execve\("([^"]+)"', line)
             if m:
-                processes.append(os.path.basename(m.group(1)))
+                proc = os.path.basename(m.group(1))
+                if proc != "node":
+                    processes.append(proc)
 
-        #  COMMANDS
+        # COMMANDS
         if "execve(" in line or "system(" in line:
             m = re.search(r'"([^"]+)"', line)
             if m:
                 commands.append(m.group(1))
 
-        if "getaddrinfo" in line or "resolv" in line:
+        # ✅ 2. REAL DNS DETECTION (UPDATED)
+        if "getaddrinfo(" in line:
             d = re.findall(r'"([^"]+)"', line)
             for x in d:
-                if "." in x:
+                if "." in x and not x.endswith(".conf"):
                     captured_dns.append(x)
 
         # IP
         for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
             ips.add(ip)
 
-        #  DOMAIN FIX 
+        # ✅ 3. CLEAN DOMAIN EXTRACTION (UPDATED)
         for d in re.findall(r'([a-zA-Z0-9-]+\.[a-zA-Z]{2,})', line):
 
-            if d.endswith((".so",".cnf",".conf",".cfg",".ini",".res",".node")):
+            if d.endswith((".js",".json",".bundle",".node",".map")):
                 continue
 
-            if any(x in d for x in ["lib","usr","bin","etc"]):
+            if any(x in d for x in ["memory","index","module","exports"]):
+                continue
+
+            if not re.match(r'^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$', d):
                 continue
 
             domains.add(d)
 
-        #  FILESYSTEM 
+        # FILESYSTEM
         if any(x in line for x in ["open(", "read(", "write(", "access("]):
             f = re.search(r'"([^"]+)"', line)
             if f:
