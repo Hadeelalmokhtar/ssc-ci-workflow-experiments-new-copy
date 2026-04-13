@@ -47,7 +47,6 @@ class FakeHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"OK")
 
-
 def start_http():
     server = HTTPServer(("0.0.0.0", 8080), FakeHandler)
     server.serve_forever()
@@ -107,14 +106,10 @@ for root, _, files in os.walk(file_path):
         if f.endswith(".js") or f.endswith(".py"):
             targets.append(os.path.join(root, f))
 
-# ============================
-# ENV
-# ============================
-
 env = os.environ.copy()
 
 # ============================
-# NETWORK ENRICHMENT
+# ENRICH IP
 # ============================
 
 def enrich_ip(ip):
@@ -171,17 +166,29 @@ for target in targets:
             "event": line[:200]
         })
 
+        # PROCESS
         if "execve(" in line:
             m = re.search(r'execve\("([^"]+)"', line)
             if m:
                 processes.append(os.path.basename(m.group(1)))
 
+        # IP
         for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
             ips.add(ip)
 
-        for d in re.findall(r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line):
+        # ✅ FIXED DOMAIN EXTRACTION
+        for d in re.findall(r'\b(?:[a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}\b', line):
+
+            # فلترة أشياء مو دومينات
+            if d.endswith((".js",".so",".json",".node",".length",".map",".bundle")):
+                continue
+
+            if d.startswith(("lib", "this", "state", "input")):
+                continue
+
             domains.add(d)
 
+        # FILES
         if "open(" in line:
             f = re.search(r'"([^"]+)"', line)
             if f:
@@ -219,12 +226,11 @@ log = {
 }
 
 run_id = str(int(time.time()))
-archive_file = f"decoy_logs/decoy_runs/log_{run_id}.json"
 
-with open(archive_file, "w") as f:
+with open(f"decoy_logs/decoy_runs/log_{run_id}.json", "w") as f:
     json.dump(log, f, indent=4)
 
 with open("decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4)
 
-print("Saved:", archive_file)
+print("Saved:", run_id)
