@@ -2163,5 +2163,35 @@
     "hour": 19,
     "timestamp": "2026-04-14T19:19:50.227326",
     "event_type": "request"
+  },
+  {
+    "ip": "127.0.0.1",
+    "user_agent": "Go-http-client/1.1",
+    "endpoint": "/",
+    "method": "HEAD",
+    "geo": {
+      "status": "fail",
+      "message": "reserved range",
+      "query": "127.0.0.1"
+    },
+    "abuse": {},
+    "ipqs": {
+      "success": false,
+      "message": "Invalid or unauthorized key. Please check the API key and try again.",
+      "request_id": "gByHbkZ3C1"
+    },
+    "shodan": {
+      "error": "Invalid IP"
+    },
+    "greynoise": {
+      "plan": "Community",
+      "rate_limit": "25-W",
+      "plan_url": "https://greynoise.io/pricing",
+      "message": "You have hit your current rate limit. Please create a free account or upgrade your plan at https://greynoise.io/pricing."
+    },
+    "request_count": 1,
+    "hour": 19,
+    "timestamp": "2026-04-14T19:21:11.644595",
+    "event_type": "request"
   }
 ]
