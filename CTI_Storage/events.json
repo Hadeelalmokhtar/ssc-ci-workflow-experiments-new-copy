@@ -2055,5 +2055,44 @@
     "hour": 19,
     "timestamp": "2026-04-14T19:18:06.779349",
     "event_type": "request"
+  },
+  {
+    "ip": "34.82.57.203",
+    "user_agent": "Go-http-client/2.0",
+    "endpoint": "/",
+    "method": "GET",
+    "geo": {
+      "status": "success",
+      "country": "United States",
+      "countryCode": "US",
+      "region": "OR",
+      "regionName": "Oregon",
+      "city": "The Dalles",
+      "zip": "97058",
+      "lat": 45.5945,
+      "lon": -121.1786,
+      "timezone": "America/Los_Angeles",
+      "isp": "Google LLC",
+      "org": "Google Cloud (us-west1)",
+      "as": "AS396982 Google LLC",
+      "query": "34.82.57.203"
+    },
+    "abuse": {},
+    "ipqs": {
+      "success": false,
+      "message": "Invalid or unauthorized key. Please check the API key and try again.",
+      "request_id": "gBy4fvAKll"
+    },
+    "shodan": {},
+    "greynoise": {
+      "plan": "Community",
+      "rate_limit": "25-W",
+      "plan_url": "https://greynoise.io/pricing",
+      "message": "You have hit your current rate limit. Please create a free account or upgrade your plan at https://greynoise.io/pricing."
+    },
+    "request_count": 1,
+    "hour": 19,
+    "timestamp": "2026-04-14T19:18:16.581803",
+    "event_type": "request"
   }
 ]
