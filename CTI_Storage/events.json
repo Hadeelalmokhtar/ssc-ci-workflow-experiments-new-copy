@@ -1292,5 +1292,44 @@
     "hour": 18,
     "timestamp": "2026-04-14T18:59:08.833697",
     "event_type": "request"
+  },
+  {
+    "ip": "34.127.94.67",
+    "user_agent": "Go-http-client/2.0",
+    "endpoint": "/",
+    "method": "GET",
+    "geo": {
+      "status": "success",
+      "country": "United States",
+      "countryCode": "US",
+      "region": "OR",
+      "regionName": "Oregon",
+      "city": "The Dalles",
+      "zip": "97058",
+      "lat": 45.5945,
+      "lon": -121.1786,
+      "timezone": "America/Los_Angeles",
+      "isp": "Google LLC",
+      "org": "Google Cloud (us-west1)",
+      "as": "AS396982 Google LLC",
+      "query": "34.127.94.67"
+    },
+    "abuse": {},
+    "ipqs": {
+      "success": false,
+      "message": "Invalid or unauthorized key. Please check the API key and try again.",
+      "request_id": "gBwiUXdGvQ"
+    },
+    "shodan": {},
+    "greynoise": {
+      "ip": "34.127.94.67",
+      "noise": false,
+      "riot": false,
+      "message": "IP not observed scanning the internet or contained in RIOT data set."
+    },
+    "request_count": 1,
+    "hour": 18,
+    "timestamp": "2026-04-14T18:59:16.541767",
+    "event_type": "request"
   }
 ]
