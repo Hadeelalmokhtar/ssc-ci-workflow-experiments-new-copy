@@ -147,33 +147,78 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
         "curl","bot","python","scanner","wget"
     ])
 
-    vt_stats = vt.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
+    automation_score = int(automation_flag) * 80
 
-    # 🔥 readable event
+    hour = now.hour
+    day = now.strftime("%A")
+
+    # 🔥 FINAL EVENT (ALL DATA)
     return {
         "event_type": "path_trigger",
         "token_profile": profile_name,
         "privilege_level": privilege_level,
 
+        # =========================
+        # 🌍 BASIC + GEO
+        # =========================
         "ip": ip,
         "country": geo.get("country"),
+        "city": geo.get("city"),
         "isp": geo.get("isp"),
+        "asn": geo.get("as"),
+        "continent": geo.get("continent"),
+        "timezone": geo.get("timezone"),
+        "lat": geo.get("lat"),
+        "lon": geo.get("lon"),
 
+        "proxy_flag": bool(request.headers.get("X-Forwarded-For")),
+        "hosting_flag": bool(geo.get("hosting")),
+
+        # =========================
+        # 📊 BEHAVIOR
+        # =========================
+        "request_count": request_count,
+        "burst_flag": burst_flag,
+
+        # =========================
+        # 🤖 AUTOMATION
+        # =========================
         "user_agent": ua,
-        "endpoint": endpoint_name,
+        "automation_flag": automation_flag,
+        "automation_score": automation_score,
+
+        # =========================
+        # ⏱️ TIME
+        # =========================
+        "hour_of_day": hour,
+        "day_of_week": day,
+        "is_business_hours": 9 <= hour <= 17,
+
+        # =========================
+        # 🎯 ATTACK CONTEXT
+        # =========================
+        "attack_type": "config_access",
+        "attack_stage": "discovery",
+        "mitre_technique": "T1083",
+        "mitre_tactic": "Discovery",
+
+        # =========================
+        # 🔎 IOC
+        # =========================
+        "ioc_ip": ip,
+        "ioc_user_agent": ua,
+        "ioc_endpoint": endpoint_name,
         "method": request.method,
 
-        "threat_summary": {
-            "abuse_score": abuse.get("abuseConfidenceScore", 0),
-            "fraud_score": ipqs.get("fraud_score", 0),
-            "vt_malicious": vt_stats.get("malicious", 0)
-        },
-
-        "attacker_profile": {
-            "is_bot": automation_flag,
-            "is_vpn": int(ipqs.get("vpn", False)),
-            "is_cloud": int(geo.get("hosting", False)),
-            "burst": burst_flag
+        # =========================
+        # 💀 RAW INTEL (التولز)
+        # =========================
+        "intel": {
+            "geo": geo,
+            "abuseipdb": abuse,
+            "ipqualityscore": ipqs,
+            "shodan": shodan,
+            "virustotal": vt
         },
 
         "timestamp": now.isoformat()
