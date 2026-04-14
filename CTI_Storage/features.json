@@ -196,5 +196,27 @@
     "is_malicious_scanner": 0,
     "token_misuse": 0,
     "label": 0
+  },
+  {
+    "abuse_score": 0,
+    "total_reports": 0,
+    "fraud_score": 0,
+    "is_cloud": 0,
+    "is_vpn": 0,
+    "is_tor": 0,
+    "is_bot": 0,
+    "automation_score": 0,
+    "request_count": 1,
+    "burst_flag": 0,
+    "hour": 18,
+    "is_business_hours": 0,
+    "endpoint_sensitivity": 1,
+    "open_ports_count": 0,
+    "has_ssh": 0,
+    "has_http": 0,
+    "is_known_scanner": 0,
+    "is_malicious_scanner": 0,
+    "token_misuse": 0,
+    "label": 0
   }
 ]
