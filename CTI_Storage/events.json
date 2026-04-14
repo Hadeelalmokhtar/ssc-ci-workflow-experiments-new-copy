@@ -514,5 +514,25 @@
     "automation_flag": false,
     "automation_score": 0,
     "timestamp": "2026-04-14T21:46:52.922466"
+  },
+  {
+    "event_type": "path_trigger",
+    "token_profile": "legacy_registry",
+    "privilege_level": 1,
+    "ip": "95.185.0.3",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
+    "method": "GET",
+    "ioc_endpoint": "/legacy_internal_config.yaml",
+    "hosting_flag": 0,
+    "abuse_score": 0,
+    "fraud_score": 0,
+    "is_vpn": 0,
+    "vt_malicious": 0,
+    "open_ports_count": 0,
+    "request_count": 1,
+    "burst_flag": false,
+    "automation_flag": false,
+    "automation_score": 0,
+    "timestamp": "2026-04-14T21:47:31.151380"
   }
 ]
