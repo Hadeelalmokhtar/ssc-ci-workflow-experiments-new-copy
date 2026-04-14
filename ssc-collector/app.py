@@ -1,76 +1,189 @@
 from flask import Flask, request, jsonify
 from datetime import datetime
+import requests
+import os
 import json
 import base64
-import os
-import requests
 
 app = Flask(__name__)
 
-# =====================================================
-# Credential Store (Honeytokens)
+# =========================
+# CONFIG
+# =========================
 
-CREDENTIAL_STORE = {
-    "repo_admin": {
-        "token": "ghp_pr0dRel3aseAdm1nAccess2026xYzAbC",
-        "privilege_level": 3
-    },
-    "ci_deploy": {
-        "token": "build-prod-deploy-master-2026",
-        "privilege_level": 2
-    },
-    "legacy_registry": {
-        "token": "ghp_LegacyRepoAccess2024Prod",
-        "privilege_level": 1
-    }
-}
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
+GITHUB_REPO = os.getenv("GITHUB_REPO")
 
-# =====================================================
-# IP Tracking
+EVENTS_FILE = "CTI_Storage/events.json"
+FEATURES_FILE = "CTI_Storage/features.json"
+
+ABUSE_API_KEY = os.getenv("ABUSE_API_KEY")
+IPQS_API_KEY = os.getenv("IPQS_API_KEY")
+SHODAN_API_KEY = os.getenv("SHODAN_API_KEY")
+GREYNOISE_API_KEY = os.getenv("GREYNOISE_API_KEY")
+
+# =========================
+# CACHE
+# =========================
+
+CACHE = {}
+
+def cached_lookup(ip, func):
+    if ip in CACHE and func.__name__ in CACHE[ip]:
+        return CACHE[ip][func.__name__]
+
+    result = func(ip)
+
+    if ip not in CACHE:
+        CACHE[ip] = {}
+
+    CACHE[ip][func.__name__] = result
+    return result
+
+# =========================
+# TRACKING
+# =========================
 
 IP_TRACKER = {}
 
 def track_ip(ip):
-    now = datetime.utcnow()
-
     if ip not in IP_TRACKER:
-        IP_TRACKER[ip] = {
-            "count": 1,
-            "first_seen": now,
-            "last_seen": now
-        }
+        IP_TRACKER[ip] = {"count": 1}
     else:
         IP_TRACKER[ip]["count"] += 1
-        IP_TRACKER[ip]["last_seen"] = now
 
     return IP_TRACKER[ip]
 
-# =====================================================
-# IP Enrichment
+# =========================
+# ENRICHMENT
+# =========================
 
 def enrich_ip(ip):
     try:
+        return requests.get(f"http://ip-api.com/json/{ip}", timeout=3).json()
+    except:
+        return {}
+
+def enrich_abuse(ip):
+    try:
         r = requests.get(
-            f"http://ip-api.com/json/{ip}?fields=status,country,city,isp,proxy,hosting,as,continent,timezone,lat,lon",
+            "https://api.abuseipdb.com/api/v2/check",
+            headers={"Key": ABUSE_API_KEY},
+            params={"ipAddress": ip, "maxAgeInDays": 90},
             timeout=3
         )
-        data = r.json()
-        if data.get("status") == "success":
-            return data
+        return r.json().get("data", {})
     except:
-        pass
-    return {}
+        return {}
 
-# =====================================================
-# GitHub Logging
+def enrich_ipqs(ip):
+    try:
+        url = f"https://ipqualityscore.com/api/json/ip/{IPQS_API_KEY}/{ip}"
+        return requests.get(url, timeout=3).json()
+    except:
+        return {}
 
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-GITHUB_REPO = os.getenv("GITHUB_REPO")
-FILE_PATH = "CTI_Storage/events.json"
+def enrich_shodan(ip):
+    try:
+        url = f"https://api.shodan.io/shodan/host/{ip}?key={SHODAN_API_KEY}"
+        return requests.get(url, timeout=3).json()
+    except:
+        return {}
 
-def log_event(event):
+def enrich_greynoise(ip):
+    try:
+        r = requests.get(
+            f"https://api.greynoise.io/v3/community/{ip}",
+            headers={"key": GREYNOISE_API_KEY},
+            timeout=3
+        )
+        return r.json()
+    except:
+        return {}
 
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
+# =========================
+# FEATURE ENGINEERING
+# =========================
+
+def build_features(event):
+
+    ua = (event.get("user_agent") or "").lower()
+
+    shodan = event.get("shodan", {})
+    greynoise = event.get("greynoise", {})
+    geo = event.get("geo", {})
+    abuse = event.get("abuse", {})
+    ipqs = event.get("ipqs", {})
+
+    features = {
+
+        # Threat Intel
+        "abuse_score": abuse.get("abuseConfidenceScore", 0),
+        "total_reports": abuse.get("totalReports", 0),
+        "fraud_score": ipqs.get("fraud_score", 0),
+
+        # Network
+        "is_cloud": int(geo.get("hosting", False)),
+        "is_vpn": int(ipqs.get("vpn", False)),
+        "is_tor": int(ipqs.get("tor", False)),
+
+        # User-Agent
+        "is_bot": int(any(x in ua for x in ["curl","bot","python","scanner"])),
+        "automation_score": 80 if any(x in ua for x in ["curl","bot","python"]) else 0,
+
+        # Behavior
+        "request_count": event.get("request_count", 1),
+        "burst_flag": int(event.get("request_count", 1) > 5),
+
+        # Time
+        "hour": event.get("hour", 0),
+        "is_business_hours": int(9 <= event.get("hour", 0) <= 17),
+
+        # Endpoint
+        "endpoint_sensitivity": 3 if "admin" in event.get("endpoint","") else 1,
+
+        # Shodan
+        "open_ports_count": len(shodan.get("ports", [])),
+        "has_ssh": int(22 in shodan.get("ports", [])),
+        "has_http": int(80 in shodan.get("ports", [])),
+
+        # GreyNoise
+        "is_known_scanner": int(greynoise.get("noise", False)),
+        "is_malicious_scanner": int(greynoise.get("classification") == "malicious"),
+
+        # Helper
+        "token_misuse": int(event.get("event_type") == "credential_misuse")
+    }
+
+    return features
+
+# =========================
+# AUTO LABEL 
+# =========================
+
+def generate_label(event, features):
+
+    if event.get("event_type") == "credential_misuse":
+        return 1
+
+    if features.get("abuse_score", 0) > 80:
+        return 1
+
+    if features.get("is_known_scanner", 0) == 1:
+        return 1
+
+    if features.get("burst_flag", 0) == 1 and features.get("is_bot", 0) == 1:
+        return 1
+
+    return 0
+
+# =========================
+# GITHUB STORAGE
+# =========================
+
+def save_to_github(file_path, new_entry):
+
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{file_path}"
 
     headers = {
         "Authorization": f"token {GITHUB_TOKEN}",
@@ -82,21 +195,18 @@ def log_event(event):
     if response.status_code == 200:
         content = response.json()
         sha = content["sha"]
-        existing_data = base64.b64decode(content["content"]).decode()
-        data = json.loads(existing_data)
+        existing = json.loads(base64.b64decode(content["content"]).decode())
     else:
         sha = None
-        data = []
+        existing = []
 
-    data.append(event)
+    existing.append(new_entry)
 
-    updated_content = base64.b64encode(
-        json.dumps(data, indent=4).encode()
-    ).decode()
+    encoded = base64.b64encode(json.dumps(existing, indent=2).encode()).decode()
 
     payload = {
-        "message": "Update CTI events log",
-        "content": updated_content,
+        "message": "update logs",
+        "content": encoded,
         "branch": "main"
     }
 
@@ -105,255 +215,75 @@ def log_event(event):
 
     requests.put(url, headers=headers, json=payload)
 
-# =====================================================
-# Helper (File-based triggers)
+# =========================
+# MAIN
+# =========================
 
-def build_path_event(profile_name, privilege_level, endpoint_name):
+@app.route("/", methods=["GET","POST"])
+def handle():
+
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
     ip = ip.split(",")[0].strip()
+
     ua = request.headers.get("User-Agent")
 
     ip_data = track_ip(ip)
-    geo = enrich_ip(ip)
 
-    hour = datetime.utcnow().hour
-    is_weekend = datetime.utcnow().weekday() >= 5
+    geo = cached_lookup(ip, enrich_ip)
+    abuse = cached_lookup(ip, enrich_abuse)
+    ipqs = cached_lookup(ip, enrich_ipqs)
+    shodan = cached_lookup(ip, enrich_shodan)
+    greynoise = cached_lookup(ip, enrich_greynoise)
 
-    automation_flag = any(
-        x in (ua or "").lower()
-        for x in ["curl", "bot", "python", "scanner"]
-    )
+    now = datetime.utcnow()
 
-    return {
-        "event_type": "path_trigger",
-        "token_profile": profile_name,
-        "privilege_level": privilege_level,
-
-        # Network
+    event = {
         "ip": ip,
-        "country": geo.get("country"),
-        "city": geo.get("city"),
-        "isp": geo.get("isp"),
-        "asn": geo.get("as"),
-        "continent": geo.get("continent"),
-        "timezone": geo.get("timezone"),
-        "lat": geo.get("lat"),
-        "lon": geo.get("lon"),
-        "proxy_flag": bool(request.headers.get("X-Forwarded-For")),
-        "hosting_flag": bool(geo.get("hosting")),
-
-        # Behavior
-        "request_count": ip_data["count"],
-        "burst_flag": ip_data["count"] > 5,
-
-        # Automation
         "user_agent": ua,
-        "automation_flag": automation_flag,
-        "automation_score": int(automation_flag) * 80,
+        "endpoint": request.path,
+        "method": request.method,
 
-        # Time
-        "hour_of_day": hour,
-        "day_of_week": datetime.utcnow().strftime("%A"),
-        "is_business_hours": 9 <= hour <= 17,
+        "geo": geo,
+        "abuse": abuse,
+        "ipqs": ipqs,
+        "shodan": shodan,
+        "greynoise": greynoise,
 
-        # Threat Intel
-        "attack_type": "config_access",
-        "attack_stage": "discovery",
-        "mitre_technique": "T1083",
-        "mitre_tactic": "Discovery",
+        "request_count": ip_data["count"],
+        "hour": now.hour,
+        "timestamp": now.isoformat(),
 
-        # IOC
-        "ioc_ip": ip,
-        "ioc_user_agent": ua,
-        "ioc_endpoint": endpoint_name,
-
-        "timestamp": datetime.utcnow().isoformat()
+        "event_type": "request"
     }
 
-# =====================================================
-# SCM Trigger
+    # FEATURES
+    features = build_features(event)
 
-@app.route("/legacy_internal_config.yaml", methods=["GET", "POST"])
-def scm_trigger():
-    event = build_path_event("legacy_registry", 1, "/legacy_internal_config.yaml")
-    log_event(event)
-    return (
-    "internal_registry_endpoint: https://internal-auth.local/api/v1/auth\n"
-    "internal_registry_token: redacted\n"
-    "backup_api_secret: redacted\n",
-    200,
-    {"Content-Type": "text/plain; charset=utf-8"}
-)
+    # LABEL
+    label = generate_label(event, features)
+    features["label"] = label
 
-# =====================================================
-# Build Trigger
-                                                                                              
-@app.route("/s3/<bucket>", methods=["GET", "POST", "PUT"])
-def fake_s3(bucket):
+    # SAVE
+    save_to_github(EVENTS_FILE, event)
+    save_to_github(FEATURES_FILE, features)
 
-    token_name = f"s3_{bucket}"
+    return jsonify({
+        "status": "captured",
+        "label": label,
+        "features": features
+    })
 
-    event = build_path_event(token_name, 3, f"/s3/{bucket}")
-
-    event["event_type"] = "s3_access"
-    event["bucket"] = bucket
-    event["method"] = request.method
-
-    if request.method == "PUT":
-        event["attack_type"] = "malicious_upload_attempt"
-        event["mitre_technique"] = "T1105"
-        event["mitre_tactic"] = "Command and Control"
-        event["severity"] = "high"
-
-    elif request.method == "POST":
-        event["attack_type"] = "data_exfiltration_attempt"
-        event["mitre_technique"] = "T1041"
-        event["mitre_tactic"] = "Exfiltration"
-        event["severity"] = "medium"
-
-    else:
-        event["attack_type"] = "bucket_discovery"
-        event["mitre_technique"] = "T1083"
-        event["mitre_tactic"] = "Discovery"
-        event["severity"] = "low"
-
-    event["target_resource"] = f"s3://{bucket}"
-    event["service"] = "S3"
-    event["attack_surface"] = "cloud_storage"
-
-    log_event(event)
-
-    return (
-        f"<Error><Code>AccessDenied</Code><BucketName>{bucket}</BucketName></Error>",
-        403,
-        {"Content-Type": "application/xml"}
-    )
-
-# =====================================================
-# Repository Canary (Token Misuse)
-
-@app.route("/api/v1/session", methods=["POST"])
-def validate_session():
-
-    provided_token = request.headers.get("Authorization")
-    ip = request.headers.get("X-Forwarded-For", request.remote_addr)
-    ip = ip.split(",")[0].strip()
-    ua = request.headers.get("User-Agent")
-
-    if not provided_token:
-        return jsonify({"error": "Missing credentials"}), 400
-
-    provided_token = provided_token.replace("Bearer ", "")
-
-    for name, data in CREDENTIAL_STORE.items():
-
-        if provided_token == data["token"]:
-
-            ip_data = track_ip(ip)
-            geo = enrich_ip(ip)
-
-            hour = datetime.utcnow().hour
-            is_weekend = datetime.utcnow().weekday() >= 5
-
-            automation_flag = any(
-                x in (ua or "").lower()
-                for x in ["curl", "bot", "python", "scanner"]
-            )
-
-            event = {
-                "event_type": "credential_misuse",
-                "token_type": name,
-                "token_scope": name,
-                "token_length": len(provided_token),
-                "token_prefix": provided_token[:5],
-
-                # Network
-                "ip": ip,
-                "country": geo.get("country"),
-                "city": geo.get("city"),
-                "isp": geo.get("isp"),
-                "asn": geo.get("as"),
-                "continent": geo.get("continent"),
-                "timezone": geo.get("timezone"),
-                "lat": geo.get("lat"),
-                "lon": geo.get("lon"),
-                "proxy_flag": bool(geo.get("proxy")),
-                "hosting_flag": bool(geo.get("hosting")),
-
-                # Behavior
-                "request_count": ip_data["count"],
-                "burst_flag": ip_data["count"] > 5,
-
-                # Automation
-                "user_agent": ua,
-                "automation_flag": automation_flag,
-                "automation_score": int(automation_flag) * 80,
-
-                # Time
-                "hour_of_day": hour,
-                "day_of_week": datetime.utcnow().strftime("%A"),
-                "is_business_hours": 9 <= hour <= 17,
-
-                # Threat
-                "attack_type": "token_misuse",
-                "attack_stage": "credential_access",
-                "mitre_technique": "T1552.001",
-                "mitre_tactic": "Credential Access",
-
-                # IOC
-                "ioc_ip": ip,
-                "ioc_user_agent": ua,
-                "ioc_endpoint": "/api/v1/session",
-
-                "timestamp": datetime.utcnow().isoformat()
-            }
-
-            log_event(event)
-            return jsonify({  "status": "ok",
-                              "message": "Session validated",
-                             "scope": name,
-                             "expires_in": 3600
-                                                 }), 200
-  
-
-    return jsonify({"status": "Invalid credentials"}), 403
-
-# =====================================================
-# Events Viewer
-
-@app.route("/api/v1/events", methods=["GET"])
-def get_events():
-
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
-
-    headers = {
-        "Authorization": f"token {GITHUB_TOKEN}",
-        "Accept": "application/vnd.github.v3+json"
-    }
-
-    response = requests.get(url, headers=headers)
-
-    if response.status_code == 200:
-        content = response.json()
-        decoded = base64.b64decode(content["content"]).decode()
-        data = json.loads(decoded)
-        return jsonify(data)
-
-    return jsonify({"error": "Unable to fetch events"}), 500
-
-# =====================================================
-# Health
+# =========================
+# HEALTH
+# =========================
 
 @app.route("/health")
 def health():
     return {"status": "ok"}
 
-@app.route("/")
-def home():
-    return {"status": "SSC Collector Running"}
-
-# =====================================================
-# Run
+# =========================
+# RUN
+# =========================
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
