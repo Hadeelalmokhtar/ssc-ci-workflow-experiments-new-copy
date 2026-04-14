@@ -574,5 +574,28 @@
     "automation_flag": true,
     "automation_score": 80,
     "timestamp": "2026-04-14T21:57:40.532874"
+  },
+  {
+    "event_type": "path_trigger",
+    "token_profile": "legacy_registry",
+    "privilege_level": 1,
+    "ip": "185.220.101.1",
+    "country": "Germany",
+    "isp": "Stiftung Erneuerbare Freiheit",
+    "user_agent": "python-bot-scanner",
+    "endpoint": "/legacy_internal_config.yaml",
+    "method": "GET",
+    "threat_summary": {
+      "abuse_score": 100,
+      "fraud_score": 100,
+      "vt_malicious": 15
+    },
+    "attacker_profile": {
+      "is_bot": true,
+      "is_vpn": 1,
+      "is_cloud": 0,
+      "burst": false
+    },
+    "timestamp": "2026-04-14T22:06:22.605019"
   }
 ]
