@@ -40,12 +40,17 @@ def cached_lookup(ip, func):
     return data
 
 # =====================================================
-# DEDUP
-
+# DEDUP (FIXED)
+ 
 LAST_SEEN = {}
 
 def is_duplicate(event):
-    key = f"{event['ip']}_{event['endpoint']}"
+
+    endpoint = event.get("endpoint") or event.get("ioc_endpoint") or "unknown"
+    ip = event.get("ip", "unknown")
+
+    key = f"{ip}_{endpoint}"
+
     now = time.time()
 
     if key in LAST_SEEN:
@@ -119,7 +124,7 @@ def enrich_vt(ip):
         return {}
 
 # =====================================================
-# HELPER (Readable Event)
+# HELPER
 
 def build_path_event(profile_name, privilege_level, endpoint_name):
 
@@ -152,67 +157,36 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
     hour = now.hour
     day = now.strftime("%A")
 
-    # 🔥 FINAL EVENT (ALL DATA)
     return {
         "event_type": "path_trigger",
         "token_profile": profile_name,
         "privilege_level": privilege_level,
 
-        # =========================
-        # 🌍 BASIC + GEO
-        # =========================
+        # GEO
         "ip": ip,
         "country": geo.get("country"),
         "city": geo.get("city"),
         "isp": geo.get("isp"),
         "asn": geo.get("as"),
-        "continent": geo.get("continent"),
-        "timezone": geo.get("timezone"),
-        "lat": geo.get("lat"),
-        "lon": geo.get("lon"),
 
-        "proxy_flag": bool(request.headers.get("X-Forwarded-For")),
-        "hosting_flag": bool(geo.get("hosting")),
-
-        # =========================
-        # 📊 BEHAVIOR
-        # =========================
+        # BEHAVIOR
         "request_count": request_count,
         "burst_flag": burst_flag,
 
-        # =========================
-        # 🤖 AUTOMATION
-        # =========================
+        # AUTOMATION
         "user_agent": ua,
         "automation_flag": automation_flag,
         "automation_score": automation_score,
 
-        # =========================
-        # ⏱️ TIME
-        # =========================
+        # TIME
         "hour_of_day": hour,
         "day_of_week": day,
-        "is_business_hours": 9 <= hour <= 17,
 
-        # =========================
-        # 🎯 ATTACK CONTEXT
-        # =========================
-        "attack_type": "config_access",
-        "attack_stage": "discovery",
-        "mitre_technique": "T1083",
-        "mitre_tactic": "Discovery",
-
-        # =========================
-        # 🔎 IOC
-        # =========================
-        "ioc_ip": ip,
-        "ioc_user_agent": ua,
+        # IOC
         "ioc_endpoint": endpoint_name,
         "method": request.method,
 
-        # =========================
-        # 💀 RAW INTEL (التولز)
-        # =========================
+        # RAW INTEL
         "intel": {
             "geo": geo,
             "abuseipdb": abuse,
@@ -225,22 +199,25 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
     }
 
 # =====================================================
-# FEATURES (ML)
+# FEATURES (FIXED)
 
 def build_features(event):
 
-    ts = event["threat_summary"]
-    ap = event["attacker_profile"]
+    abuse = event.get("intel", {}).get("abuseipdb", {})
+    ipqs = event.get("intel", {}).get("ipqualityscore", {})
+    vt = event.get("intel", {}).get("virustotal", {})
+
+    vt_stats = vt.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
 
     return {
-        "abuse_score": ts["abuse_score"],
-        "fraud_score": ts["fraud_score"],
-        "vt_malicious": ts["vt_malicious"],
+        "abuse_score": abuse.get("abuseConfidenceScore", 0),
+        "fraud_score": ipqs.get("fraud_score", 0),
+        "vt_malicious": vt_stats.get("malicious", 0),
 
-        "is_bot": int(ap["is_bot"]),
-        "is_vpn": int(ap["is_vpn"]),
-        "is_cloud": int(ap["is_cloud"]),
-        "burst_flag": int(ap["burst"])
+        "is_bot": int(event.get("automation_flag", 0)),
+        "is_vpn": int(ipqs.get("vpn", False)),
+        "is_cloud": int(event.get("hosting_flag", 0)),
+        "burst_flag": int(event.get("burst_flag", 0))
     }
 
 # =====================================================
@@ -248,9 +225,9 @@ def build_features(event):
 
 def generate_label(event, f):
 
-    endpoint = event.get("endpoint", "")
+    endpoint = event.get("ioc_endpoint", "")
 
-    if endpoint == "/legacy_internal_config.yaml":
+    if "config" in endpoint:
         return 1
 
     if "/s3/" in endpoint:
@@ -334,7 +311,6 @@ def session():
 
     token = request.headers.get("Authorization","").replace("Bearer ","")
 
-    # dummy tokens
     CREDENTIAL_STORE = {
         "repo_token": {"token": "admin123", "privilege_level": 3}
     }
@@ -353,7 +329,6 @@ def health():
     return {"status":"ok"}
 
 # =====================================================
-# RUN
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT",5000)))
