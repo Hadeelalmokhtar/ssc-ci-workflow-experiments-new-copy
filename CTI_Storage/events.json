@@ -674,5 +674,39 @@
     "hour": 18,
     "timestamp": "2026-04-14T18:44:30.497673",
     "event_type": "request"
+  },
+  {
+    "ip": "127.0.0.1",
+    "user_agent": "Go-http-client/1.1",
+    "endpoint": "/",
+    "method": "HEAD",
+    "geo": {
+      "status": "fail",
+      "message": "reserved range",
+      "query": "127.0.0.1"
+    },
+    "abuse": {},
+    "ipqs": {
+      "success": false,
+      "message": "Invalid or unauthorized key. Please check the API key and try again.",
+      "request_id": "gBvnXPx7NV"
+    },
+    "shodan": {
+      "error": "Invalid IP"
+    },
+    "greynoise": {
+      "ip": "127.0.0.1",
+      "noise": false,
+      "riot": true,
+      "classification": "benign",
+      "name": "Auth0",
+      "link": "https://viz.greynoise.io/ip/127.0.0.1",
+      "last_seen": "2026-04-14",
+      "message": "Success"
+    },
+    "request_count": 1,
+    "hour": 18,
+    "timestamp": "2026-04-14T18:46:25.175879",
+    "event_type": "request"
   }
 ]
