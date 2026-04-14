@@ -1208,5 +1208,19 @@
     "is_malicious_scanner": 0,
     "token_misuse": 0,
     "label": 0
+  },
+  {
+    "abuse_score": 0,
+    "fraud_score": 0,
+    "vt_malicious": 0,
+    "is_bot": 0,
+    "burst_flag": 0,
+    "is_cloud": 0,
+    "is_vpn": 0,
+    "open_ports_count": 0,
+    "is_known_scanner": 0,
+    "endpoint_sensitivity": 3,
+    "threat_score": 0.0,
+    "label": 1
   }
 ]
