@@ -40,16 +40,16 @@ def cached_lookup(ip, func):
     return data
 
 # =====================================================
-# (DEDUP)
+# DEDUP
 
 LAST_SEEN = {}
 
 def is_duplicate(event):
-    key = f"{event['ip']}_{event['ioc_endpoint']}"
+    key = f"{event['ip']}_{event['endpoint']}"
     now = time.time()
 
     if key in LAST_SEEN:
-        if now - LAST_SEEN[key] < 10:  # ⏱️ 10 ثواني
+        if now - LAST_SEEN[key] < 10:
             return True
 
     LAST_SEEN[key] = now
@@ -119,8 +119,8 @@ def enrich_vt(ip):
         return {}
 
 # =====================================================
-# HELPER (CENTRAL)
- 
+# HELPER (Readable Event)
+
 def build_path_event(profile_name, privilege_level, endpoint_name):
 
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -147,83 +147,63 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
         "curl","bot","python","scanner","wget"
     ])
 
-    automation_score = int(automation_flag) * 80
-
     vt_stats = vt.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
 
+    # 🔥 readable event
     return {
         "event_type": "path_trigger",
         "token_profile": profile_name,
         "privilege_level": privilege_level,
 
         "ip": ip,
+        "country": geo.get("country"),
+        "isp": geo.get("isp"),
+
         "user_agent": ua,
+        "endpoint": endpoint_name,
         "method": request.method,
-        "ioc_endpoint": endpoint_name,
 
-        "hosting_flag": int(geo.get("hosting", False)),
+        "threat_summary": {
+            "abuse_score": abuse.get("abuseConfidenceScore", 0),
+            "fraud_score": ipqs.get("fraud_score", 0),
+            "vt_malicious": vt_stats.get("malicious", 0)
+        },
 
-        "abuse_score": abuse.get("abuseConfidenceScore", 0),
-        "fraud_score": ipqs.get("fraud_score", 0),
-        "is_vpn": int(ipqs.get("vpn", False)),
-        "vt_malicious": vt_stats.get("malicious", 0),
-
-        "open_ports_count": len(shodan.get("ports", [])),
-
-        "request_count": request_count,
-        "burst_flag": burst_flag,
-
-        "automation_flag": automation_flag,
-        "automation_score": automation_score,
+        "attacker_profile": {
+            "is_bot": automation_flag,
+            "is_vpn": int(ipqs.get("vpn", False)),
+            "is_cloud": int(geo.get("hosting", False)),
+            "burst": burst_flag
+        },
 
         "timestamp": now.isoformat()
     }
 
 # =====================================================
-# FEATURES
+# FEATURES (ML)
 
 def build_features(event):
+
+    ts = event["threat_summary"]
+    ap = event["attacker_profile"]
+
     return {
-        "abuse_score": event["abuse_score"],
-        "fraud_score": event["fraud_score"],
-        "vt_malicious": event["vt_malicious"],
+        "abuse_score": ts["abuse_score"],
+        "fraud_score": ts["fraud_score"],
+        "vt_malicious": ts["vt_malicious"],
 
-        "is_bot": int(event["automation_flag"]),
-        "burst_flag": int(event["burst_flag"]),
-        "is_cloud": int(event["hosting_flag"]),
-        "is_vpn": event["is_vpn"],
-
-        "open_ports_count": event["open_ports_count"],
-
-        "is_known_scanner": int(
-            event["automation_score"] > 50 or
-            event["vt_malicious"] > 0
-        ),
-
-        "endpoint_sensitivity": 3 if event["ioc_endpoint"] == "/legacy_internal_config.yaml" else 1
+        "is_bot": int(ap["is_bot"]),
+        "is_vpn": int(ap["is_vpn"]),
+        "is_cloud": int(ap["is_cloud"]),
+        "burst_flag": int(ap["burst"])
     }
-  
-# =====================================================
-# SCORE
-
-def calculate_threat_score(f):
-    score = 0
-    score += f["abuse_score"] * 0.3
-    score += f["fraud_score"] * 0.2
-    score += f["burst_flag"] * 20
-    score += f["is_cloud"] * 15
-    score += f["vt_malicious"] * 10
-    return round(score, 2)
 
 # =====================================================
 # LABEL
 
 def generate_label(event, f):
 
-    endpoint = event["ioc_endpoint"]
-
-    if event.get("event_type") == "credential_misuse":
-        return 1
+    endpoint = event.get("endpoint", "")
 
     if endpoint == "/legacy_internal_config.yaml":
         return 1
@@ -237,7 +217,7 @@ def generate_label(event, f):
     if f["abuse_score"] > 80:
         return 1
 
-    if f["is_cloud"] == 1 and (f["is_bot"] == 1 or f["burst_flag"] == 1):
+    if f["is_cloud"] == 1 and f["is_bot"] == 1:
         return 1
 
     return 0
@@ -255,7 +235,11 @@ def save_to_github(file_path, entry):
     if r.status_code == 200:
         content = r.json()
         sha = content["sha"]
-        data = json.loads(base64.b64decode(content["content"]).decode())
+
+        try:
+            data = json.loads(base64.b64decode(content["content"]).decode())
+        except:
+            data = []
     else:
         sha = None
         data = []
@@ -276,12 +260,10 @@ def save_to_github(file_path, entry):
 
 def process_event(event):
 
-   
     if is_duplicate(event):
         return
 
     features = build_features(event)
-    features["threat_score"] = calculate_threat_score(features)
     features["label"] = generate_label(event, features)
 
     save_to_github(EVENTS_FILE, event)
@@ -306,6 +288,11 @@ def s3(bucket):
 def session():
 
     token = request.headers.get("Authorization","").replace("Bearer ","")
+
+    # dummy tokens
+    CREDENTIAL_STORE = {
+        "repo_token": {"token": "admin123", "privilege_level": 3}
+    }
 
     for name,data in CREDENTIAL_STORE.items():
         if token == data["token"]:
