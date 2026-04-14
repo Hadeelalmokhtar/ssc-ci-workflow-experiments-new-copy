@@ -4,6 +4,7 @@ import json
 import base64
 import os
 import requests
+import time
 
 app = Flask(__name__)
 
@@ -39,13 +40,20 @@ def cached_lookup(ip, func):
     return data
 
 # =====================================================
-# CREDENTIAL STORE (HONEYPOTS)
+# (DEDUP)
 
-CREDENTIAL_STORE = {
-    "repo_admin": {"token": "ghp_pr0dRel3aseAdm1nAccess2026xYzAbC","privilege_level": 3},
-    "ci_deploy": {"token": "build-prod-deploy-master-2026","privilege_level": 2},
-    "legacy_registry": {"token": "ghp_LegacyRepoAccess2024Prod","privilege_level": 1}
-}
+LAST_SEEN = {}
+
+def is_duplicate(event):
+    key = f"{event['ip']}_{event['ioc_endpoint']}"
+    now = time.time()
+
+    if key in LAST_SEEN:
+        if now - LAST_SEEN[key] < 10:  # ⏱️ 10 ثواني
+            return True
+
+    LAST_SEEN[key] = now
+    return False
 
 # =====================================================
 # IP TRACKING
@@ -111,8 +119,8 @@ def enrich_vt(ip):
         return {}
 
 # =====================================================
-# CENTRAL HELPER (FULL DATA)
-  
+# HELPER (CENTRAL)
+ 
 def build_path_event(profile_name, privilege_level, endpoint_name):
 
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -136,7 +144,7 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
     ua_lower = (ua or "").lower()
 
     automation_flag = any(x in ua_lower for x in [
-        "curl","bot","python","scanner","wget","httpclient"
+        "curl","bot","python","scanner","wget"
     ])
 
     automation_score = int(automation_flag) * 80
@@ -144,53 +152,37 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
     vt_stats = vt.get("data", {}).get("attributes", {}).get("last_analysis_stats", {})
 
     return {
-        # Core
         "event_type": "path_trigger",
         "token_profile": profile_name,
         "privilege_level": privilege_level,
 
-        # Request
         "ip": ip,
         "user_agent": ua,
         "method": request.method,
         "ioc_endpoint": endpoint_name,
 
-        # Geo
-        "geo": geo,
         "hosting_flag": int(geo.get("hosting", False)),
 
-        # Threat Intel Raw
-        "abuse": abuse,
-        "ipqs": ipqs,
-        "shodan": shodan,
-        "vt": vt,
-
-        # Extracted Features
         "abuse_score": abuse.get("abuseConfidenceScore", 0),
         "fraud_score": ipqs.get("fraud_score", 0),
         "is_vpn": int(ipqs.get("vpn", False)),
         "vt_malicious": vt_stats.get("malicious", 0),
-        "vt_suspicious": vt_stats.get("suspicious", 0),
+
         "open_ports_count": len(shodan.get("ports", [])),
 
-        # Behavior
         "request_count": request_count,
         "burst_flag": burst_flag,
 
-        # Automation
         "automation_flag": automation_flag,
         "automation_score": automation_score,
 
-        # Time
-        "hour": now.hour,
         "timestamp": now.isoformat()
     }
 
 # =====================================================
-# FEATURE ENGINEERING
+# FEATURES
 
 def build_features(event):
-
     return {
         "abuse_score": event["abuse_score"],
         "fraud_score": event["fraud_score"],
@@ -210,9 +202,9 @@ def build_features(event):
 
         "endpoint_sensitivity": 3 if event["ioc_endpoint"] == "/legacy_internal_config.yaml" else 1
     }
-
+  
 # =====================================================
-# THREAT SCORE
+# SCORE
 
 def calculate_threat_score(f):
     score = 0
@@ -224,7 +216,7 @@ def calculate_threat_score(f):
     return round(score, 2)
 
 # =====================================================
-# LABELING
+# LABEL
 
 def generate_label(event, f):
 
@@ -251,7 +243,7 @@ def generate_label(event, f):
     return 0
 
 # =====================================================
-# GITHUB STORAGE
+# GITHUB SAVE
 
 def save_to_github(file_path, entry):
 
@@ -280,9 +272,13 @@ def save_to_github(file_path, entry):
     requests.put(url, headers=headers, json=payload)
 
 # =====================================================
-# PROCESS EVENT
+# PROCESS
 
 def process_event(event):
+
+   
+    if is_duplicate(event):
+        return
 
     features = build_features(event)
     features["threat_score"] = calculate_threat_score(features)
@@ -294,7 +290,7 @@ def process_event(event):
 # =====================================================
 # ROUTES
 
-@app.route("/legacy_internal_config.yaml", methods=["GET","POST"])
+@app.route("/legacy_internal_config.yaml", methods=["GET"])
 def scm():
     event = build_path_event("legacy_registry",1,"/legacy_internal_config.yaml")
     process_event(event)
