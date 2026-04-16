@@ -157,7 +157,7 @@ for target in targets:
                 commands.append(m.group(1))
 
         # ============================
-        # DNS + DOMAIN (FIXED )
+        # DNS + DOMAIN (FIXED)
         # ============================
         if "connect(" in line:
 
@@ -165,13 +165,13 @@ for target in targets:
 
             for x in matches:
 
-                # IP detection
+                # IP
                 if re.match(r'\d+\.\d+\.\d+\.\d+', x):
                     captured_dns.append(x)
                     ips.add(x)
                     continue
 
-                # DOMAIN detection
+                # DOMAIN
                 if "." not in x:
                     continue
 
@@ -183,7 +183,6 @@ for target in targets:
 
                 domains.add(x)
 
-            # network event
             timeline.append({
                 "time": round(counter * 0.01, 2),
                 "event": "NETWORK CONNECTION DETECTED"
@@ -195,7 +194,6 @@ for target in targets:
             if f:
                 file_path = f.group(1)
 
-                # ignore system
                 if file_path.startswith(("/etc", "/usr", "/lib", "/proc", "/dev")):
                     continue
 
@@ -208,12 +206,25 @@ for target in targets:
                 ]):
                     files.append(file_path)
 
-# fallback
-if not processes:
-    processes.append("node")
+# ============================
+# CLEAN PROCESSES 
+# ============================
+
+processes = list(set(processes))   # remove duplicates
+processes = sorted(processes)      # sort
+
+clean_processes = []
+
+for p in processes:
+    if p in ["node", "npm", "sh", "bash"]:
+        continue
+    clean_processes.append(p)
+
+if not clean_processes:
+    clean_processes = ["node"]
 
 # ============================
-# CLEAN DNS 
+# CLEAN DNS
 # ============================
 
 captured_dns = list(set(captured_dns))
@@ -287,7 +298,7 @@ log = {
     "score": score,
     "threat_level": threat_level,
     "reasons": reasons,
-    "processes": processes,
+    "processes": clean_processes, 
     "commands": commands,
     "files": files,
     "domains": list(domains),
