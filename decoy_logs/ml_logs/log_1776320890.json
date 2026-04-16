@@ -1,0 +1,51 @@
+{
+    "run_id": "1776320890",
+    "package": "48484efej8id-0.1.tar.gz",
+    "risk_probability": 0.9547637701034546,
+    "prediction": 1,
+    "file_entropy": 4.7977,
+    "execution_time": 1.493,
+    "timestamp": "2026-04-16T06:28:10.661131",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.321339726448059
+        ],
+        [
+            "num__shannon mean ID metadata",
+            -1.2834357023239136
+        ],
+        [
+            "num__.md",
+            0.9710433483123779
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8958176374435425
+        ],
+        [
+            "num__Number of lines in metadata",
+            0.830043613910675
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6276360750198364
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.45793822407722473
+        ],
+        [
+            "num__shannon mean string source code",
+            0.44789907336235046
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4251076281070709
+        ],
+        [
+            "num__presence of installation script",
+            -0.4211924374103546
+        ]
+    ]
+}
