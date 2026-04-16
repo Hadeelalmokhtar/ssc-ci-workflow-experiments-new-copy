@@ -1,0 +1,51 @@
+{
+    "run_id": "1776318856",
+    "package": "32red-admin-999.9.9.tgz",
+    "risk_probability": 0.9905394315719604,
+    "prediction": 1,
+    "file_entropy": 4.7744,
+    "execution_time": 1.45,
+    "timestamp": "2026-04-16T05:54:16.035153",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.088273525238037
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.056161642074585
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.9192676544189453
+        ],
+        [
+            "num__.md",
+            0.851615309715271
+        ],
+        [
+            "num__Number of lines in source code",
+            0.7990058064460754
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6806669235229492
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.54656583070755
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4874385595321655
+        ],
+        [
+            "num__shannon mean string source code",
+            -0.4114346504211426
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4111480414867401
+        ]
+    ]
+}
