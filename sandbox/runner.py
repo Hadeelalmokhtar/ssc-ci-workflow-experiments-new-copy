@@ -157,7 +157,7 @@ for target in targets:
                 commands.append(m.group(1))
 
         # ============================
-        # DNS + DOMAIN (FIXED)
+        # DNS + DOMAIN
         # ============================
         if "connect(" in line:
 
@@ -165,13 +165,11 @@ for target in targets:
 
             for x in matches:
 
-                # IP
                 if re.match(r'\d+\.\d+\.\d+\.\d+', x):
                     captured_dns.append(x)
                     ips.add(x)
                     continue
 
-                # DOMAIN
                 if "." not in x:
                     continue
 
@@ -207,28 +205,39 @@ for target in targets:
                     files.append(file_path)
 
 # ============================
-# PROCESS HANDLING (FINAL FIX )
+# PROCESS HANDLING
 # ============================
 
-# نخلي الأصل زي ما هو (للـ graph)
 raw_processes = processes.copy()
 
-# نسخة للتحليل فقط
 unique_processes = list(set(processes))
 unique_processes = sorted(unique_processes)
 
 clean_processes = unique_processes.copy()
 
-# suspicious فقط
 suspicious_processes = []
 
 for p in unique_processes:
     if p in ["curl", "wget", "nc", "bash", "sh"]:
         suspicious_processes.append(p)
 
-# fallback
 if not clean_processes:
     clean_processes = ["node"]
+
+# ============================
+# GRAPH EDGES 🔥
+# ============================
+
+graph_edges = []
+
+prev = "Package"
+
+for p in raw_processes:
+    graph_edges.append({
+        "from": prev,
+        "to": p
+    })
+    prev = p
 
 # ============================
 # CLEAN DNS
@@ -305,9 +314,13 @@ log = {
     "score": score,
     "threat_level": threat_level,
     "reasons": reasons,
-    "processes": raw_processes,              # للـ graph
-    "unique_processes": clean_processes,     # للتحليل
+
+    "processes": raw_processes,
+    "unique_processes": clean_processes,
     "suspicious_processes": suspicious_processes,
+
+    "graph_edges": graph_edges,   # 🔥
+
     "commands": commands,
     "files": files,
     "domains": list(domains),
