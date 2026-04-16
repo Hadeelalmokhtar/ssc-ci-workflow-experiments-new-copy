@@ -118,8 +118,9 @@ for target in targets:
 
     run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
 
+    # 🔥 التعديل هنا فقط
     process = subprocess.Popen(
-        ["strace", "-ff", "-s", "200", "-e", "trace=process,network,file"] + run_cmd,
+        ["strace", "-f", "-e", "trace=all"] + run_cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
@@ -225,7 +226,7 @@ if not clean_processes:
     clean_processes = ["node"]
 
 # ============================
-# GRAPH EDGES 🔥
+# GRAPH EDGES
 # ============================
 
 graph_edges = []
@@ -319,7 +320,7 @@ log = {
     "unique_processes": clean_processes,
     "suspicious_processes": suspicious_processes,
 
-    "graph_edges": graph_edges,   # 🔥
+    "graph_edges": graph_edges,
 
     "commands": commands,
     "files": files,
