@@ -6,20 +6,45 @@ import time
 import re
 import tarfile
 import tempfile
+import base64
 import threading
 import urllib.request
+import string
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from dnslib.server import DNSServer, BaseResolver
+from dnslib import RR, A
+
+# ============================
+# STORAGE
+# ============================
 
 captured_requests = []
 captured_dns = []
 
+# ============================
+# FAKE HTTP SERVER
+# ============================
+
 class FakeHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
-        captured_requests.append({"method": "GET","path": self.path})
+        entry = {
+            "method": "GET",
+            "path": self.path,
+            "headers": dict(self.headers)
+        }
+
+        response = {"status": "ok"}
+
+        if "/api/config" in self.path:
+            response = {"mode": "active"}
+
+        entry["response"] = response
+        captured_requests.append(entry)
+
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b"OK")
+        self.wfile.write(json.dumps(response).encode())
 
     def do_POST(self):
         length = int(self.headers.get('Content-Length', 0))
@@ -35,13 +60,15 @@ class FakeHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b"OK")
 
+
 def start_http():
     HTTPServer(("0.0.0.0", 8080), FakeHandler).serve_forever()
 
 threading.Thread(target=start_http, daemon=True).start()
 
-from dnslib.server import DNSServer, BaseResolver
-from dnslib import RR, A
+# ============================
+# DNS SERVER
+# ============================
 
 class FakeResolver(BaseResolver):
     def resolve(self, request, handler):
@@ -52,12 +79,21 @@ class FakeResolver(BaseResolver):
         reply.add_answer(RR(qname, rdata=A("127.0.0.1"), ttl=60))
         return reply
 
+
 def start_dns():
     DNSServer(FakeResolver(), port=5353, address="0.0.0.0").start()
 
 threading.Thread(target=start_dns, daemon=True).start()
 
+# ============================
+# INPUT
+# ============================
+
 original_input = sys.argv[1]
+
+# ============================
+# EXTRACT
+# ============================
 
 def extract_package_if_needed(path):
     if path.endswith(".tgz") or path.endswith(".tar.gz"):
@@ -69,154 +105,43 @@ def extract_package_if_needed(path):
 
 file_path = extract_package_if_needed(original_input)
 
+# ============================
+# FIND FILES
+# ============================
+
 targets = []
 for root, _, files in os.walk(file_path):
     for f in files:
         if f.endswith(".js") or f.endswith(".py"):
             targets.append(os.path.join(root, f))
 
+# ============================
+# ENV
+# ============================
+
 env = os.environ.copy()
+env["HTTP_PROXY"] = "http://127.0.0.1:8080"
+env["HTTPS_PROXY"] = "http://127.0.0.1:8080"
+env["NO_PROXY"] = ""
 
-ips = set()
-domains = set()
-files = []
-processes = []
-timeline = []
-commands = []
+# ============================
+# HELPERS
+# ============================
 
-counter = 0
+def is_readable(s):
+    printable = set(string.printable)
+    return sum(c in printable for c in s) / len(s) > 0.85
 
-for target in targets:
 
-    run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
-
-    # 🔥🔥🔥 FIX 1: سجل اسم الملف
-    processes.append(os.path.basename(target))
-
-    # 🔥🔥🔥 FIX 2: سجل runtime
-    processes.append(os.path.basename(run_cmd[0]))
-
-    process = subprocess.Popen(
-        ["strace", "-f", "-e", "trace=all"] + run_cmd,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        env=env
-    )
-
+def try_decode_base64(s):
     try:
-        _, stderr = process.communicate(timeout=60)
+        d = base64.b64decode(s).decode("utf-8", errors="ignore")
+        if len(d) > 20 and is_readable(d):
+            return d
     except:
-        process.kill()
-        _, stderr = process.communicate()
+        pass
+    return None
 
-    for line in stderr.split("\n"):
-
-        if not line:
-            continue
-
-        counter += 1
-        timeline.append({
-            "time": round(counter * 0.01, 2),
-            "event": line[:200]
-        })
-
-        if any(x in line for x in ["execve", "clone", "fork", "vfork"]):
-            m = re.search(r'execve\("([^"]+)"', line)
-            if m:
-                processes.append(os.path.basename(m.group(1)))
-
-        if "execve(" in line or "system(" in line:
-            m = re.search(r'"([^"]+)"', line)
-            if m:
-                commands.append(m.group(1))
-
-        if "connect(" in line:
-
-            matches = re.findall(r'"([^"]+)"', line)
-
-            for x in matches:
-
-                if re.match(r'\d+\.\d+\.\d+\.\d+', x):
-                    captured_dns.append(x)
-                    ips.add(x)
-                    continue
-
-                if "." not in x:
-                    continue
-
-                if x.endswith((".conf", ".pem", ".res", ".so", ".json")):
-                    continue
-
-                if "/" in x:
-                    continue
-
-                domains.add(x)
-
-        if any(x in line for x in ["open(", "read(", "write(", "access("]):
-            f = re.search(r'"([^"]+)"', line)
-            if f:
-                file_path = f.group(1)
-
-                if file_path.startswith(("/etc", "/usr", "/lib", "/proc", "/dev")):
-                    continue
-
-                if file_path.endswith(".so"):
-                    continue
-
-                if any(x in file_path for x in [
-                    "/home", "/root", "/tmp",
-                    ".env", ".ssh", "id_rsa", "passwd", "shadow"
-                ]):
-                    files.append(file_path)
-
-# ============================
-# PROCESS HANDLING
-# ============================
-
-raw_processes = processes.copy()
-
-unique_processes = sorted(list(set(processes)))
-clean_processes = unique_processes.copy()
-
-suspicious_processes = []
-
-for p in unique_processes:
-    if p in ["curl", "wget", "nc", "bash", "sh"]:
-        suspicious_processes.append(p)
-
-if not clean_processes:
-    clean_processes = ["node"]
-
-# ============================
-# GRAPH
-# ============================
-
-graph_edges = []
-prev = "Package"
-
-for p in raw_processes:
-    graph_edges.append({
-        "from": prev,
-        "to": p
-    })
-    prev = p
-
-# ============================
-# CLEAN DNS
-# ============================
-
-captured_dns = list(set(captured_dns))
-
-clean_dns = []
-for ip in captured_dns:
-    if ip.startswith(("127.", "0.", "10.", "192.168")):
-        continue
-    clean_dns.append(ip)
-
-# ============================
-# NETWORK DETAILS
-# ============================
 
 def enrich_ip(ip):
     try:
@@ -230,7 +155,103 @@ def enrich_ip(ip):
     except:
         return {"ip": ip}
 
+# ============================
+# ANALYSIS
+# ============================
+
+ips = set()
+domains = set()
+files = []
+processes = []
+timeline = []
+decoded_payloads = []
+
+start = time.time()
+
+for target in targets:
+
+    run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
+
+    # 🔥 مهم: يضمن ظهور graph دائمًا
+    processes.append(os.path.basename(target))      # index.js
+    processes.append(os.path.basename(run_cmd[0]))  # node / python3
+
+    process = subprocess.Popen(
+        ["strace", "-f", "-e", "trace=all"] + run_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        stdin=subprocess.PIPE,
+        text=True,
+        env=env
+    )
+
+    try:
+        stdout, stderr = process.communicate(input="trigger\n", timeout=60)
+    except:
+        process.kill()
+        stdout, stderr = process.communicate()
+
+    for line in stderr.split("\n"):
+
+        if not line:
+            continue
+
+        timestamp = time.time() - start
+
+        timeline.append({
+            "time": round(timestamp, 2),
+            "event": line[:200]
+        })
+
+        if "execve(" in line:
+            m = re.search(r'execve\("([^"]+)"', line)
+            if m:
+                processes.append(os.path.basename(m.group(1)))
+
+        for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
+            ips.add(ip)
+
+        for d in re.findall(r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line):
+            domains.add(d)
+
+        if "open(" in line:
+            f = re.search(r'"([^"]+)"', line)
+            if f:
+                files.append(f.group(1))
+
+        strings = re.findall(r'[A-Za-z0-9+/=]{20,}', line)
+        for s in strings:
+            d = try_decode_base64(s)
+            if d:
+                decoded_payloads.append(d)
+
+# ============================
+# GRAPH 🔥
+# ============================
+
+graph_edges = []
+prev = "Package"
+
+for p in processes:
+    graph_edges.append({
+        "from": prev,
+        "to": p
+    })
+    prev = p
+
+# ============================
+# FINAL DATA
+# ============================
+
 network_details = [enrich_ip(ip) for ip in ips]
+
+score = len(processes)*2 + len(ips)*3 + len(decoded_payloads)*4
+
+verdict = "CLEAN"
+if score > 5:
+    verdict = "SUSPICIOUS"
+if score > 10:
+    verdict = "MALICIOUS"
 
 # ============================
 # SAVE
@@ -240,15 +261,17 @@ os.makedirs("decoy_logs/decoy_runs", exist_ok=True)
 
 log = {
     "package": os.path.basename(original_input),
-    "processes": raw_processes,
-    "unique_processes": clean_processes,
-    "suspicious_processes": suspicious_processes,
-    "graph_edges": graph_edges,
-    "commands": commands,
+    "verdict": verdict,
+    "score": score,
+
+    "processes": processes,
+    "graph_edges": graph_edges,   # 🔥 مهم
+
     "files": files,
     "domains": list(domains),
-    "dns": clean_dns,
+    "dns": captured_dns,
     "http_requests": captured_requests,
+    "decoded_payloads": decoded_payloads,
     "network_details": network_details,
     "timeline": timeline[:100]
 }
