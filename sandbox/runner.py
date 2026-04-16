@@ -207,19 +207,23 @@ for target in targets:
                     files.append(file_path)
 
 # ============================
-# CLEAN PROCESSES 
+# CLEAN PROCESSES (FIXED )
 # ============================
 
-processes = list(set(processes))   # remove duplicates
-processes = sorted(processes)      # sort
+processes = list(set(processes))
+processes = sorted(processes)
 
-clean_processes = []
+# لا نحذف، فقط ننسخ
+clean_processes = processes.copy()
+
+# suspicious فقط
+suspicious_processes = []
 
 for p in processes:
-    if p in ["node", "npm", "sh", "bash"]:
-        continue
-    clean_processes.append(p)
+    if p in ["curl", "wget", "nc", "bash", "sh"]:
+        suspicious_processes.append(p)
 
+# fallback
 if not clean_processes:
     clean_processes = ["node"]
 
@@ -298,7 +302,8 @@ log = {
     "score": score,
     "threat_level": threat_level,
     "reasons": reasons,
-    "processes": clean_processes, 
+    "processes": clean_processes,              # ✅ كل العمليات
+    "suspicious_processes": suspicious_processes,  # ✅ المشبوه فقط
     "commands": commands,
     "files": files,
     "domains": list(domains),
