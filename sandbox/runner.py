@@ -207,19 +207,22 @@ for target in targets:
                     files.append(file_path)
 
 # ============================
-# CLEAN PROCESSES (FIXED )
+# PROCESS HANDLING (FINAL FIX )
 # ============================
 
-processes = list(set(processes))
-processes = sorted(processes)
+# نخلي الأصل زي ما هو (للـ graph)
+raw_processes = processes.copy()
 
-# لا نحذف، فقط ننسخ
-clean_processes = processes.copy()
+# نسخة للتحليل فقط
+unique_processes = list(set(processes))
+unique_processes = sorted(unique_processes)
+
+clean_processes = unique_processes.copy()
 
 # suspicious فقط
 suspicious_processes = []
 
-for p in processes:
+for p in unique_processes:
     if p in ["curl", "wget", "nc", "bash", "sh"]:
         suspicious_processes.append(p)
 
@@ -302,8 +305,9 @@ log = {
     "score": score,
     "threat_level": threat_level,
     "reasons": reasons,
-    "processes": clean_processes,              # ✅ كل العمليات
-    "suspicious_processes": suspicious_processes,  # ✅ المشبوه فقط
+    "processes": raw_processes,              # للـ graph
+    "unique_processes": clean_processes,     # للتحليل
+    "suspicious_processes": suspicious_processes,
     "commands": commands,
     "files": files,
     "domains": list(domains),
