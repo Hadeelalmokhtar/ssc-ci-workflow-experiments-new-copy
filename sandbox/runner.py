@@ -156,65 +156,73 @@ for target in targets:
             if m:
                 commands.append(m.group(1))
 
-        # DNS (filtered)
-        if "getaddrinfo(" in line or "connect(" in line:
-            d = re.findall(r'"([^"]+)"', line)
-            for x in d:
-                if "." in x and not x.endswith((".conf", ".local", ".internal")):
+        # ============================
+        # DNS + DOMAIN (FIXED )
+        # ============================
+        if "connect(" in line:
+
+            matches = re.findall(r'"([^"]+)"', line)
+
+            for x in matches:
+
+                # IP detection
+                if re.match(r'\d+\.\d+\.\d+\.\d+', x):
                     captured_dns.append(x)
+                    ips.add(x)
+                    continue
 
-        # IP
-        for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
-            ips.add(ip)
+                # DOMAIN detection
+                if "." not in x:
+                    continue
 
-        # DOMAIN (strong filtering)
-        for d in re.findall(r'([a-zA-Z0-9-]+\.[a-zA-Z]{2,})', line):
+                if x.endswith((".conf", ".pem", ".res", ".so", ".json")):
+                    continue
 
-            if d.endswith((".js",".json",".bundle",".node",".map",".conf",".so")):
-                continue
+                if "/" in x:
+                    continue
 
-            if "/" in d:
-                continue
+                domains.add(x)
 
-            if any(x in d for x in ["memory","index","module","exports"]):
-                continue
+            # network event
+            timeline.append({
+                "time": round(counter * 0.01, 2),
+                "event": "NETWORK CONNECTION DETECTED"
+            })
 
-            if not re.match(r'^[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$', d):
-                continue
-
-            domains.add(d)
-
-        # FILESYSTEM ( FIXED)
+        # FILESYSTEM
         if any(x in line for x in ["open(", "read(", "write(", "access("]):
             f = re.search(r'"([^"]+)"', line)
             if f:
                 file_path = f.group(1)
 
-                #  ignore system paths
+                # ignore system
                 if file_path.startswith(("/etc", "/usr", "/lib", "/proc", "/dev")):
                     continue
 
-                #  ignore libraries
                 if file_path.endswith(".so"):
                     continue
 
-                #  only interesting files
                 if any(x in file_path for x in [
                     "/home", "/root", "/tmp",
                     ".env", ".ssh", "id_rsa", "passwd", "shadow"
                 ]):
                     files.append(file_path)
 
-        # NETWORK EVENT
-        if "connect(" in line:
-            timeline.append({
-                "time": round(counter * 0.01, 2),
-                "event": "NETWORK CONNECTION DETECTED"
-            })
-
 # fallback
 if not processes:
     processes.append("node")
+
+# ============================
+# CLEAN DNS 
+# ============================
+
+captured_dns = list(set(captured_dns))
+
+clean_dns = []
+for ip in captured_dns:
+    if ip.startswith(("127.", "0.", "10.", "192.168")):
+        continue
+    clean_dns.append(ip)
 
 # ============================
 # NETWORK DETAILS
@@ -249,7 +257,7 @@ if len(ips) > 0:
     score += 4
     reasons.append("External connections")
 
-if len(domains) > 2:
+if len(domains) > 1:
     score += 2
     reasons.append("Multiple domains")
 
@@ -283,7 +291,7 @@ log = {
     "commands": commands,
     "files": files,
     "domains": list(domains),
-    "dns": captured_dns,
+    "dns": clean_dns,
     "http_requests": captured_requests,
     "network_details": network_details,
     "timeline": timeline[:100]
