@@ -1,0 +1,51 @@
+{
+    "run_id": "1776317444",
+    "package": "0g-storage-contracts-2.0.0.tgz",
+    "risk_probability": 0.9994450211524963,
+    "prediction": 1,
+    "file_entropy": 4.989,
+    "execution_time": 1.732,
+    "timestamp": "2026-04-16T05:30:44.152883",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.0148656368255615
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.1054210662841797
+        ],
+        [
+            "num__.md",
+            0.819562554359436
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7877516746520996
+        ],
+        [
+            "num__Number of lines in source code",
+            0.7523180246353149
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5669295191764832
+        ],
+        [
+            "num__shannon std string source code",
+            -0.5522729754447937
+        ],
+        [
+            "num__shannon std ID source code",
+            0.48405858874320984
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.46838125586509705
+        ],
+        [
+            "num__plus ratio mean",
+            -0.43446364998817444
+        ]
+    ]
+}
