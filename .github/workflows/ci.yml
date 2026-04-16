@@ -3,6 +3,9 @@ name: SSC Build Pipeline
 on:
   push:
     branches: ["main"]
+    paths:
+      - "**.tgz"
+      - "**.tar.gz"
 
   workflow_dispatch:
     inputs:
