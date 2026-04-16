@@ -112,8 +112,6 @@ processes = []
 timeline = []
 commands = []
 
-#  FIXED TIMELINE
-start_time = time.time()
 counter = 0
 
 for target in targets:
@@ -139,19 +137,18 @@ for target in targets:
         if not line:
             continue
 
-        #  TIMELINE FIX
+        # TIMELINE
         counter += 1
         timeline.append({
             "time": round(counter * 0.01, 2),
             "event": line[:200]
         })
 
-        #  PROCESS FIX
+        # PROCESS
         if any(x in line for x in ["execve", "clone", "fork", "vfork"]):
             m = re.search(r'execve\("([^"]+)"', line)
             if m:
-                proc = os.path.basename(m.group(1))
-                processes.append(proc)
+                processes.append(os.path.basename(m.group(1)))
 
         # COMMANDS
         if "execve(" in line or "system(" in line:
@@ -159,21 +156,24 @@ for target in targets:
             if m:
                 commands.append(m.group(1))
 
-        #  DNS FIX
+        # DNS (filtered)
         if "getaddrinfo(" in line or "connect(" in line:
             d = re.findall(r'"([^"]+)"', line)
             for x in d:
-                if "." in x and not x.endswith(".conf"):
+                if "." in x and not x.endswith((".conf", ".local", ".internal")):
                     captured_dns.append(x)
 
         # IP
         for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
             ips.add(ip)
 
-        # DOMAIN
+        # DOMAIN (strong filtering)
         for d in re.findall(r'([a-zA-Z0-9-]+\.[a-zA-Z]{2,})', line):
 
-            if d.endswith((".js",".json",".bundle",".node",".map")):
+            if d.endswith((".js",".json",".bundle",".node",".map",".conf",".so")):
+                continue
+
+            if "/" in d:
                 continue
 
             if any(x in d for x in ["memory","index","module","exports"]):
@@ -184,20 +184,35 @@ for target in targets:
 
             domains.add(d)
 
-        # FILESYSTEM
+        # FILESYSTEM ( FIXED)
         if any(x in line for x in ["open(", "read(", "write(", "access("]):
             f = re.search(r'"([^"]+)"', line)
             if f:
-                files.append(f.group(1))
+                file_path = f.group(1)
 
-        # NETWORK
+                #  ignore system paths
+                if file_path.startswith(("/etc", "/usr", "/lib", "/proc", "/dev")):
+                    continue
+
+                #  ignore libraries
+                if file_path.endswith(".so"):
+                    continue
+
+                #  only interesting files
+                if any(x in file_path for x in [
+                    "/home", "/root", "/tmp",
+                    ".env", ".ssh", "id_rsa", "passwd", "shadow"
+                ]):
+                    files.append(file_path)
+
+        # NETWORK EVENT
         if "connect(" in line:
             timeline.append({
                 "time": round(counter * 0.01, 2),
                 "event": "NETWORK CONNECTION DETECTED"
             })
 
-#  PROCESS FALLBACK
+# fallback
 if not processes:
     processes.append("node")
 
@@ -238,9 +253,9 @@ if len(domains) > 2:
     score += 2
     reasons.append("Multiple domains")
 
-if len(files) > 5:
-    score += 2
-    reasons.append("File activity detected")
+if len(files) > 2:
+    score += 3
+    reasons.append("Sensitive file access")
 
 # ============================
 # LEVEL
@@ -257,7 +272,6 @@ else:
 # SAVE
 # ============================
 
-os.makedirs("decoy_logs", exist_ok=True)
 os.makedirs("decoy_logs/decoy_runs", exist_ok=True)
 
 log = {
