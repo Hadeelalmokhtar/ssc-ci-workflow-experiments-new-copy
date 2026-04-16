@@ -10,16 +10,8 @@ import threading
 import urllib.request
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-# ============================
-# STORAGE
-# ============================
-
 captured_requests = []
 captured_dns = []
-
-# ============================
-# FAKE HTTP SERVER
-# ============================
 
 class FakeHandler(BaseHTTPRequestHandler):
 
@@ -48,10 +40,6 @@ def start_http():
 
 threading.Thread(target=start_http, daemon=True).start()
 
-# ============================
-# DNS SERVER
-# ============================
-
 from dnslib.server import DNSServer, BaseResolver
 from dnslib import RR, A
 
@@ -69,15 +57,7 @@ def start_dns():
 
 threading.Thread(target=start_dns, daemon=True).start()
 
-# ============================
-# INPUT
-# ============================
-
 original_input = sys.argv[1]
-
-# ============================
-# EXTRACT
-# ============================
 
 def extract_package_if_needed(path):
     if path.endswith(".tgz") or path.endswith(".tar.gz"):
@@ -89,10 +69,6 @@ def extract_package_if_needed(path):
 
 file_path = extract_package_if_needed(original_input)
 
-# ============================
-# FIND FILES
-# ============================
-
 targets = []
 for root, _, files in os.walk(file_path):
     for f in files:
@@ -100,10 +76,6 @@ for root, _, files in os.walk(file_path):
             targets.append(os.path.join(root, f))
 
 env = os.environ.copy()
-
-# ============================
-# ANALYSIS
-# ============================
 
 ips = set()
 domains = set()
@@ -118,7 +90,12 @@ for target in targets:
 
     run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
 
-    # 🔥 التعديل هنا فقط
+    # 🔥🔥🔥 FIX 1: سجل اسم الملف
+    processes.append(os.path.basename(target))
+
+    # 🔥🔥🔥 FIX 2: سجل runtime
+    processes.append(os.path.basename(run_cmd[0]))
+
     process = subprocess.Popen(
         ["strace", "-f", "-e", "trace=all"] + run_cmd,
         stdout=subprocess.PIPE,
@@ -138,28 +115,22 @@ for target in targets:
         if not line:
             continue
 
-        # TIMELINE
         counter += 1
         timeline.append({
             "time": round(counter * 0.01, 2),
             "event": line[:200]
         })
 
-        # PROCESS
         if any(x in line for x in ["execve", "clone", "fork", "vfork"]):
             m = re.search(r'execve\("([^"]+)"', line)
             if m:
                 processes.append(os.path.basename(m.group(1)))
 
-        # COMMANDS
         if "execve(" in line or "system(" in line:
             m = re.search(r'"([^"]+)"', line)
             if m:
                 commands.append(m.group(1))
 
-        # ============================
-        # DNS + DOMAIN
-        # ============================
         if "connect(" in line:
 
             matches = re.findall(r'"([^"]+)"', line)
@@ -182,12 +153,6 @@ for target in targets:
 
                 domains.add(x)
 
-            timeline.append({
-                "time": round(counter * 0.01, 2),
-                "event": "NETWORK CONNECTION DETECTED"
-            })
-
-        # FILESYSTEM
         if any(x in line for x in ["open(", "read(", "write(", "access("]):
             f = re.search(r'"([^"]+)"', line)
             if f:
@@ -211,9 +176,7 @@ for target in targets:
 
 raw_processes = processes.copy()
 
-unique_processes = list(set(processes))
-unique_processes = sorted(unique_processes)
-
+unique_processes = sorted(list(set(processes)))
 clean_processes = unique_processes.copy()
 
 suspicious_processes = []
@@ -226,11 +189,10 @@ if not clean_processes:
     clean_processes = ["node"]
 
 # ============================
-# GRAPH EDGES
+# GRAPH
 # ============================
 
 graph_edges = []
-
 prev = "Package"
 
 for p in raw_processes:
@@ -271,40 +233,6 @@ def enrich_ip(ip):
 network_details = [enrich_ip(ip) for ip in ips]
 
 # ============================
-# SCORING
-# ============================
-
-score = 0
-reasons = []
-
-if len(processes) > 2:
-    score += 3
-    reasons.append("Multiple processes")
-
-if len(ips) > 0:
-    score += 4
-    reasons.append("External connections")
-
-if len(domains) > 1:
-    score += 2
-    reasons.append("Multiple domains")
-
-if len(files) > 2:
-    score += 3
-    reasons.append("Sensitive file access")
-
-# ============================
-# LEVEL
-# ============================
-
-if score >= 7:
-    threat_level = "HIGH RISK"
-elif score >= 4:
-    threat_level = "MEDIUM RISK"
-else:
-    threat_level = "LOW RISK"
-
-# ============================
 # SAVE
 # ============================
 
@@ -312,16 +240,10 @@ os.makedirs("decoy_logs/decoy_runs", exist_ok=True)
 
 log = {
     "package": os.path.basename(original_input),
-    "score": score,
-    "threat_level": threat_level,
-    "reasons": reasons,
-
     "processes": raw_processes,
     "unique_processes": clean_processes,
     "suspicious_processes": suspicious_processes,
-
     "graph_edges": graph_edges,
-
     "commands": commands,
     "files": files,
     "domains": list(domains),
