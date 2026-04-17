@@ -1,0 +1,51 @@
+{
+    "run_id": "1776418703",
+    "package": "2e6d5f64604be31-1.0.2.tgz",
+    "risk_probability": 0.9899745583534241,
+    "prediction": 1,
+    "file_entropy": 5.0489,
+    "execution_time": 1.865,
+    "timestamp": "2026-04-17T09:38:23.885776",
+    "top_shap": [
+        [
+            "num__.md",
+            0.9839389324188232
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8390244245529175
+        ],
+        [
+            "num__Number of lines in metadata",
+            0.7390123009681702
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            0.6452655792236328
+        ],
+        [
+            "num__Number of lines in source code",
+            0.6403195858001709
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.5860303640365601
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5626409649848938
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5393849611282349
+        ],
+        [
+            "num__presence of installation script",
+            -0.5333303809165955
+        ],
+        [
+            "num__plus ratio max",
+            0.4691050350666046
+        ]
+    ]
+}
