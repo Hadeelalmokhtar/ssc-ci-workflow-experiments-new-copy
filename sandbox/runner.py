@@ -166,6 +166,8 @@ processes = []
 timeline = []
 decoded_payloads = []
 
+start = time.time()
+
 for target in targets:
 
     run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
@@ -174,7 +176,7 @@ for target in targets:
     processes.append(os.path.basename(run_cmd[0]))
 
     process = subprocess.Popen(
-        ["strace", "-tt", "-f", "-e", "trace=all"] + run_cmd,
+        ["strace", "-tt", "-f", "-e", "trace=all"] + run_cmd, 
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         stdin=subprocess.PIPE,
@@ -188,6 +190,8 @@ for target in targets:
         process.kill()
         stdout, stderr = process.communicate()
 
+    counter = 0 
+
     for line in stderr.split("\n"):
 
         if not line:
@@ -198,7 +202,10 @@ for target in targets:
             timestamp = float(m.group(1))
             event = m.group(2)
         else:
-            continue
+            # 
+            counter += 1
+            timestamp = round(counter * 0.01, 2)
+            event = line
 
         timeline.append({
             "time": timestamp,
@@ -228,7 +235,7 @@ for target in targets:
                 decoded_payloads.append(d)
 
 # ============================
-# GRAPH
+# GRAPH 
 # ============================
 
 graph_edges = []
