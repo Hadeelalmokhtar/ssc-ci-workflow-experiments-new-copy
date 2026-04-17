@@ -166,18 +166,15 @@ processes = []
 timeline = []
 decoded_payloads = []
 
-start = time.time()
-
 for target in targets:
 
     run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
 
-    # 🔥 مهم: يضمن ظهور graph دائمًا
-    processes.append(os.path.basename(target))      # index.js
-    processes.append(os.path.basename(run_cmd[0]))  # node / python3
+    processes.append(os.path.basename(target))
+    processes.append(os.path.basename(run_cmd[0]))
 
     process = subprocess.Popen(
-        ["strace", "-f", "-e", "trace=all"] + run_cmd,
+        ["strace", "-tt", "-f", "-e", "trace=all"] + run_cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         stdin=subprocess.PIPE,
@@ -196,37 +193,42 @@ for target in targets:
         if not line:
             continue
 
-        timestamp = time.time() - start
+        m = re.match(r'^(\d+\.\d+)\s+(.*)', line)
+        if m:
+            timestamp = float(m.group(1))
+            event = m.group(2)
+        else:
+            continue
 
         timeline.append({
-            "time": round(timestamp, 2),
-            "event": line[:200]
+            "time": timestamp,
+            "event": event[:200]
         })
 
-        if "execve(" in line:
-            m = re.search(r'execve\("([^"]+)"', line)
-            if m:
-                processes.append(os.path.basename(m.group(1)))
+        if "execve(" in event:
+            m2 = re.search(r'execve\("([^"]+)"', event)
+            if m2:
+                processes.append(os.path.basename(m2.group(1)))
 
-        for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', line):
+        for ip in re.findall(r'\d+\.\d+\.\d+\.\d+', event):
             ips.add(ip)
 
-        for d in re.findall(r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', line):
+        for d in re.findall(r'[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', event):
             domains.add(d)
 
-        if "open(" in line:
-            f = re.search(r'"([^"]+)"', line)
+        if "open(" in event:
+            f = re.search(r'"([^"]+)"', event)
             if f:
                 files.append(f.group(1))
 
-        strings = re.findall(r'[A-Za-z0-9+/=]{20,}', line)
+        strings = re.findall(r'[A-Za-z0-9+/=]{20,}', event)
         for s in strings:
             d = try_decode_base64(s)
             if d:
                 decoded_payloads.append(d)
 
 # ============================
-# GRAPH 🔥
+# GRAPH
 # ============================
 
 graph_edges = []
@@ -265,7 +267,7 @@ log = {
     "score": score,
 
     "processes": processes,
-    "graph_edges": graph_edges,   # 🔥 مهم
+    "graph_edges": graph_edges,
 
     "files": files,
     "domains": list(domains),
