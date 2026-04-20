@@ -1,0 +1,51 @@
+{
+    "run_id": "1776721997",
+    "package": "7702-eoa-implementation-1.0.0.tgz",
+    "risk_probability": 0.996823787689209,
+    "prediction": 1,
+    "file_entropy": 4.9602,
+    "execution_time": 1.545,
+    "timestamp": "2026-04-20T21:53:17.317381",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.063403844833374
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0822962522506714
+        ],
+        [
+            "num__.md",
+            0.8810514211654663
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8184268474578857
+        ],
+        [
+            "num__Number of lines in source code",
+            0.618228018283844
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5545394420623779
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5354672074317932
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5091733932495117
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4483906030654907
+        ],
+        [
+            "num__eq ratio q3",
+            -0.4206562042236328
+        ]
+    ]
+}
