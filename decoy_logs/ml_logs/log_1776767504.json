@@ -1,0 +1,51 @@
+{
+    "run_id": "1776767504",
+    "package": "sportdigi-bootstrapper-17.1.0.tgz",
+    "risk_probability": 0.9685479998588562,
+    "prediction": 1,
+    "file_entropy": 4.5616,
+    "execution_time": 0.46,
+    "timestamp": "2026-04-21T10:31:44.450917",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.078305244445801
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0843100547790527
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8970696926116943
+        ],
+        [
+            "num__Number of lines in source code",
+            0.8512203693389893
+        ],
+        [
+            "num__.md",
+            0.7950671315193176
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6727539896965027
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5435974597930908
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5365893244743347
+        ],
+        [
+            "num__plus ratio mean",
+            -0.48723676800727844
+        ],
+        [
+            "num__Number of Words in metadata",
+            0.38446304202079773
+        ]
+    ]
+}
