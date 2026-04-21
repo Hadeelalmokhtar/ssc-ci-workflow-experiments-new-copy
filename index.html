@@ -632,11 +632,39 @@ let network = null
 function renderGraph(data){
   if(graphRendered) return
   graphRendered = true
-  
+
   const container = el('graph-container')
-  const nodes = []
-  const edges = []
-  let id = 1
+
+  const graph = data.graph || {}
+
+  const nodes = new vis.DataSet(
+    (graph.nodes || []).map(n => ({
+      id: n.id,
+      label: n.label,
+      color: getNodeColor(n.type),
+      shape: getNodeShape(n.type),
+      font: {face:'Share Tech Mono', size:11}
+    }))
+  )
+
+  const edges = new vis.DataSet(
+    (graph.edges || []).map(e => ({
+      from: e.from,
+      to: e.to,
+      arrows: "to",
+      color: getEdgeColor(e)
+    }))
+  )
+
+  if(network) network.destroy()
+
+  network = new vis.Network(container, {nodes, edges}, {
+    layout:{ hierarchical:false },
+    physics:{ enabled:true },
+    edges:{ smooth:true },
+    interaction:{zoomView:true, dragView:true}
+  })
+}
 
   nodes.push({
     id:1, label:'Package\n'+(data.package||''), level:0,
