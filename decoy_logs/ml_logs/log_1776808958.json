@@ -1,0 +1,51 @@
+{
+    "run_id": "1776808958",
+    "package": "j5gnpfweguiwerbngpiutbgn0iutb0pfwef-0.0.1.tar.gz",
+    "risk_probability": 0.9385979175567627,
+    "prediction": 1,
+    "file_entropy": 5.1474,
+    "execution_time": 1.132,
+    "timestamp": "2026-04-21T22:02:38.199874",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.2368271350860596
+        ],
+        [
+            "num__.md",
+            -0.8811975121498108
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.6202881932258606
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.572202205657959
+        ],
+        [
+            "num__presence of installation script",
+            -0.5274345278739929
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.4935995042324066
+        ],
+        [
+            "num__plus ratio mean",
+            -0.47622257471084595
+        ],
+        [
+            "num__eq ratio q3",
+            -0.45191073417663574
+        ],
+        [
+            "num__shannon max ID metadata",
+            0.38898250460624695
+        ],
+        [
+            "num__bracket ratio max",
+            0.3758777379989624
+        ]
+    ]
+}
