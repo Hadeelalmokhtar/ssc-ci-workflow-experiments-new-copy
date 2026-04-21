@@ -355,7 +355,7 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 
   <div class="grid-2">
     <div class="card">
-      <div class="card-title">Domain without real</div>
+      <div class="card-title">Domains</div>
       <div class="scroll" id="domains-list"><div class="empty">No domains</div></div>
     </div>
     <div class="card">
@@ -397,7 +397,6 @@ function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 }
 
-// ✅ دالة لف النص داخل النود
 function wrapLabel(text, max = 15){
   if(!text) return ''
   const words = text.split(' ')
@@ -600,7 +599,7 @@ function renderNetwork(netAnalysis){
   
   let html = `<div style="margin-bottom:10px;padding:8px;background:var(--bg3);border-radius:5px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
-      <div>Real Domains: <strong>${(netAnalysis.real_domains||[]).length}</strong></div>
+      <div>Domains: <strong>${(netAnalysis.real_domains||[]).length}</strong></div>
       <div>External IPs: <strong>${externalIPs.length}</strong></div>
       <div>DNS Queries: <strong>${netAnalysis.total_dns_queries||0}</strong></div>
       <div>HTTP Requests: <strong>${netAnalysis.total_http_requests||0}</strong></div>
@@ -687,12 +686,10 @@ function renderGraph(data){
   const graph = data.graph || {}
   const netAnalysis = data.network_analysis || {}
   
-  // بناء النودات والإيدجات من البيانات الحقيقية
   const nodesArray = []
   const edgesArray = []
   let nodeId = 1
   
-  // إضافة الباكدج
   nodesArray.push({
     id: nodeId,
     label: wrapLabel('Package: ' + (data.package || 'unknown')),
@@ -702,7 +699,6 @@ function renderGraph(data){
   const packageId = nodeId
   nodeId++
   
-  // إضافة العمليات
   const processes = data.processes || []
   const processIds = []
   processes.slice(0, 8).forEach(proc => {
@@ -721,7 +717,6 @@ function renderGraph(data){
     })
   })
   
-  // إضافة الدومينز
   const domains = netAnalysis.real_domains || []
   if(processIds.length > 0){
     domains.slice(0, 10).forEach(domain => {
@@ -740,7 +735,6 @@ function renderGraph(data){
     })
   }
   
-  // إضافة IPs
   const externalIPs = netAnalysis.external_ips || []
   if(processIds.length > 0){
     externalIPs.slice(0, 5).forEach(ipData => {
@@ -760,7 +754,6 @@ function renderGraph(data){
     })
   }
   
-  // إضافة ملفات العسل
   const honeyHits = data.honeytoken_hits || []
   honeyHits.slice(0, 4).forEach(hit => {
     const id = nodeId++
@@ -778,7 +771,6 @@ function renderGraph(data){
     })
   })
   
-  // إضافة الملفات الحساسة
   const files = data.accessed_files || []
   const sensitivePatterns = ['.env', '.aws', '.ssh', 'id_rsa', 'credentials', 'secrets', 'config.json']
   const sensitiveFiles = files.filter(f => sensitivePatterns.some(p => f.includes(p)))
@@ -832,7 +824,6 @@ function renderGraph(data){
 
   if(network) network.destroy()
 
-  // ✅ الإعدادات الجديدة مع Hierarchical Layout
   network = new vis.Network(container, {nodes, edges}, {
     layout: {
       hierarchical: {
