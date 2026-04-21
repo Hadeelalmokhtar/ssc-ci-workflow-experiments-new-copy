@@ -3,6 +3,7 @@ import json
 import ipaddress
 import pandas as pd
 
+
 DECOY_DIR = "decoy_logs/decoy_runs"
 OUTPUT_CSV = "CTI_Storage/decoy_features.csv"
 
