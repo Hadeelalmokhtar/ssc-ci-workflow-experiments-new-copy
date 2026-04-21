@@ -1,0 +1,51 @@
+{
+    "run_id": "1776768124",
+    "package": "common-pattern-components-8.2.9.tgz",
+    "risk_probability": 0.9887737035751343,
+    "prediction": 1,
+    "file_entropy": 4.8619,
+    "execution_time": 1.247,
+    "timestamp": "2026-04-21T10:42:04.543464",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.0824038982391357
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0000289678573608
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8660280704498291
+        ],
+        [
+            "num__.md",
+            0.8536446690559387
+        ],
+        [
+            "num__Number of lines in source code",
+            0.7444294095039368
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6721289157867432
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5655502080917358
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5202459096908569
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4656834602355957
+        ],
+        [
+            "num__shannon mean string source code",
+            -0.4542448818683624
+        ]
+    ]
+}
