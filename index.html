@@ -276,7 +276,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 </header>
 
 <main>
-
   <div id="verdict-banner">
     <div class="banner-left">
       <div class="banner-pkg">Package: <span id="b-pkg">—</span></div>
@@ -328,8 +327,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
     </div>
   </div>
 
-  <!-- Decoded Payloads removed — not useful per user request -->
-
   <div class="grid-2">
     <div class="card">
       <div class="card-title">Processes</div>
@@ -349,7 +346,7 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Network Details (IP Enrichment)</div>
+      <div class="card-title">Network Analysis</div>
       <div style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto" id="net-list">
         <div class="empty">No network activity</div>
       </div>
@@ -358,7 +355,7 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 
   <div class="grid-2">
     <div class="card">
-      <div class="card-title">Domains</div>
+      <div class="card-title">Real Domains</div>
       <div class="scroll" id="domains-list"><div class="empty">No domains</div></div>
     </div>
     <div class="card">
@@ -367,7 +364,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
     </div>
   </div>
 
-  <!-- Memory Strings: improved extraction, shows ALL strings including paths/IPs/URLs/suspicious -->
   <div class="card">
     <div class="card-title">Memory Strings (Runtime Extraction)</div>
     <div id="mem-list" style="max-height:200px;overflow-y:auto;padding:4px">
@@ -382,16 +378,13 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
     </div>
   </div>
 
-  <!-- Attack Graph: rendered ONCE, never re-rendered on polling updates -->
   <div class="card">
     <div class="card-title">Attack Graph</div>
     <div id="graph-container" style="height:420px"></div>
   </div>
-
 </main>
 
 <script>
-// ── UTILITIES ──────────────────────────────────────────────
 function el(id){ return document.getElementById(id) }
 function row(icon, text){
   return `<div class="row"><span class="row-icon">${icon}</span><span>${text}</span></div>`
@@ -404,7 +397,6 @@ function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 }
 
-// ── SCORE BAR ──────────────────────────────────────────────
 function updateScoreBar(score){
   const fill = el('score-fill')
   const pct  = Math.min((score / 30) * 100, 100)
@@ -415,7 +407,6 @@ function updateScoreBar(score){
   else                 fill.style.background = 'var(--green)'
 }
 
-// ── VERDICT BANNER ─────────────────────────────────────────
 function updateBanner(data){
   const v      = data.verdict || 'CLEAN'
   const banner = el('verdict-banner')
@@ -425,15 +416,14 @@ function updateBanner(data){
   el('b-score').textContent     = data.score         ?? 0
   el('b-findings').textContent  = (data.behavior_findings||[]).length
   el('b-procs').textContent     = (data.processes   ||[]).length
-  const realDoms = (data.domains||[]).filter(isRealDomain)
-  el('b-domains').textContent   = realDoms.length
+  const netAnalysis = data.network_analysis || {}
+  el('b-domains').textContent   = (netAnalysis.real_domains || []).length
   const vEl = el('b-verdict')
   vEl.textContent = v
   vEl.className   = 'banner-verdict ' + v
   updateScoreBar(data.score || 0)
 }
 
-// ── BEHAVIOR FINDINGS ──────────────────────────────────────
 function renderFindings(findings){
   const list = el('findings-list')
   list.innerHTML = ''
@@ -452,7 +442,6 @@ function renderFindings(findings){
   })
 }
 
-// ── BEHAVIORAL PHASES ──────────────────────────────────────
 const PHASE_ICONS={
   reconnaissance:'◈',defense_evasion:'⬡',credential_access:'⬢',
   exfiltration:'▲',execution:'■',persistence:'⬟',discovery:'◉'
@@ -473,7 +462,6 @@ function renderPhases(phases){
   })
 }
 
-// ── HONEYTOKEN HITS ────────────────────────────────────────
 function renderHoney(hits){
   const list = el('honey-list')
   list.innerHTML = ''
@@ -490,7 +478,6 @@ function renderHoney(hits){
   })
 }
 
-// ── STATIC ANALYSIS ────────────────────────────────────────
 function renderStatic(sa){
   const list = el('static-list')
   list.innerHTML = ''
@@ -511,14 +498,6 @@ function renderStatic(sa){
       tags += `<span class="sa-tag warn">imports: ${info.suspicious_imports.join(',')}</span>`
     if(info.reverse_shell_pattern)
       tags += `<span class="sa-tag danger">reverse shell pattern</span>`
-    if(info.encoded_exec)
-      tags += `<span class="sa-tag danger">encoded exec</span>`
-    if(info.curl_wget)
-      tags += `<span class="sa-tag warn">curl/wget</span>`
-    if(info.env_access)
-      tags += `<span class="sa-tag warn">env access</span>`
-    if(info.line_count !== undefined)
-      tags += `<span class="sa-tag">lines: ${info.line_count}</span>`
     if(!tags) tags = '<span class="sa-tag ok">clean</span>'
     list.innerHTML += `
       <div class="sa-file">
@@ -528,7 +507,6 @@ function renderStatic(sa){
   })
 }
 
-// ── PACKAGE METADATA ───────────────────────────────────────
 function renderMeta(meta){
   const list = el('meta-list')
   list.innerHTML = ''
@@ -543,7 +521,6 @@ function renderMeta(meta){
   })
 }
 
-// ── HTTP REQUESTS ──────────────────────────────────────────
 function renderHttp(reqs){
   const list = el('http-list')
   list.innerHTML = ''
@@ -563,91 +540,60 @@ function renderHttp(reqs){
   })
 }
 
-// ── NETWORK DETAILS ────────────────────────────────────────
-function renderNet(nets){
+function renderNetwork(netAnalysis){
   const list = el('net-list')
   list.innerHTML = ''
-  if(!nets||!nets.length){ list.innerHTML='<div class="empty">No network activity</div>'; return }
-  nets.forEach(n=>{
-    const riskHigh = n.risk==='high'||n.private===false
-    list.innerHTML += `
+  if(!netAnalysis){ list.innerHTML='<div class="empty">No network data</div>'; return }
+  
+  const httpSum = netAnalysis.http_summary || {}
+  const externalIPs = netAnalysis.external_ips || []
+  
+  let html = `<div style="margin-bottom:10px;padding:8px;background:var(--bg3);border-radius:5px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+      <div>Real Domains: <strong>${(netAnalysis.real_domains||[]).length}</strong></div>
+      <div>External IPs: <strong>${externalIPs.length}</strong></div>
+      <div>DNS Queries: <strong>${netAnalysis.total_dns_queries||0}</strong></div>
+      <div>HTTP Requests: <strong>${netAnalysis.total_http_requests||0}</strong></div>
+      <div>POST Requests: <strong>${httpSum.post_count||0}</strong></div>
+      <div>Exfil Attempts: <strong style="color:${httpSum.exfil_attempts>0?'var(--red)':'inherit'}">${httpSum.exfil_attempts||0}</strong></div>
+    </div>
+  </div>`
+  
+  externalIPs.forEach(ip=>{
+    const riskClass = ip.risk === 'high' ? 'net-risk-high' : ''
+    html += `
       <div class="net-card">
-        <div class="net-ip ${riskHigh?'net-risk-high':''}">${esc(n.ip||'—')}</div>
-        ${n.private ? '<div class="net-detail">Private IP</div>' : ''}
-        ${n.country ? `<div class="net-detail">Country: <span>${esc(n.country)}</span></div>` : ''}
-        ${n.isp     ? `<div class="net-detail">ISP: <span>${esc(n.isp)}</span></div>` : ''}
-        ${n.org     ? `<div class="net-detail">Org: <span>${esc(n.org)}</span></div>` : ''}
-        ${n.risk    ? `<div class="net-detail">Risk: <span class="${n.risk==='high'?'net-risk-high':''}">${esc(n.risk)}</span></div>` : ''}
+        <div class="net-ip ${riskClass}">${esc(ip.ip)}</div>
+        ${ip.country ? `<div class="net-detail">📍 ${ip.country} ${ip.city||''}</div>` : ''}
+        ${ip.isp ? `<div class="net-detail">ISP: ${esc(ip.isp)}</div>` : ''}
+        ${ip.risk ? `<div class="net-detail">Risk: <span class="${riskClass}">${ip.risk}</span></div>` : ''}
       </div>`
   })
+  
+  if(externalIPs.length === 0){
+    html += '<div style="padding:10px;text-align:center;color:var(--text-dim)">No external IPs contacted</div>'
+  }
+  
+  list.innerHTML = html
 }
 
-// ── MEMORY STRINGS (FIXED) ─────────────────────────────────
-// Shows ALL meaningful strings: IPs, URLs, paths, base64, suspicious tokens
-// No aggressive filtering that was causing blank sections
 function renderMemory(strings){
   const list = el('mem-list')
   list.innerHTML = ''
+  if(!strings||!strings.length){ list.innerHTML='<div class="empty">No strings extracted</div>'; return }
 
-  // Collect from multiple possible fields
-  let all = []
-  if(Array.isArray(strings)) all = strings
-
-  if(!all.length){ list.innerHTML='<div class="empty">No strings extracted</div>'; return }
-
-  // Light filter: only skip empty/very short/pure whitespace
-  const filtered = all.filter(s => {
-    if(!s || typeof s !== 'string') return false
-    s = s.trim()
-    if(s.length < 4) return false
-    return true
-  })
-
-  if(!filtered.length){ list.innerHTML='<div class="empty">No significant strings extracted</div>'; return }
-
-  filtered.forEach(s=>{
-    s = s.trim()
+  strings.forEach(s=>{
+    s = String(s).trim()
     let cls = ''
-    let label = ''
-
-    if(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(s)){
-      cls='ip'; label='IP'
-    } else if(/^https?:\/\//i.test(s)){
-      cls='url'; label='URL'
-    } else if(s.includes('/etc/')||s.includes('/.ssh/')||s.includes('/.aws/')||s.includes('/proc/')){
-      cls='path'; label='PATH'
-    } else if(/^[A-Za-z0-9+/]{32,}={0,2}$/.test(s)){
-      cls='b64'; label='B64'
-    }
-
+    if(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(s)) cls='ip'
+    else if(/^https?:\/\//i.test(s)) cls='url'
+    else if(s.includes('/etc/')||s.includes('/.ssh/')||s.includes('/.aws/')) cls='path'
+    else if(/^[A-Za-z0-9+/]{32,}={0,2}$/.test(s)) cls='b64'
     const display = s.length > 60 ? s.substring(0,60)+'…' : s
-    list.innerHTML += `<span class="mem-chip ${cls}" title="${esc(s)}">${label?`<span style="font-size:9px;opacity:.6;margin-right:3px">${label}</span>`:''}${esc(display)}</span>`
+    list.innerHTML += `<span class="mem-chip ${cls}" title="${esc(s)}">${esc(display)}</span>`
   })
 }
 
-// ── DOMAIN FILTER ──────────────────────────────────────────
-function isRealDomain(d){
-  if(/[A-Z]/.test(d))              return false
-  if(d.split('.').length < 2)       return false
-  if(/\s/.test(d))                  return false
-  if(d.startsWith('.')||d.endsWith('.')) return false
-  const tld = d.split('.').pop()
-  if(tld.length < 2 || /^\d+$/.test(tld)) return false
-  const JUNK = ['this','list','node','index','exports','require','module','window','document',
-                'process','console','buffer','stream','event','error','object','array',
-                'string','number','boolean','function','promise','async','await','return',
-                'refdestructuringerrors','netsvc']
-  const prefix = d.split('.')[0].toLowerCase()
-  if(JUNK.some(j=>prefix.startsWith(j))) return false
-  if(!/^[a-z0-9][a-z0-9._-]{2,}$/.test(d)) return false
-  const KNOWN_TLDS = ['com','net','org','io','dev','gov','edu','co','uk','de','fr',
-                      'ru','cn','jp','br','au','nl','se','no','fi','dk','pl','it',
-                      'es','ca','mx','in','sg','hk','conf','cnf','json','so']
-  if(!KNOWN_TLDS.includes(tld.toLowerCase())) return false
-  return true
-}
-
-// ── SIMPLE LISTS ───────────────────────────────────────────
 function renderSimple(id, arr, icon='○'){
   const list = el(id)
   list.innerHTML = ''
@@ -655,7 +601,6 @@ function renderSimple(id, arr, icon='○'){
   arr.forEach(item=>{ list.innerHTML += row(icon, esc(String(item))) })
 }
 
-// ── DNS ────────────────────────────────────────────────────
 function renderDns(dns){
   const list = el('dns-list')
   list.innerHTML = ''
@@ -667,7 +612,6 @@ function renderDns(dns){
   })
 }
 
-// ── TIMELINE ───────────────────────────────────────────────
 function renderTimeline(timeline){
   const list = el('timeline-list')
   list.innerHTML = ''
@@ -682,23 +626,18 @@ function renderTimeline(timeline){
   list.scrollTop = list.scrollHeight
 }
 
-// ── ATTACK GRAPH (RENDERED ONCE — NEVER RE-RENDERED) ───────
 let graphRendered = false
 let network = null
 
-function renderGraph(data, realDomains){
-  // Only render if not yet rendered, or if package changed
-  const currentPkg = data.package || ''
-  if(graphRendered && window._lastGraphPkg === currentPkg) return
-  window._lastGraphPkg = currentPkg
+function renderGraph(data){
+  if(graphRendered) return
   graphRendered = true
-
+  
   const container = el('graph-container')
   const nodes = []
   const edges = []
   let id = 1
 
-  // Package root
   nodes.push({
     id:1, label:'Package\n'+(data.package||''), level:0,
     color:{background:'#172035',border:'#00d4ff'},
@@ -706,7 +645,6 @@ function renderGraph(data, realDomains){
     shape:'box', widthConstraint:{minimum:100}
   })
 
-  // Processes — level 1
   const procs = [...new Set(data.processes||[])].slice(0,8)
   procs.forEach((p)=>{
     id++
@@ -716,15 +654,14 @@ function renderGraph(data, realDomains){
       font:{color:'#ff4e6a',face:'Share Tech Mono',size:11},
       shape:'box'
     })
-    edges.push({from:1, to:id, color:{color:'#ff4e6a'}, width:1.5, dashes:false,
-      arrows:{to:{enabled:true,scaleFactor:.5}}})
+    edges.push({from:1, to:id, color:{color:'#ff4e6a'}, width:1.5, arrows:{to:{enabled:true,scaleFactor:.5}}})
   })
 
   const lastProcId = id
-
-  // Real Domains — level 2
-  const filteredDoms = (realDomains||[]).slice(0,10)
-  filteredDoms.forEach((d)=>{
+  const netAnalysis = data.network_analysis || {}
+  const domains = (netAnalysis.real_domains || []).slice(0,10)
+  
+  domains.forEach((d)=>{
     id++
     nodes.push({
       id, label:d, level:2,
@@ -732,26 +669,22 @@ function renderGraph(data, realDomains){
       font:{color:'#f5c400',face:'Share Tech Mono',size:10},
       shape:'ellipse'
     })
-    edges.push({from:lastProcId, to:id, color:{color:'#f5c400'}, dashes:true,
-      arrows:{to:{enabled:true,scaleFactor:.4}}})
+    edges.push({from:lastProcId, to:id, color:{color:'#f5c400'}, dashes:true, arrows:{to:{enabled:true,scaleFactor:.4}}})
   })
 
-  // External IPs — level 2
-  const extIPs = (data.network_details||[]).filter(n=>!n.private).slice(0,5)
-  extIPs.forEach(n=>{
+  const externalIPs = (netAnalysis.external_ips || []).slice(0,5)
+  externalIPs.forEach(ip=>{
     id++
-    const lbl = n.ip+(n.country?'\n'+n.country:'')
+    const lbl = ip.ip+(ip.country?'\n'+ip.country:'')
     nodes.push({
       id, label:lbl, level:2,
       color:{background:'#0a0f1a',border:'#ff8c42'},
       font:{color:'#ff8c42',face:'Share Tech Mono',size:10},
       shape:'ellipse'
     })
-    edges.push({from:lastProcId, to:id, color:{color:'#ff8c42'}, dashes:true,
-      arrows:{to:{enabled:true,scaleFactor:.4}}})
+    edges.push({from:lastProcId, to:id, color:{color:'#ff8c42'}, dashes:true, arrows:{to:{enabled:true,scaleFactor:.4}}})
   })
 
-  // Honeytoken hits — level 1
   const honey = (data.honeytoken_hits||[]).slice(0,4)
   honey.forEach(h=>{
     id++
@@ -762,8 +695,7 @@ function renderGraph(data, realDomains){
       font:{color:'#ff4e6a',face:'Share Tech Mono',size:10,bold:true},
       shape:'diamond'
     })
-    edges.push({from:1, to:id, color:{color:'#ff4e6a'}, width:2.5, dashes:false,
-      arrows:{to:{enabled:true,scaleFactor:.6}}})
+    edges.push({from:1, to:id, color:{color:'#ff4e6a'}, width:2.5, arrows:{to:{enabled:true,scaleFactor:.6}}})
   })
 
   if(network) network.destroy()
@@ -773,57 +705,43 @@ function renderGraph(data, realDomains){
     {
       layout:{
         hierarchical:{
-          enabled: true,
-          direction: 'LR',
-          sortMethod: 'directed',
-          levelSeparation: 200,
-          nodeSpacing: 80,
-          treeSpacing: 120,
+          enabled: true, direction: 'LR', sortMethod: 'directed',
+          levelSeparation: 200, nodeSpacing: 80, treeSpacing: 120,
         }
       },
       physics:{ enabled:false },
-      edges:{
-        smooth:{type:'cubicBezier',forceDirection:'horizontal'},
-      },
+      edges:{ smooth:{type:'cubicBezier',forceDirection:'horizontal'} },
       interaction:{tooltipDelay:200, zoomView:true, dragView:true},
     }
   )
 }
 
-// ── MAIN LOAD ──────────────────────────────────────────────
 async function load(){
   try{
-    const r    = await fetch('decoy_logs/latest.json?t='+Date.now())
+    const r = await fetch('decoy_logs/latest.json?t='+Date.now())
     if(!r.ok) throw new Error('HTTP '+r.status)
     const data = await r.json()
 
     el('last-updated').textContent = 'Updated: '+new Date().toLocaleTimeString()
-
+    
     updateBanner(data)
     renderFindings(data.behavior_findings)
     renderPhases(data.behavioral_phases)
     renderHoney(data.honeytoken_hits)
     renderStatic(data.static_analysis)
     renderMeta(data.package_metadata)
-    renderSimple('proc-list',  data.processes,      '▶')
+    renderSimple('proc-list',  data.processes, '▶')
     renderSimple('files-list', data.accessed_files, '○')
-
-    const realDomains = (data.domains||[]).filter(isRealDomain)
-    renderSimple('domains-list', realDomains, '◈')
-
+    
+    const netAnalysis = data.network_analysis || {}
+    renderSimple('domains-list', netAnalysis.real_domains || [], '◈')
     renderDns(data.dns)
     renderHttp(data.http_requests)
-    renderNet(data.network_details)
-
-    // Memory: try memory_strings first, fallback to memory_dump, then runtime_strings
-    const memSrc = data.memory_strings || data.memory_dump || data.runtime_strings || []
-    renderMemory(memSrc)
-
+    renderNetwork(netAnalysis)
+    renderMemory(data.memory_strings)
     renderTimeline(data.timeline)
-
-    // Attack graph: only drawn once (or when package changes)
-    renderGraph(data, realDomains)
-
+    
+    renderGraph(data)
   }catch(e){
     console.error('Dashboard error:', e)
     el('last-updated').textContent = 'Error: '+e.message
