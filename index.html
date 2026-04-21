@@ -558,9 +558,14 @@ function renderHttp(reqs){
   list.innerHTML = ''
   if(!reqs||!reqs.length){ list.innerHTML='<div class="empty">No requests</div>'; return }
   reqs.slice(0, 5).forEach(r=>{
+    const analysis = r.analysis||{}
+    let extra = ''
+    if(analysis.large_exfil_attempt) extra += `<div class="http-tag">⚠ Large payload (${analysis.payload_size} bytes)</div>`
+    if(analysis.base64_decoded)      extra += `<div class="http-tag">⚠ Base64 decoded</div>`
     list.innerHTML += `
       <div class="http-card">
         <div><span class="http-method ${r.method||'GET'}">${r.method||'GET'}</span><span class="http-path">${esc(r.path||'')}</span></div>
+        ${extra}
       </div>`
   })
 }
@@ -570,21 +575,35 @@ function renderNetwork(netAnalysis){
   list.innerHTML = ''
   if(!netAnalysis){ list.innerHTML='<div class="empty">No network data</div>'; return }
   
+  const httpSum = netAnalysis.http_summary || {}
   const externalIPs = netAnalysis.external_ips || []
+  
   let html = `<div style="margin-bottom:10px;padding:8px;background:var(--bg3);border-radius:5px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
-      <div>Domains: <strong>${(netAnalysis.real_domains||[]).length}</strong></div>
+      <div>Real Domains: <strong>${(netAnalysis.real_domains||[]).length}</strong></div>
       <div>External IPs: <strong>${externalIPs.length}</strong></div>
+      <div>DNS Queries: <strong>${netAnalysis.total_dns_queries||0}</strong></div>
+      <div>HTTP Requests: <strong>${netAnalysis.total_http_requests||0}</strong></div>
+      <div>POST Requests: <strong>${httpSum.post_count||0}</strong></div>
+      <div>Exfil Attempts: <strong style="color:${httpSum.exfil_attempts>0?'var(--red)':'inherit'}">${httpSum.exfil_attempts||0}</strong></div>
     </div>
   </div>`
   
-  externalIPs.slice(0, 5).forEach(ip=>{
+  const uniqueIPs = [...new Map(externalIPs.map(i => [i.ip, i])).values()]
+  uniqueIPs.slice(0, 5).forEach(ip=>{
+    const riskClass = ip.risk === 'high' ? 'net-risk-high' : ''
     html += `
       <div class="net-card">
-        <div class="net-ip">${esc(ip.ip)}</div>
-        ${ip.country ? `<div class="net-detail">📍 ${ip.country}</div>` : ''}
+        <div class="net-ip ${riskClass}">${esc(ip.ip)}</div>
+        ${ip.country ? `<div class="net-detail">📍 ${ip.country} ${ip.city||''}</div>` : ''}
+        ${ip.isp ? `<div class="net-detail">ISP: ${esc(ip.isp)}</div>` : ''}
+        ${ip.risk ? `<div class="net-detail">Risk: <span class="${riskClass}">${ip.risk}</span></div>` : ''}
       </div>`
   })
+  
+  if(uniqueIPs.length === 0){
+    html += '<div style="padding:10px;text-align:center;color:var(--text-dim)">No external IPs contacted</div>'
+  }
   
   list.innerHTML = html
 }
@@ -613,7 +632,8 @@ function renderDns(dns){
   if(!dns||!dns.length){ list.innerHTML='<div class="empty">No DNS queries</div>'; return }
   dns.slice(0, 10).forEach(d=>{
     const q  = typeof d==='object' ? d.query : d
-    list.innerHTML += row('◈', esc(q))
+    const ts = typeof d==='object' && d.timestamp ? ` @ ${d.timestamp}` : ''
+    list.innerHTML += row('◈', `${esc(q)}${ts}`)
   })
 }
 
@@ -654,7 +674,7 @@ function renderGraph(data){
   const packageId = nodeId
   nodeId++
   
-  // Main Process فقط
+  // Main Process 
   const processes = data.processes || []
   const mainProcess = processes[0] || 'node'
   const processId = nodeId++
@@ -687,7 +707,7 @@ function renderGraph(data){
     })
   })
   
-  // IPs - level 3 (بدون تكرار)
+  // IPs - level 3 
   const externalIPs = netAnalysis.external_ips || []
   const uniqueIPs = [...new Map(externalIPs.map(i => [i.ip, i])).values()]
   uniqueIPs.slice(0, 5).forEach(ipData => {
