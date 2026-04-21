@@ -397,6 +397,31 @@ function esc(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
 }
 
+function getNodeColor(type){
+  if(type === "process") return "#ff4e6a"
+  if(type === "file") return "#5a7a9a"
+  if(type === "sensitive_file") return "#ff0000"
+  if(type === "domain") return "#f5c400"
+  if(type === "ip") return "#ff8c42"
+  if(type === "honey") return "#ff00aa"
+  if(type === "package") return "#00d4ff"
+  return "#999"
+}
+
+function getNodeShape(type){
+  if(type === "honey") return "diamond"
+  if(type === "package") return "box"
+  if(type === "process") return "box"
+  return "dot"
+}
+
+function getEdgeColor(e){
+  if(e.type === "network") return "#ff8c42"
+  if(e.type === "file_access") return "#5a7a9a"
+  if(e.type === "execution") return "#ff4e6a"
+  return "#ccc"
+}
+  
 function updateScoreBar(score){
   const fill = el('score-fill')
   const pct  = Math.min((score / 30) * 100, 100)
