@@ -1,0 +1,51 @@
+{
+    "run_id": "1776769148",
+    "package": "cwlib-core-30.0.20.tgz",
+    "risk_probability": 0.9951275587081909,
+    "prediction": 1,
+    "file_entropy": 5.0522,
+    "execution_time": 4.608,
+    "timestamp": "2026-04-21T10:59:08.649611",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.0638043880462646
+        ],
+        [
+            "num__Number of lines in metadata",
+            0.9637724757194519
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8044270277023315
+        ],
+        [
+            "num__.md",
+            0.800211489200592
+        ],
+        [
+            "num__Number of lines in source code",
+            0.7177603244781494
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6724206805229187
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5621245503425598
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5179476141929626
+        ],
+        [
+            "num__plus ratio mean",
+            -0.43671929836273193
+        ],
+        [
+            "num__Number of Words in metadata",
+            0.39179712533950806
+        ]
+    ]
+}
