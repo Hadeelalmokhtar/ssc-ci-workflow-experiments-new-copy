@@ -1,0 +1,51 @@
+{
+    "run_id": "1776780555",
+    "package": "ycryptodome-4.5.2.tar.gz",
+    "risk_probability": 0.988243818283081,
+    "prediction": 1,
+    "file_entropy": 4.7454,
+    "execution_time": 1.084,
+    "timestamp": "2026-04-21T14:09:15.717878",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.786546230316162
+        ],
+        [
+            "num__Number of lines in source code",
+            1.3099262714385986
+        ],
+        [
+            "num__.md",
+            1.0067428350448608
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5844108462333679
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5835731029510498
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5677002668380737
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            0.5464364886283875
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5397948026657104
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.49820148944854736
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.45189282298088074
+        ]
+    ]
+}
