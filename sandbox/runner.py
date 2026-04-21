@@ -26,7 +26,7 @@ captured_requests = []
 captured_dns      = []
 
 # ============================================================
-# HELPERS — عامة
+# HELPERS 
 # ============================================================
 
 def is_readable(s):
@@ -79,56 +79,78 @@ def check_typosquatting(name):
 # ============================================================
 
 def is_real_domain(d):
-    """فلترة domains الحقيقية من الـ junk"""
-    if not d or len(d) < 4: return False
-    if re.search(r'[A-Z]', d): return False  
-    if d.split('.')[-1].isdigit(): return False  
-    if d.startswith('.') or d.endswith('.'): return False
-    if re.search(r'[^\x20-\x7E]', d): return False  
-    
-    # Junk domains common in strace
+
+    if not d or len(d) < 4:
+        return False
+
+    if "." not in d:
+        return False
+
+    if "/" in d:
+        return False
+
+    if d.startswith('.') or d.endswith('.'):
+        return False
+
+    if re.search(r'[^\x20-\x7E]', d):
+        return False
+
+    if re.match(r'^\d+\.\d+\.\d+\.\d+$', d):
+        return False
+
+    if not re.search(r'[a-zA-Z]', d):
+        return False
+
+    if d.endswith((".so", ".cnf", ".json", ".py", ".log", ".conf", ".cfg")):
+        return False
+
     junk_patterns = [
-        r'^[0-9]+$', r'^[0-9]+\.[0-9]+$',
-        r'^[a-z]\.[a-z]$', r'^\.[a-z]', r'[a-z]\.$',
-        r'^(com|net|org|io|dev|gov|edu|co|uk|de|fr|ru|cn|jp|br|au|nl|se|no|fi|dk|pl|it|es|ca|mx|in|sg|hk|conf|cnf|json|so)$'
+        r'^[0-9]+$', 
+        r'^[0-9]+\.[0-9]+$',
+        r'^[a-z]\.[a-z]$', 
+        r'^\.[a-z]', 
+        r'[a-z]\.$'
     ]
     for pattern in junk_patterns:
         if re.match(pattern, d, re.IGNORECASE):
             return False
-    
-    # Check TLD
-    known_tlds = ['com', 'net', 'org', 'io', 'dev', 'gov', 'edu', 'co', 'uk', 'de', 'fr',
-                  'ru', 'cn', 'jp', 'br', 'au', 'nl', 'se', 'no', 'fi', 'dk', 'pl', 'it',
-                  'es', 'ca', 'mx', 'in', 'sg', 'hk', 'conf', 'cnf', 'json', 'so', 'app',
-                  'cloud', 'xyz', 'info', 'biz', 'name', 'pro', 'site', 'online', 'tech']
-    tld = d.split('.')[-1].lower()
-    if tld not in known_tlds:
-        return False
-    
-    # Avoid code artifacts
-    code_keywords = ['function', 'return', 'const', 'let', 'var', 'import', 'export',
-                     'require', 'module', 'window', 'document', 'console', 'process',
-                     'buffer', 'stream', 'event', 'error', 'object', 'array', 'string',
-                     'number', 'boolean', 'promise', 'async', 'await', 'this', 'list',
-                     'node', 'index', 'exports', 'refdestructuringerrors', 'netsvc']
+
+    code_keywords = [
+        'function', 'return', 'const', 'let', 'var', 'import', 'export',
+        'require', 'module', 'window', 'document', 'console', 'process',
+        'buffer', 'stream', 'event', 'error', 'object', 'array', 'string',
+        'number', 'boolean', 'promise', 'async', 'await', 'this',
+        'node', 'index', 'exports', 'netsvc'
+    ]
     first_part = d.split('.')[0].lower()
     for keyword in code_keywords:
         if first_part.startswith(keyword):
             return False
-    
+
+    known_tlds = {
+        'com','net','org','io','dev','gov','edu','co','uk','de','fr',
+        'ru','cn','jp','br','au','nl','se','no','fi','dk','pl','it',
+        'es','ca','mx','in','sg','hk',
+        'app','cloud','xyz','info','biz','name','pro','site','online','tech'
+    }
+
+    tld = d.split('.')[-1].lower()
+    if tld not in known_tlds:
+        return False
+
     return True
 
+
 def filter_domains(domains_set):
-    """تصفية domains واستخراج الحقيقي فقط"""
     real_domains = []
     junk_domains = []
-    
+
     for d in domains_set:
         if is_real_domain(d):
             real_domains.append(d)
         else:
             junk_domains.append(d)
-    
+
     return list(set(real_domains)), list(set(junk_domains))
 
 # ============================================================
