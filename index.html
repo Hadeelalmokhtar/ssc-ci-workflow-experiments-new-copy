@@ -355,7 +355,7 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 
   <div class="grid-2">
     <div class="card">
-      <div class="card-title">Real Domains</div>
+      <div class="card-title">Domains</div>
       <div class="scroll" id="domains-list"><div class="empty">No domains</div></div>
     </div>
     <div class="card">
@@ -691,83 +691,7 @@ function renderGraph(data){
   })
 }
 
-  nodes.push({
-    id:1, label:'Package\n'+(data.package||''), level:0,
-    color:{background:'#172035',border:'#00d4ff'},
-    font:{color:'#00d4ff',face:'Share Tech Mono',size:13},
-    shape:'box', widthConstraint:{minimum:100}
-  })
 
-  const procs = [...new Set(data.processes||[])].slice(0,8)
-  procs.forEach((p)=>{
-    id++
-    nodes.push({
-      id, label:p, level:1,
-      color:{background:'#1a0d12',border:'#ff4e6a'},
-      font:{color:'#ff4e6a',face:'Share Tech Mono',size:11},
-      shape:'box'
-    })
-    edges.push({from:1, to:id, color:{color:'#ff4e6a'}, width:1.5, arrows:{to:{enabled:true,scaleFactor:.5}}})
-  })
-
-  const lastProcId = id
-  const netAnalysis = data.network_analysis || {}
-  const domains = (netAnalysis.real_domains || []).slice(0,10)
-  
-  domains.forEach((d)=>{
-    id++
-    nodes.push({
-      id, label:d, level:2,
-      color:{background:'#0f1208',border:'#f5c400'},
-      font:{color:'#f5c400',face:'Share Tech Mono',size:10},
-      shape:'ellipse'
-    })
-    edges.push({from:lastProcId, to:id, color:{color:'#f5c400'}, dashes:true, arrows:{to:{enabled:true,scaleFactor:.4}}})
-  })
-
-  const externalIPs = (netAnalysis.external_ips || []).slice(0,5)
-  externalIPs.forEach(ip=>{
-    id++
-    const lbl = ip.ip+(ip.country?'\n'+ip.country:'')
-    nodes.push({
-      id, label:lbl, level:2,
-      color:{background:'#0a0f1a',border:'#ff8c42'},
-      font:{color:'#ff8c42',face:'Share Tech Mono',size:10},
-      shape:'ellipse'
-    })
-    edges.push({from:lastProcId, to:id, color:{color:'#ff8c42'}, dashes:true, arrows:{to:{enabled:true,scaleFactor:.4}}})
-  })
-
-  const honey = (data.honeytoken_hits||[]).slice(0,4)
-  honey.forEach(h=>{
-    id++
-    const short = h.split('/').pop()
-    nodes.push({
-      id, label:'HONEY: '+short, level:1,
-      color:{background:'#1f0810',border:'#ff4e6a'},
-      font:{color:'#ff4e6a',face:'Share Tech Mono',size:10,bold:true},
-      shape:'diamond'
-    })
-    edges.push({from:1, to:id, color:{color:'#ff4e6a'}, width:2.5, arrows:{to:{enabled:true,scaleFactor:.6}}})
-  })
-
-  if(network) network.destroy()
-  network = new vis.Network(
-    container,
-    {nodes:new vis.DataSet(nodes), edges:new vis.DataSet(edges)},
-    {
-      layout:{
-        hierarchical:{
-          enabled: true, direction: 'LR', sortMethod: 'directed',
-          levelSeparation: 200, nodeSpacing: 80, treeSpacing: 120,
-        }
-      },
-      physics:{ enabled:false },
-      edges:{ smooth:{type:'cubicBezier',forceDirection:'horizontal'} },
-      interaction:{tooltipDelay:200, zoomView:true, dragView:true},
-    }
-  )
-}
 
 async function load(){
   try{
