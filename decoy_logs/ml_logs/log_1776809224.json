@@ -1,0 +1,51 @@
+{
+    "run_id": "1776809224",
+    "package": "32red-api-client-999.9.9.tgz",
+    "risk_probability": 0.9907993674278259,
+    "prediction": 1,
+    "file_entropy": 4.7744,
+    "execution_time": 0.409,
+    "timestamp": "2026-04-21T22:07:04.572512",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.088273525238037
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0504493713378906
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.9192676544189453
+        ],
+        [
+            "num__.md",
+            0.851615309715271
+        ],
+        [
+            "num__Number of lines in source code",
+            0.8000805974006653
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6806669235229492
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5489937663078308
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4874385595321655
+        ],
+        [
+            "num__shannon mean string source code",
+            -0.4114346504211426
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4111480414867401
+        ]
+    ]
+}
