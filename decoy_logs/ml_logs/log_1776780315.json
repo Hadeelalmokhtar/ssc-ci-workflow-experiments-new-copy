@@ -1,0 +1,51 @@
+{
+    "run_id": "1776780315",
+    "package": "xcryptography-2.4.2.tar.gz",
+    "risk_probability": 0.991710901260376,
+    "prediction": 1,
+    "file_entropy": 4.6677,
+    "execution_time": 1.011,
+    "timestamp": "2026-04-21T14:05:15.143015",
+    "top_shap": [
+        [
+            "num__Number of lines in metadata",
+            1.0139036178588867
+        ],
+        [
+            "num__.md",
+            0.9180858135223389
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7292863130569458
+        ],
+        [
+            "num__Number of lines in source code",
+            0.7143028974533081
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.6621525883674622
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5280606150627136
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.5080044865608215
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4676658809185028
+        ],
+        [
+            "num__presence of installation script",
+            -0.46637827157974243
+        ],
+        [
+            "num__shannon mean string source code",
+            0.4379102885723114
+        ]
+    ]
+}
