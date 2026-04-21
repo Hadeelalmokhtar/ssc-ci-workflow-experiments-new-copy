@@ -517,14 +517,86 @@ def _extract_strings_from_bytes(data):
 # PROCESS GRAPH
 # ============================================================
 
-def build_process_graph(processes):
-    graph_edges = []
-    unique_processes = list(set(processes))
-    prev = "Package"
-    for p in unique_processes[:15]:
-        graph_edges.append({"from": prev, "to": p})
-        prev = p
-    return graph_edges
+def build_process_graph(processes, accessed_files, network_analysis, honeytoken_hits):
+    nodes = []
+    edges = []
+    node_id = 1
+
+    # Root node
+    nodes.append({
+        "id": node_id,
+        "label": "Package",
+        "type": "root"
+    })
+    root_id = node_id
+
+    # -------------------------
+    # Processes
+    # -------------------------
+    process_ids = {}
+    for p in set(processes):
+        node_id += 1
+        nodes.append({
+            "id": node_id,
+            "label": p,
+            "type": "process"
+        })
+        edges.append({"from": root_id, "to": node_id})
+        process_ids[p] = node_id
+
+    # -------------------------
+    # Files
+    # -------------------------
+    for f in accessed_files[:20]:
+        node_id += 1
+        nodes.append({
+            "id": node_id,
+            "label": os.path.basename(f),
+            "type": "file"
+        })
+
+        if process_ids:
+            edges.append({"from": list(process_ids.values())[0], "to": node_id})
+
+    # -------------------------
+    # Domains
+    # -------------------------
+    for d in network_analysis.get("real_domains", [])[:15]:
+        node_id += 1
+        nodes.append({
+            "id": node_id,
+            "label": d,
+            "type": "domain"
+        })
+        if process_ids:
+            edges.append({"from": list(process_ids.values())[0], "to": node_id})
+
+    # -------------------------
+    # External IPs
+    # -------------------------
+    for ip in network_analysis.get("external_ips", [])[:10]:
+        node_id += 1
+        nodes.append({
+            "id": node_id,
+            "label": ip["ip"],
+            "type": "ip"
+        })
+        if process_ids:
+            edges.append({"from": list(process_ids.values())[0], "to": node_id})
+
+    # -------------------------
+    # Honeytokens 
+    # -------------------------
+    for h in honeytoken_hits:
+        node_id += 1
+        nodes.append({
+            "id": node_id,
+            "label": "HONEY: " + os.path.basename(h),
+            "type": "honeytoken"
+        })
+        edges.append({"from": root_id, "to": node_id})
+
+    return {"nodes": nodes, "edges": edges}
 
 # ============================================================
 # MAIN EXECUTION
@@ -672,8 +744,12 @@ behavioral_phases = build_behavioral_phases(timeline)
 network_analysis = enrich_network_data(ips, domains, captured_dns, captured_requests)
 
 # Build process graph
-graph_edges = build_process_graph(processes)
-
+graph_data = build_process_graph(
+    processes,
+    accessed_files,
+    network_analysis,
+    honeytoken_hits
+)
 # ============================================================
 # SAVE RESULTS
 # ============================================================
@@ -703,7 +779,7 @@ log = {
     
     # Execution
     "processes":          list(set(processes)),
-    "graph_edges":        graph_edges,
+    "graph": graph_data,
     "accessed_files":     list(set(accessed_files)),
     "decoded_payloads":   decoded_payloads,
     
