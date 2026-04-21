@@ -6,10 +6,8 @@
 <script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/styles/vis-network.min.css" rel="stylesheet">
 <style>
-/* ── FONTS ───────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap');
 
-/* ── VARIABLES ───────────────────────────────────────────── */
 :root{
   --bg0:#060b14;
   --bg1:#0b1220;
@@ -30,7 +28,6 @@
   --sans:'Rajdhani',sans-serif;
 }
 
-/* ── RESET ───────────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{
@@ -41,7 +38,6 @@ body{
   overflow-x:hidden;
 }
 
-/* ── SCANLINE OVERLAY ────────────────────────────────────── */
 body::before{
   content:'';
   position:fixed;inset:0;
@@ -49,7 +45,6 @@ body::before{
   pointer-events:none;z-index:9999;
 }
 
-/* ── HEADER ──────────────────────────────────────────────── */
 header{
   display:flex;align-items:center;justify-content:space-between;
   padding:18px 30px;
@@ -83,10 +78,8 @@ header{
   color:var(--text-dim);
 }
 
-/* ── MAIN LAYOUT ─────────────────────────────────────────── */
 main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 
-/* ── VERDICT BANNER ──────────────────────────────────────── */
 #verdict-banner{
   border-radius:10px;padding:22px 28px;
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
@@ -118,19 +111,15 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .banner-stat .lbl{font-size:11px;color:var(--text-dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
 .banner-stat .val{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent)}
 
-/* ── SCORE BAR ───────────────────────────────────────────── */
 .score-bar-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 16px}
 .score-bar-track{background:var(--bg3);border-radius:4px;height:8px;overflow:hidden;margin-top:6px}
 .score-bar-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.4,0,.2,1),background .4s}
 .score-bar-labels{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-top:4px}
 
-/* ── GRID ────────────────────────────────────────────────── */
 .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
-.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:16px}
 @media(max-width:900px){.grid-3,.grid-2{grid-template-columns:1fr}}
 
-/* ── CARD ────────────────────────────────────────────────── */
 .card{
   background:var(--bg2);
   border:1px solid var(--border);
@@ -149,7 +138,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
   background:var(--accent);
 }
 
-/* ── LIST SCROLL AREA ────────────────────────────────────── */
 .scroll{
   background:var(--bg1);border-radius:6px;
   max-height:220px;overflow-y:auto;
@@ -169,7 +157,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .row:hover{background:rgba(0,212,255,.05)}
 .row-icon{font-size:10px;opacity:.5;margin-top:1px;white-space:nowrap}
 
-/* ── TIER BADGES ─────────────────────────────────────────── */
 .tier{
   display:inline-block;font-family:var(--mono);
   font-size:9px;font-weight:700;letter-spacing:.1em;
@@ -181,7 +168,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .tier-medium  {background:rgba(245,196,0,.15);color:var(--yellow);border:1px solid rgba(245,196,0,.35)}
 .tier-low     {background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.3)}
 
-/* ── PHASE GRID ──────────────────────────────────────────── */
 .phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
 .phase-card{
   background:var(--bg1);border:1px solid var(--border);border-radius:7px;
@@ -195,7 +181,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .phase-count.nonzero{color:var(--accent2)}
 .phase-events{font-family:var(--mono);font-size:10px;color:var(--text-dim);max-height:60px;overflow:hidden}
 
-/* ── HONEYTOKEN HITS ─────────────────────────────────────── */
 .honey-hit{
   background:rgba(255,78,106,.12);
   border:1px solid rgba(255,78,106,.4);
@@ -208,7 +193,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .no-honey{color:var(--green);font-family:var(--mono);font-size:12px;padding:8px 12px;
   background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.2);border-radius:6px}
 
-/* ── STATIC ANALYSIS TABLE ───────────────────────────────── */
 .sa-file{
   background:var(--bg1);border:1px solid var(--border);border-radius:7px;
   padding:12px;margin-bottom:8px;
@@ -223,7 +207,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .sa-tag.danger{background:rgba(255,78,106,.12);border-color:rgba(255,78,106,.3);color:var(--red)}
 .sa-tag.ok{background:rgba(0,255,157,.08);border-color:rgba(0,255,157,.2);color:var(--green)}
 
-/* ── HTTP REQUEST CARDS ──────────────────────────────────── */
 .http-card{
   background:var(--bg1);border:1px solid var(--border);border-radius:7px;
   padding:10px 12px;font-family:var(--mono);font-size:11px;
@@ -239,7 +222,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .http-body{color:var(--text-dim);font-size:10px;word-break:break-all;margin-top:2px}
 .http-tag{color:var(--yellow);font-size:10px}
 
-/* ── NETWORK CARDS ───────────────────────────────────────── */
 .net-card{
   background:var(--bg1);border:1px solid var(--border);border-radius:7px;
   padding:10px 14px;display:flex;flex-direction:column;gap:3px;
@@ -249,7 +231,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .net-detail span{color:var(--text)}
 .net-risk-high{color:var(--red)!important}
 
-/* ── MEMORY STRINGS ──────────────────────────────────────── */
 .mem-chip{
   display:inline-block;margin:3px;
   font-family:var(--mono);font-size:10px;
@@ -260,8 +241,8 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .mem-chip.ip{border-color:rgba(255,78,106,.3);color:var(--red)}
 .mem-chip.url{border-color:rgba(0,212,255,.3);color:var(--accent)}
 .mem-chip.b64{border-color:rgba(245,196,0,.3);color:var(--yellow)}
+.mem-chip.path{border-color:rgba(255,140,66,.3);color:var(--orange)}
 
-/* ── TIMELINE ────────────────────────────────────────────── */
 .tl-row{
   display:grid;grid-template-columns:90px 1fr;gap:8px;
   padding:5px 12px;border-bottom:1px solid rgba(30,48,80,.5);
@@ -271,32 +252,21 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .tl-time{color:var(--text-dim);white-space:nowrap}
 .tl-event{color:var(--text);word-break:break-all}
 
-/* ── GRAPH ───────────────────────────────────────────────── */
 #graph-container{
-  height:340px;background:var(--bg1);
+  height:420px;background:var(--bg1);
   border-radius:8px;border:1px solid var(--border);
   overflow:hidden;
 }
 
-/* ── EMPTY STATE ─────────────────────────────────────────── */
 .empty{
   padding:20px;text-align:center;
   font-family:var(--mono);font-size:12px;
   color:var(--text-dim);
 }
-
-/* ── SECTION LABEL ───────────────────────────────────────── */
-.section-label{
-  font-size:11px;font-weight:600;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--text-dim);
-  padding:4px 0;border-bottom:1px solid var(--border);
-  margin-bottom:4px;
-}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="logo">DECOY<span>/</span>SYSTEM &nbsp;—&nbsp; Threat Intelligence</div>
   <div style="display:flex;align-items:center;gap:20px">
@@ -307,7 +277,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 
 <main>
 
-  <!-- VERDICT BANNER -->
   <div id="verdict-banner">
     <div class="banner-left">
       <div class="banner-pkg">Package: <span id="b-pkg">—</span></div>
@@ -322,7 +291,6 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
     </div>
   </div>
 
-  <!-- SCORE BAR -->
   <div class="score-bar-wrap">
     <div style="font-size:11px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase">Risk Level</div>
     <div class="score-bar-track">
@@ -333,105 +301,80 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
     </div>
   </div>
 
-  <!-- ROW 1: Behavior Findings | Behavioral Phases -->
   <div class="grid-2">
-
     <div class="card">
       <div class="card-title">Behavior Findings</div>
       <div class="scroll" id="findings-list"><div class="empty">No data</div></div>
     </div>
-
     <div class="card">
       <div class="card-title">Behavioral Phases (MITRE ATT&CK)</div>
       <div class="phase-grid" id="phases-grid"></div>
     </div>
-
   </div>
 
-  <!-- HONEYTOKEN HITS -->
   <div class="card">
     <div class="card-title">Honeytoken Access</div>
     <div id="honey-list"><div class="empty">Loading…</div></div>
   </div>
 
-  <!-- ROW 2: Static Analysis | Package Metadata -->
   <div class="grid-2">
-
     <div class="card">
       <div class="card-title">Static Analysis</div>
       <div id="static-list" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto"></div>
     </div>
-
     <div class="card">
       <div class="card-title">Package Metadata</div>
       <div class="scroll" id="meta-list"><div class="empty">No data</div></div>
     </div>
-
   </div>
 
-  <!-- ROW 3: Processes | Accessed Files | Decoded Payloads -->
-  <div class="grid-3">
+  <!-- Decoded Payloads removed — not useful per user request -->
 
+  <div class="grid-2">
     <div class="card">
       <div class="card-title">Processes</div>
       <div class="scroll" id="proc-list"><div class="empty">No data</div></div>
     </div>
-
     <div class="card">
       <div class="card-title">Accessed Files</div>
       <div class="scroll" id="files-list"><div class="empty">No data</div></div>
     </div>
-
-    <div class="card">
-      <div class="card-title">Decoded Payloads</div>
-      <div class="scroll" id="payloads-list"><div class="empty">No data</div></div>
-    </div>
-
   </div>
 
-  <!-- ROW 4: HTTP Requests | Network Details -->
   <div class="grid-2">
-
     <div class="card">
       <div class="card-title">HTTP Requests</div>
       <div style="display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto" id="http-list">
         <div class="empty">No requests</div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-title">Network Details (IP Enrichment)</div>
       <div style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto" id="net-list">
         <div class="empty">No network activity</div>
       </div>
     </div>
-
   </div>
 
-  <!-- ROW 5: Domains | DNS Queries -->
   <div class="grid-2">
-
     <div class="card">
       <div class="card-title">Domains</div>
       <div class="scroll" id="domains-list"><div class="empty">No domains</div></div>
     </div>
-
     <div class="card">
       <div class="card-title">DNS Queries</div>
       <div class="scroll" id="dns-list"><div class="empty">No DNS queries</div></div>
     </div>
-
   </div>
 
-  <!-- MEMORY STRINGS -->
+  <!-- Memory Strings: improved extraction, shows ALL strings including paths/IPs/URLs/suspicious -->
   <div class="card">
     <div class="card-title">Memory Strings (Runtime Extraction)</div>
-    <div id="mem-list" style="max-height:140px;overflow-y:auto;padding:4px">
+    <div id="mem-list" style="max-height:200px;overflow-y:auto;padding:4px">
       <div class="empty">No strings extracted</div>
     </div>
   </div>
 
-  <!-- TIMELINE -->
   <div class="card">
     <div class="card-title">Timeline</div>
     <div class="scroll" id="timeline-list" style="max-height:300px">
@@ -439,7 +382,7 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
     </div>
   </div>
 
-  // Attack Graph — ارتفاع أكبر
+  <!-- Attack Graph: rendered ONCE, never re-rendered on polling updates -->
   <div class="card">
     <div class="card-title">Attack Graph</div>
     <div id="graph-container" style="height:420px"></div>
@@ -448,9 +391,8 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 </main>
 
 <script>
-// ── UTILITIES ────────────────────────────────────────────────
+// ── UTILITIES ──────────────────────────────────────────────
 function el(id){ return document.getElementById(id) }
-function clr(...ids){ ids.forEach(id=>{ const e=el(id); if(e) e.innerHTML='' }) }
 function row(icon, text){
   return `<div class="row"><span class="row-icon">${icon}</span><span>${text}</span></div>`
 }
@@ -458,8 +400,11 @@ function tierBadge(t){
   const map={critical:'tier-critical',high:'tier-high',medium:'tier-medium',low:'tier-low'}
   return `<span class="tier ${map[t]||'tier-low'}">${t}</span>`
 }
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+}
 
-// ── SCORE BAR ────────────────────────────────────────────────
+// ── SCORE BAR ──────────────────────────────────────────────
 function updateScoreBar(score){
   const fill = el('score-fill')
   const pct  = Math.min((score / 30) * 100, 100)
@@ -470,26 +415,25 @@ function updateScoreBar(score){
   else                 fill.style.background = 'var(--green)'
 }
 
-// ── VERDICT BANNER ───────────────────────────────────────────
+// ── VERDICT BANNER ─────────────────────────────────────────
 function updateBanner(data){
   const v      = data.verdict || 'CLEAN'
   const banner = el('verdict-banner')
   banner.className = v
-
-  el('b-pkg').textContent      = data.package     || '—'
-  el('b-timestamp').textContent= data.run_timestamp|| ''
-  el('b-score').textContent    = data.score        ?? 0
-  el('b-findings').textContent = (data.behavior_findings||[]).length
-  el('b-procs').textContent    = (data.processes  ||[]).length
-  el('b-domains').textContent  = (data.domains    ||[]).length
-
+  el('b-pkg').textContent       = data.package      || '—'
+  el('b-timestamp').textContent = data.run_timestamp || ''
+  el('b-score').textContent     = data.score         ?? 0
+  el('b-findings').textContent  = (data.behavior_findings||[]).length
+  el('b-procs').textContent     = (data.processes   ||[]).length
+  const realDoms = (data.domains||[]).filter(isRealDomain)
+  el('b-domains').textContent   = realDoms.length
   const vEl = el('b-verdict')
-  vEl.textContent  = v
-  vEl.className    = 'banner-verdict ' + v
+  vEl.textContent = v
+  vEl.className   = 'banner-verdict ' + v
   updateScoreBar(data.score || 0)
 }
 
-// ── BEHAVIOR FINDINGS ────────────────────────────────────────
+// ── BEHAVIOR FINDINGS ──────────────────────────────────────
 function renderFindings(findings){
   const list = el('findings-list')
   list.innerHTML = ''
@@ -499,7 +443,7 @@ function renderFindings(findings){
       <div class="row" style="flex-direction:column;gap:4px">
         <div style="display:flex;align-items:center;gap:8px">
           ${tierBadge(f.tier)}
-          <span style="font-family:var(--mono);font-size:12px;color:var(--text)">${f.label||''}</span>
+          <span style="font-family:var(--mono);font-size:12px;color:var(--text)">${esc(f.label||'')}</span>
           <span style="font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-left:auto">+${f.weight}</span>
         </div>
         ${f.evidence ? `<div style="font-family:var(--mono);font-size:10px;color:var(--text-dim);word-break:break-all">${esc(f.evidence)}</div>` : ''}
@@ -508,7 +452,7 @@ function renderFindings(findings){
   })
 }
 
-// ── BEHAVIORAL PHASES ────────────────────────────────────────
+// ── BEHAVIORAL PHASES ──────────────────────────────────────
 const PHASE_ICONS={
   reconnaissance:'◈',defense_evasion:'⬡',credential_access:'⬢',
   exfiltration:'▲',execution:'■',persistence:'⬟',discovery:'◉'
@@ -529,7 +473,7 @@ function renderPhases(phases){
   })
 }
 
-// ── HONEYTOKEN HITS ──────────────────────────────────────────
+// ── HONEYTOKEN HITS ────────────────────────────────────────
 function renderHoney(hits){
   const list = el('honey-list')
   list.innerHTML = ''
@@ -546,7 +490,7 @@ function renderHoney(hits){
   })
 }
 
-// ── STATIC ANALYSIS ──────────────────────────────────────────
+// ── STATIC ANALYSIS ────────────────────────────────────────
 function renderStatic(sa){
   const list = el('static-list')
   list.innerHTML = ''
@@ -584,7 +528,7 @@ function renderStatic(sa){
   })
 }
 
-// ── PACKAGE METADATA ─────────────────────────────────────────
+// ── PACKAGE METADATA ───────────────────────────────────────
 function renderMeta(meta){
   const list = el('meta-list')
   list.innerHTML = ''
@@ -599,7 +543,7 @@ function renderMeta(meta){
   })
 }
 
-// ── HTTP REQUESTS ────────────────────────────────────────────
+// ── HTTP REQUESTS ──────────────────────────────────────────
 function renderHttp(reqs){
   const list = el('http-list')
   list.innerHTML = ''
@@ -619,7 +563,7 @@ function renderHttp(reqs){
   })
 }
 
-// ── NETWORK DETAILS ──────────────────────────────────────────
+// ── NETWORK DETAILS ────────────────────────────────────────
 function renderNet(nets){
   const list = el('net-list')
   list.innerHTML = ''
@@ -638,57 +582,64 @@ function renderNet(nets){
   })
 }
 
-// ── MEMORY STRINGS ───────────────────────────────────────────
+// ── MEMORY STRINGS (FIXED) ─────────────────────────────────
+// Shows ALL meaningful strings: IPs, URLs, paths, base64, suspicious tokens
+// No aggressive filtering that was causing blank sections
 function renderMemory(strings){
   const list = el('mem-list')
   list.innerHTML = ''
-  // فلترة: شيل الـ paths العادية والـ library names
-  const filtered = (strings||[]).filter(s=>{
-    if(s.length < 6) return false
-    if(s.startsWith('/lib')) return false
-    if(s.startsWith('/usr/lib')) return false
-    if(s.endsWith('.so') || s.endsWith('.so.6')) return false
-    if(/^[a-z]{1,3}$/.test(s)) return false
+
+  // Collect from multiple possible fields
+  let all = []
+  if(Array.isArray(strings)) all = strings
+
+  if(!all.length){ list.innerHTML='<div class="empty">No strings extracted</div>'; return }
+
+  // Light filter: only skip empty/very short/pure whitespace
+  const filtered = all.filter(s => {
+    if(!s || typeof s !== 'string') return false
+    s = s.trim()
+    if(s.length < 4) return false
     return true
   })
+
   if(!filtered.length){ list.innerHTML='<div class="empty">No significant strings extracted</div>'; return }
+
   filtered.forEach(s=>{
+    s = s.trim()
     let cls = ''
     let label = ''
-    if(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(s)){
+
+    if(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(s)){
       cls='ip'; label='IP'
-    } else if(/^https?:\/\//.test(s)){
+    } else if(/^https?:\/\//i.test(s)){
       cls='url'; label='URL'
-    } else if(/^[A-Za-z0-9+/]{24,}={0,2}$/.test(s)&&s.length>30){
+    } else if(s.includes('/etc/')||s.includes('/.ssh/')||s.includes('/.aws/')||s.includes('/proc/')){
+      cls='path'; label='PATH'
+    } else if(/^[A-Za-z0-9+/]{32,}={0,2}$/.test(s)){
       cls='b64'; label='B64'
-    } else if(s.includes('/etc/')||s.includes('/.ssh/')||s.includes('/.aws/')){
-      cls='ip'; label='PATH'
     }
-    list.innerHTML += `<span class="mem-chip ${cls}" title="${esc(s)}">${label?`<span style="font-size:9px;opacity:.6;margin-right:3px">${label}</span>`:''}${esc(s.length>40?s.substring(0,40)+'…':s)}</span>`
+
+    const display = s.length > 60 ? s.substring(0,60)+'…' : s
+    list.innerHTML += `<span class="mem-chip ${cls}" title="${esc(s)}">${label?`<span style="font-size:9px;opacity:.6;margin-right:3px">${label}</span>`:''}${esc(display)}</span>`
   })
 }
 
-// ── DOMAIN FILTER — يشيل false positives ──────────────────
+// ── DOMAIN FILTER ──────────────────────────────────────────
 function isRealDomain(d){
-  // يشيل أي شيء يحتوي على camelCase أو special JS patterns
-  if(/[A-Z]/.test(d))              return false  // camelCase = JS variable
-  if(d.split('.').length < 2)       return false  // بدون dot
-  if(/\s/.test(d))                  return false  // spaces
-  if(d.startsWith('.'))             return false  // يبدأ بـ dot
-  if(d.endsWith('.'))               return false  // ينتهي بـ dot
-  // TLD قصير جداً أو رقمي = مش domain حقيقي
+  if(/[A-Z]/.test(d))              return false
+  if(d.split('.').length < 2)       return false
+  if(/\s/.test(d))                  return false
+  if(d.startsWith('.')||d.endsWith('.')) return false
   const tld = d.split('.').pop()
   if(tld.length < 2 || /^\d+$/.test(tld)) return false
-  // أشياء مثل this.body / list.length / node.loca
   const JUNK = ['this','list','node','index','exports','require','module','window','document',
                 'process','console','buffer','stream','event','error','object','array',
                 'string','number','boolean','function','promise','async','await','return',
                 'refdestructuringerrors','netsvc']
   const prefix = d.split('.')[0].toLowerCase()
   if(JUNK.some(j=>prefix.startsWith(j))) return false
-  // يجب أن يحتوي على حروف صغيرة فقط وأرقام وـ
   if(!/^[a-z0-9][a-z0-9._-]{2,}$/.test(d)) return false
-  // TLD معروف
   const KNOWN_TLDS = ['com','net','org','io','dev','gov','edu','co','uk','de','fr',
                       'ru','cn','jp','br','au','nl','se','no','fi','dk','pl','it',
                       'es','ca','mx','in','sg','hk','conf','cnf','json','so']
@@ -696,7 +647,7 @@ function isRealDomain(d){
   return true
 }
 
-// ── SIMPLE LISTS ─────────────────────────────────────────────
+// ── SIMPLE LISTS ───────────────────────────────────────────
 function renderSimple(id, arr, icon='○'){
   const list = el(id)
   list.innerHTML = ''
@@ -704,24 +655,23 @@ function renderSimple(id, arr, icon='○'){
   arr.forEach(item=>{ list.innerHTML += row(icon, esc(String(item))) })
 }
 
-// ── DNS ──────────────────────────────────────────────────────
+// ── DNS ────────────────────────────────────────────────────
 function renderDns(dns){
   const list = el('dns-list')
   list.innerHTML = ''
   if(!dns||!dns.length){ list.innerHTML='<div class="empty">No DNS queries</div>'; return }
   dns.forEach(d=>{
-    const q   = typeof d==='object' ? d.query : d
-    const ts  = typeof d==='object' && d.timestamp ? `<span style="color:var(--text-dim)"> @ ${d.timestamp}</span>` : ''
+    const q  = typeof d==='object' ? d.query : d
+    const ts = typeof d==='object' && d.timestamp ? `<span style="color:var(--text-dim)"> @ ${d.timestamp}</span>` : ''
     list.innerHTML += row('◈', `${esc(q)}${ts}`)
   })
 }
 
-// ── TIMELINE ─────────────────────────────────────────────────
+// ── TIMELINE ───────────────────────────────────────────────
 function renderTimeline(timeline){
   const list = el('timeline-list')
   list.innerHTML = ''
   if(!timeline||!timeline.length){ list.innerHTML='<div class="empty">No events</div>'; return }
-  // show last 200 events (most recent behaviour)
   timeline.slice(-200).forEach(t=>{
     list.innerHTML += `
       <div class="tl-row">
@@ -732,15 +682,23 @@ function renderTimeline(timeline){
   list.scrollTop = list.scrollHeight
 }
 
-// ── ATTACK GRAPH ─────────────────────────────────────────────
+// ── ATTACK GRAPH (RENDERED ONCE — NEVER RE-RENDERED) ───────
+let graphRendered = false
 let network = null
+
 function renderGraph(data, realDomains){
+  // Only render if not yet rendered, or if package changed
+  const currentPkg = data.package || ''
+  if(graphRendered && window._lastGraphPkg === currentPkg) return
+  window._lastGraphPkg = currentPkg
+  graphRendered = true
+
   const container = el('graph-container')
   const nodes = []
   const edges = []
   let id = 1
 
-  // Package root — المركز
+  // Package root
   nodes.push({
     id:1, label:'Package\n'+(data.package||''), level:0,
     color:{background:'#172035',border:'#00d4ff'},
@@ -748,9 +706,9 @@ function renderGraph(data, realDomains){
     shape:'box', widthConstraint:{minimum:100}
   })
 
-  // Processes — المستوى 1
+  // Processes — level 1
   const procs = [...new Set(data.processes||[])].slice(0,8)
-  procs.forEach((p,i)=>{
+  procs.forEach((p)=>{
     id++
     nodes.push({
       id, label:p, level:1,
@@ -764,7 +722,7 @@ function renderGraph(data, realDomains){
 
   const lastProcId = id
 
-  // Real Domains فقط — المستوى 2
+  // Real Domains — level 2
   const filteredDoms = (realDomains||[]).slice(0,10)
   filteredDoms.forEach((d)=>{
     id++
@@ -778,9 +736,8 @@ function renderGraph(data, realDomains){
       arrows:{to:{enabled:true,scaleFactor:.4}}})
   })
 
-  // Network IPs — المستوى 2 (external فقط)
-  const extIPs = (data.network_details||[])
-    .filter(n=>!n.private).slice(0,5)
+  // External IPs — level 2
+  const extIPs = (data.network_details||[]).filter(n=>!n.private).slice(0,5)
   extIPs.forEach(n=>{
     id++
     const lbl = n.ip+(n.country?'\n'+n.country:'')
@@ -794,7 +751,7 @@ function renderGraph(data, realDomains){
       arrows:{to:{enabled:true,scaleFactor:.4}}})
   })
 
-  // Honeytoken hits — المستوى 1 (خطر مباشر)
+  // Honeytoken hits — level 1
   const honey = (data.honeytoken_hits||[]).slice(0,4)
   honey.forEach(h=>{
     id++
@@ -817,14 +774,14 @@ function renderGraph(data, realDomains){
       layout:{
         hierarchical:{
           enabled: true,
-          direction: 'LR',          // Left → Right أوضح
+          direction: 'LR',
           sortMethod: 'directed',
           levelSeparation: 200,
           nodeSpacing: 80,
           treeSpacing: 120,
         }
       },
-      physics:{ enabled:false },    // مع hierarchical نوقف physics
+      physics:{ enabled:false },
       edges:{
         smooth:{type:'cubicBezier',forceDirection:'horizontal'},
       },
@@ -833,12 +790,7 @@ function renderGraph(data, realDomains){
   )
 }
 
-// ── ESCAPE ───────────────────────────────────────────────────
-function esc(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-}
-
-// ── MAIN LOAD ────────────────────────────────────────────────
+// ── MAIN LOAD ──────────────────────────────────────────────
 async function load(){
   try{
     const r    = await fetch('decoy_logs/latest.json?t='+Date.now())
@@ -853,19 +805,23 @@ async function load(){
     renderHoney(data.honeytoken_hits)
     renderStatic(data.static_analysis)
     renderMeta(data.package_metadata)
-    renderSimple('proc-list',    data.processes,     '▶')
-    renderSimple('files-list',   data.accessed_files,'○')
-    renderSimple('payloads-list',data.decoded_payloads,'⚠')
-    // فلترة الـ domains قبل العرض
+    renderSimple('proc-list',  data.processes,      '▶')
+    renderSimple('files-list', data.accessed_files, '○')
+
     const realDomains = (data.domains||[]).filter(isRealDomain)
     renderSimple('domains-list', realDomains, '◈')
-    // تحديث عداد الـ domains في الـ banner بالعدد الفعلي
-    el('b-domains').textContent = realDomains.length
+
     renderDns(data.dns)
     renderHttp(data.http_requests)
     renderNet(data.network_details)
-    renderMemory(data.memory_strings)
+
+    // Memory: try memory_strings first, fallback to memory_dump, then runtime_strings
+    const memSrc = data.memory_strings || data.memory_dump || data.runtime_strings || []
+    renderMemory(memSrc)
+
     renderTimeline(data.timeline)
+
+    // Attack graph: only drawn once (or when package changes)
     renderGraph(data, realDomains)
 
   }catch(e){
