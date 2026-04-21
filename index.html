@@ -402,7 +402,6 @@ function wrapLabel(text, max = 15){
   const words = text.split(' ')
   let lines = []
   let line = ''
-
   words.forEach(w=>{
     if((line + w).length > max){
       lines.push(line)
@@ -426,16 +425,11 @@ function getNodeColor(type){
     "package": "#00d4ff"
   }
   const color = colors[type] || "#999"
-  return {
-    background: color,
-    border: color
-  }
+  return { background: color, border: color }
 }
 
 function getNodeShape(type){
   if(type === "honey") return "diamond"
-  if(type === "package") return "box"
-  if(type === "process") return "box"
   return "box"
 }
 
@@ -486,7 +480,6 @@ function renderFindings(findings){
           <span style="font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-left:auto">+${f.weight}</span>
         </div>
         ${f.evidence ? `<div style="font-family:var(--mono);font-size:10px;color:var(--text-dim);word-break:break-all">${esc(f.evidence)}</div>` : ''}
-        ${f.similar_to ? `<div style="font-size:10px;color:var(--yellow)">Similar to: ${f.similar_to}</div>` : ''}
       </div>`
   })
 }
@@ -501,12 +494,10 @@ function renderPhases(phases){
   if(!phases){ grid.innerHTML='<div class="empty">No data</div>'; return }
   Object.entries(phases).forEach(([name,events])=>{
     const count = events.length
-    const sample= events.slice(0,2).map(e=>e.event||'').join(' · ')
     grid.innerHTML += `
       <div class="phase-card ${count>0?'active':''}">
         <div class="phase-name">${PHASE_ICONS[name]||'○'} ${name.replace('_',' ')}</div>
         <div class="phase-count ${count>0?'nonzero':'zero'}">${count}</div>
-        ${count>0?`<div class="phase-events">${esc(sample.substring(0,80))}</div>`:''}
       </div>`
   })
 }
@@ -539,14 +530,6 @@ function renderStatic(sa){
       tags += `<span class="sa-tag ${entropyClass}">entropy: ${info.entropy}</span>`
     if(info.has_obfuscation)
       tags += `<span class="sa-tag danger">obfuscated</span>`
-    if(info.parse_failed)
-      tags += `<span class="sa-tag danger">parse failed</span>`
-    if((info.dynamic_exec_calls||[]).length)
-      tags += `<span class="sa-tag danger">eval/exec: ${info.dynamic_exec_calls.join(',')}</span>`
-    if((info.suspicious_imports||[]).length)
-      tags += `<span class="sa-tag warn">imports: ${info.suspicious_imports.join(',')}</span>`
-    if(info.reverse_shell_pattern)
-      tags += `<span class="sa-tag danger">reverse shell pattern</span>`
     if(!tags) tags = '<span class="sa-tag ok">clean</span>'
     list.innerHTML += `
       <div class="sa-file">
@@ -574,17 +557,10 @@ function renderHttp(reqs){
   const list = el('http-list')
   list.innerHTML = ''
   if(!reqs||!reqs.length){ list.innerHTML='<div class="empty">No requests</div>'; return }
-  reqs.forEach(r=>{
-    const analysis = r.analysis||{}
-    let extra = ''
-    if(analysis.large_exfil_attempt) extra += `<div class="http-tag">⚠ Large payload (${analysis.payload_size} bytes)</div>`
-    if(analysis.base64_decoded)      extra += `<div class="http-tag">⚠ Base64 decoded: ${esc(analysis.base64_decoded.substring(0,80))}</div>`
-    if(analysis.sensitive_json_keys) extra += `<div class="http-tag">⚠ Sensitive keys: ${esc(analysis.sensitive_json_keys.join(', '))}</div>`
-    const bodyText = r.body_text ? `<div class="http-body">${esc(r.body_text.substring(0,120))}</div>` : ''
+  reqs.slice(0, 5).forEach(r=>{
     list.innerHTML += `
       <div class="http-card">
         <div><span class="http-method ${r.method||'GET'}">${r.method||'GET'}</span><span class="http-path">${esc(r.path||'')}</span></div>
-        ${bodyText}${extra}
       </div>`
   })
 }
@@ -594,34 +570,21 @@ function renderNetwork(netAnalysis){
   list.innerHTML = ''
   if(!netAnalysis){ list.innerHTML='<div class="empty">No network data</div>'; return }
   
-  const httpSum = netAnalysis.http_summary || {}
   const externalIPs = netAnalysis.external_ips || []
-  
   let html = `<div style="margin-bottom:10px;padding:8px;background:var(--bg3);border-radius:5px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
       <div>Domains: <strong>${(netAnalysis.real_domains||[]).length}</strong></div>
       <div>External IPs: <strong>${externalIPs.length}</strong></div>
-      <div>DNS Queries: <strong>${netAnalysis.total_dns_queries||0}</strong></div>
-      <div>HTTP Requests: <strong>${netAnalysis.total_http_requests||0}</strong></div>
-      <div>POST Requests: <strong>${httpSum.post_count||0}</strong></div>
-      <div>Exfil Attempts: <strong style="color:${httpSum.exfil_attempts>0?'var(--red)':'inherit'}">${httpSum.exfil_attempts||0}</strong></div>
     </div>
   </div>`
   
-  externalIPs.forEach(ip=>{
-    const riskClass = ip.risk === 'high' ? 'net-risk-high' : ''
+  externalIPs.slice(0, 5).forEach(ip=>{
     html += `
       <div class="net-card">
-        <div class="net-ip ${riskClass}">${esc(ip.ip)}</div>
-        ${ip.country ? `<div class="net-detail">📍 ${ip.country} ${ip.city||''}</div>` : ''}
-        ${ip.isp ? `<div class="net-detail">ISP: ${esc(ip.isp)}</div>` : ''}
-        ${ip.risk ? `<div class="net-detail">Risk: <span class="${riskClass}">${ip.risk}</span></div>` : ''}
+        <div class="net-ip">${esc(ip.ip)}</div>
+        ${ip.country ? `<div class="net-detail">📍 ${ip.country}</div>` : ''}
       </div>`
   })
-  
-  if(externalIPs.length === 0){
-    html += '<div style="padding:10px;text-align:center;color:var(--text-dim)">No external IPs contacted</div>'
-  }
   
   list.innerHTML = html
 }
@@ -630,16 +593,10 @@ function renderMemory(strings){
   const list = el('mem-list')
   list.innerHTML = ''
   if(!strings||!strings.length){ list.innerHTML='<div class="empty">No strings extracted</div>'; return }
-
-  strings.forEach(s=>{
+  strings.slice(0, 30).forEach(s=>{
     s = String(s).trim()
-    let cls = ''
-    if(/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d+)?$/.test(s)) cls='ip'
-    else if(/^https?:\/\//i.test(s)) cls='url'
-    else if(s.includes('/etc/')||s.includes('/.ssh/')||s.includes('/.aws/')) cls='path'
-    else if(/^[A-Za-z0-9+/]{32,}={0,2}$/.test(s)) cls='b64'
     const display = s.length > 60 ? s.substring(0,60)+'…' : s
-    list.innerHTML += `<span class="mem-chip ${cls}" title="${esc(s)}">${esc(display)}</span>`
+    list.innerHTML += `<span class="mem-chip" title="${esc(s)}">${esc(display)}</span>`
   })
 }
 
@@ -647,14 +604,211 @@ function renderSimple(id, arr, icon='○'){
   const list = el(id)
   list.innerHTML = ''
   if(!arr||!arr.length){ list.innerHTML=`<div class="empty">No data</div>`; return }
-  arr.forEach(item=>{ list.innerHTML += row(icon, esc(String(item))) })
+  arr.slice(0, 20).forEach(item=>{ list.innerHTML += row(icon, esc(String(item))) })
 }
 
 function renderDns(dns){
   const list = el('dns-list')
   list.innerHTML = ''
   if(!dns||!dns.length){ list.innerHTML='<div class="empty">No DNS queries</div>'; return }
-  dns.forEach(d=>{
+  dns.slice(0, 10).forEach(d=>{
     const q  = typeof d==='object' ? d.query : d
-    const ts = typeof d==='object' && d.timestamp ? `<span style="color:var(--text-dim)"> @ ${d.timestamp}</span>` : ''
-    list.innerHTML += row('
+    list.innerHTML += row('◈', esc(q))
+  })
+}
+
+function renderTimeline(timeline){
+  const list = el('timeline-list')
+  list.innerHTML = ''
+  if(!timeline||!timeline.length){ list.innerHTML='<div class="empty">No events</div>'; return }
+  timeline.slice(-100).forEach(t=>{
+    list.innerHTML += `
+      <div class="tl-row">
+        <span class="tl-time">${t.time||0}</span>
+        <span class="tl-event">${esc((t.event||'').substring(0,120))}</span>
+      </div>`
+  })
+}
+
+let graphRendered = false
+let network = null
+
+function renderGraph(data){
+  if(graphRendered) return
+  graphRendered = true
+
+  const container = el('graph-container')
+  const netAnalysis = data.network_analysis || {}
+  
+  const nodesArray = []
+  const edgesArray = []
+  let nodeId = 1
+  
+  // Package
+  nodesArray.push({
+    id: nodeId,
+    label: wrapLabel('Package: ' + (data.package || 'unknown')),
+    type: 'package',
+    level: 0
+  })
+  const packageId = nodeId
+  nodeId++
+  
+  // Main Process فقط
+  const processes = data.processes || []
+  const mainProcess = processes[0] || 'node'
+  const processId = nodeId++
+  nodesArray.push({
+    id: processId,
+    label: wrapLabel(mainProcess),
+    type: 'process',
+    level: 1
+  })
+  edgesArray.push({
+    from: packageId,
+    to: processId,
+    type: 'execution'
+  })
+  
+  // Domains - level 2
+  const domains = netAnalysis.real_domains || []
+  domains.slice(0, 8).forEach(domain => {
+    const id = nodeId++
+    nodesArray.push({
+      id: id,
+      label: wrapLabel(domain),
+      type: 'domain',
+      level: 2
+    })
+    edgesArray.push({
+      from: processId,
+      to: id,
+      type: 'network'
+    })
+  })
+  
+  // IPs - level 3 (بدون تكرار)
+  const externalIPs = netAnalysis.external_ips || []
+  const uniqueIPs = [...new Map(externalIPs.map(i => [i.ip, i])).values()]
+  uniqueIPs.slice(0, 5).forEach(ipData => {
+    const id = nodeId++
+    const label = ipData.ip + (ipData.country ? '\n' + ipData.country : '')
+    nodesArray.push({
+      id: id,
+      label: wrapLabel(label),
+      type: 'ip',
+      level: 3
+    })
+    edgesArray.push({
+      from: processId,
+      to: id,
+      type: 'network'
+    })
+  })
+  
+  // Honey tokens - level 2
+  const honeyHits = data.honeytoken_hits || []
+  honeyHits.slice(0, 4).forEach(hit => {
+    const id = nodeId++
+    const shortName = hit.split('/').pop()
+    nodesArray.push({
+      id: id,
+      label: wrapLabel('HONEY: ' + shortName),
+      type: 'honey',
+      level: 2
+    })
+    edgesArray.push({
+      from: processId,
+      to: id,
+      type: 'file_access'
+    })
+  })
+
+  const nodes = new vis.DataSet(
+    nodesArray.map(n => ({
+      id: n.id,
+      label: n.label,
+      color: getNodeColor(n.type),
+      shape: getNodeShape(n.type),
+      level: n.level,
+      font: { face: 'Share Tech Mono', size: 11, multi: true },
+      margin: 10,
+      widthConstraint: { maximum: 140 }
+    }))
+  )
+
+  const edges = new vis.DataSet(
+    edgesArray.map(e => ({
+      from: e.from,
+      to: e.to,
+      arrows: "to",
+      color: getEdgeColor(e),
+      smooth: { type: "cubicBezier", forceDirection: "horizontal" }
+    }))
+  )
+
+  if(network) network.destroy()
+
+  network = new vis.Network(container, {nodes, edges}, {
+    layout: {
+      hierarchical: {
+        enabled: true,
+        direction: "LR",
+        levelSeparation: 140,
+        nodeSpacing: 90,
+        treeSpacing: 120,
+        sortMethod: "directed"
+      }
+    },
+    physics: { enabled: false },
+    nodes: {
+      shape: "box",
+      margin: 10,
+      widthConstraint: { maximum: 140 },
+      font: { face: 'Share Tech Mono', size: 11, multi: true }
+    },
+    edges: {
+      smooth: { type: "cubicBezier", forceDirection: "horizontal" },
+      arrows: "to"
+    },
+    interaction: { zoomView: true, dragView: true }
+  })
+}
+
+async function load(){
+  try{
+    const r = await fetch('decoy_logs/latest.json?t='+Date.now())
+    if(!r.ok) throw new Error('HTTP '+r.status)
+    const data = await r.json()
+
+    el('last-updated').textContent = 'Updated: '+new Date().toLocaleTimeString()
+    
+    updateBanner(data)
+    renderFindings(data.behavior_findings)
+    renderPhases(data.behavioral_phases)
+    renderHoney(data.honeytoken_hits)
+    renderStatic(data.static_analysis)
+    renderMeta(data.package_metadata)
+    renderSimple('proc-list',  data.processes, '▶')
+    renderSimple('files-list', data.accessed_files, '○')
+    
+    const netAnalysis = data.network_analysis || {}
+    renderSimple('domains-list', netAnalysis.real_domains || [], '◈')
+    renderDns(data.dns)
+    renderHttp(data.http_requests)
+    renderNetwork(netAnalysis)
+    renderMemory(data.memory_strings)
+    renderTimeline(data.timeline)
+    
+    renderGraph(data)
+  }catch(e){
+    console.error('Dashboard error:', e)
+    el('last-updated').textContent = 'Error: '+e.message
+  }
+}
+
+load()
+setInterval(load, 5000)
+</script>
+</body>
+</html>
