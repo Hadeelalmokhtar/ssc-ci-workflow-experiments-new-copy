@@ -129,6 +129,21 @@ jobs:
           ssc-sandbox \
           python sandbox/runner.py \
           packages/decoy/package_${{ github.run_number }}.tgz
+          
+      # =========================
+      # CTI FEATURE EXTRACTION
+      # =========================
+      - name: Extract Decoy CTI Features
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false' && steps.ml_scan.outputs.ml_result != '0'
+        run: |
+          python scripts/extract_decoy_features.py
+
+      - name: Upload Decoy Features
+        if: steps.detect_pkg.outputs.skip_pipeline == 'false' && steps.ml_scan.outputs.ml_result != '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: decoy-features
+          path: CTI_Storage/decoy_features.csv
 
       # =========================
       # RELEASE LOGIC
