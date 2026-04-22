@@ -244,14 +244,13 @@ main{padding:24px 28px;display:flex;flex-direction:column;gap:20px}
 .mem-chip.path{border-color:rgba(255,140,66,.3);color:var(--orange)}
 
 .tl-row{
-  display:grid;grid-template-columns:110px 1fr;gap:8px;
-  padding:5px 12px;border-bottom:1px solid rgba(30,48,80,.5);
+  display:grid;grid-template-columns:100px 1fr;gap:10px;
+  padding:6px 12px;border-bottom:1px solid rgba(30,48,80,.5);
   font-family:var(--mono);font-size:11px;
 }
 .tl-row:hover{background:rgba(0,212,255,.04)}
 .tl-time{color:var(--text-dim);white-space:nowrap}
-.tl-event{color:var(--text);word-break:break-all}
-.tl-real{color:var(--accent);font-weight:500}
+.tl-event{color:var(--text);word-break:break-all;line-height:1.4}
 
 #graph-container{
   height:500px;background:var(--bg1);
@@ -641,26 +640,31 @@ function renderDns(dns){
 function renderTimeline(timeline){
   const list = el('timeline-list')
   list.innerHTML = ''
-  if(!timeline||!timeline.length){
-    list.innerHTML='<div class="empty">No events</div>'
+  if(!timeline || !timeline.length){
+    list.innerHTML = '<div class="empty">No events</div>'
     return
   }
-
-  const base = timeline[0].time  
-
+  
+  const base = timeline[0].time
+  
   timeline.slice(-100).forEach(t=>{
-    const real = new Date(t.time * 1000)
-      .toISOString()
-      .substr(11, 12)
 
-    const rel = (t.time - base).toFixed(6)
-
+    let rel = (t.time - base).toFixed(3)
+    rel = rel.replace(/\.?0+$/, '')  
+    
+    const d = new Date(t.time * 1000)
+    const utc = d.toISOString().substr(11, 12) // HH:MM:SS.mmm
+    
+    //  Local time
+    const local = d.toLocaleTimeString() + '.' + String(d.getMilliseconds()).padStart(3,'0')
+    
     list.innerHTML += `
       <div class="tl-row">
         <span class="tl-time">+${rel}s</span>
         <span class="tl-event">
-          <span class="tl-real">${real}</span> — 
-          ${esc((t.event||'').substring(0,120))}
+          <span style="color:var(--accent4)">${local}</span>
+          <span style="color:var(--text-dim);margin-left:6px">(${utc} UTC)</span>
+          — ${esc((t.event||'').substring(0,120))}
         </span>
       </div>`
   })
