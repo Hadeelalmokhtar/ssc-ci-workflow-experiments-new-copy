@@ -134,7 +134,7 @@ jobs:
       # CTI FEATURE EXTRACTION
       # =========================
       - name: Extract Decoy CTI Features
-        if: steps.detect_pkg.outputs.skip_pipeline == 'false' && steps.ml_scan.outputs.ml_result != '0'
+        if: always()
         run: |
           python scripts/extract_decoy_features.py
 
