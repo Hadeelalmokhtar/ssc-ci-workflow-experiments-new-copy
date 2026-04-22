@@ -4,8 +4,13 @@ import ipaddress
 import pandas as pd
 
 
-DECOY_DIR = "decoy_logs/decoy_runs"
-OUTPUT_CSV = "CTI_Storage/decoy_features.csv"
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = os.path.dirname(BASE_DIR)
+
+DECOY_DIR = os.path.join(ROOT_DIR, "decoy_logs", "decoy_runs")
+OUTPUT_CSV = os.path.join(ROOT_DIR, "CTI_Storage", "decoy_features.csv")
 
 def is_private_or_local(ip: str) -> int:
     try:
