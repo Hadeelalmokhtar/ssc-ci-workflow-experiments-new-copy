@@ -430,7 +430,6 @@ def post_run_enrich_ips(ip_set):
     return enriched
 
 def enrich_network_data(ips, domains, dns_queries, http_requests):
-    """تجميع وتحليل بيانات الشبكة"""
     real_domains, junk_domains = filter_domains(domains)
     enriched_ips = post_run_enrich_ips(ips)
     
@@ -645,7 +644,8 @@ decoded_payloads = []
 behavior_findings= []
 memory_strings   = []
 strace_all_lines = []
-counter          = 0
+
+counter = 0  
 
 for target in targets:
     run_cmd = ["node", target] if target.endswith(".js") else ["python3", target]
@@ -653,7 +653,7 @@ for target in targets:
     processes.append(os.path.basename(run_cmd[0]))
 
     proc = subprocess.Popen(
-        ["strace", "-tt", "-f", "-e", "trace=all"] + run_cmd,
+        ["strace", "-ttt", "-f", "-e", "trace=all"] + run_cmd,
         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         stdin=subprocess.PIPE, text=True, env=env,
     )
@@ -671,15 +671,16 @@ for target in targets:
         stdout, stderr = proc.communicate()
 
     for line in stderr.split("\n"):
-        if not line: continue
+        if not line: 
+            continue
+        
         m = re.match(r'^(\d+\.\d+)\s+(.*)', line)
-        if m:
-            timestamp = float(m.group(1))
-            event     = m.group(2)
-        else:
-            counter  += 1
-            timestamp = round(counter * 0.01, 2)
-            event     = line
+        
+        if not m:
+            continue
+        
+        timestamp = float(m.group(1))
+        event = m.group(2)
 
         strace_all_lines.append(event)
         timeline.append({"time": timestamp, "event": event[:200]})
