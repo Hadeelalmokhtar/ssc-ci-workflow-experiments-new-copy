@@ -655,8 +655,14 @@ function renderTimeline(timeline){
     const d = new Date(t.time * 1000)
     const utc = d.toISOString().substr(11, 12) // HH:MM:SS.mmm
     
-    //  Local time
-    const local = d.toLocaleTimeString() + '.' + String(d.getMilliseconds()).padStart(3,'0')
+// Local time (FIXED 24H)
+const local = d.toLocaleTimeString('en-GB', {
+  timeZone: 'Asia/Riyadh',
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hour12: false
+}) + '.' + String(d.getMilliseconds()).padStart(3,'0')
     
     list.innerHTML += `
       <div class="tl-row">
