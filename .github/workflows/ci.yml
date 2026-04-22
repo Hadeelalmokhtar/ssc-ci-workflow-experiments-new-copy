@@ -197,6 +197,7 @@ jobs:
 
           git add packages/ || true
           git add decoy_logs/ || true
-
+          git add CTI_Storage/ || true
+          
           git commit -m "SSC pipeline result (run ${{ github.run_number }})" || echo "Nothing to commit"
           git push origin main
