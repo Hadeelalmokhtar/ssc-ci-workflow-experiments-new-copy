@@ -637,33 +637,32 @@ function renderDns(dns){
   })
 }
 
-function renderTimeline(timeline){
+function renderTimeline(timeline, runBase){
   const list = el('timeline-list')
   list.innerHTML = ''
+
   if(!timeline || !timeline.length){
     list.innerHTML = '<div class="empty">No events</div>'
     return
   }
-  
-  const base = timeline[0].time
-  
-  timeline.slice(-100).forEach(t=>{
 
-    let rel = (t.time - base).toFixed(3)
-    rel = rel.replace(/\.?0+$/, '')  
-    
-    const d = new Date(t.time * 1000)
-    const utc = d.toISOString().substr(11, 12) // HH:MM:SS.mmm
-    
-// Local time (FIXED 24H)
-const local = d.toLocaleTimeString('en-GB', {
-  timeZone: 'Asia/Riyadh',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hour12: false
-}) + '.' + String(d.getMilliseconds()).padStart(3,'0')
-    
+  timeline.slice(-100).forEach(t=>{
+    let rel = t.time.toFixed(3)
+    rel = rel.replace(/\.?0+$/, '')
+
+    const absoluteTime = runBase + t.time
+    const d = new Date(absoluteTime * 1000)
+
+    const utc = d.toISOString().substr(11, 12)
+
+    const local = d.toLocaleTimeString('en-GB', {
+      timeZone: 'Asia/Riyadh',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }) + '.' + String(d.getMilliseconds()).padStart(3,'0')
+
     list.innerHTML += `
       <div class="tl-row">
         <span class="tl-time">+${rel}s</span>
@@ -844,7 +843,9 @@ async function load(){
     renderHttp(data.http_requests)
     renderNetwork(netAnalysis)
     renderMemory(data.memory_strings)
-    renderTimeline(data.timeline)
+    
+    const runBase = new Date(data.run_timestamp).getTime() / 1000
+    renderTimeline(data.timeline, runBase)
     
     renderGraph(data)
   }catch(e){
