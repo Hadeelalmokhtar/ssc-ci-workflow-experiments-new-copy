@@ -238,27 +238,35 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
 # FILTER — drop empty / error fields recursively
  
 EMPTY_VALUES = {None, "", "N/A", "Premium required.", "Requires membership or higher to access"}
- 
+
 def filter_empty(obj):
     if isinstance(obj, dict):
         cleaned = {}
         for k, v in obj.items():
             v2 = filter_empty(v)
-            if v2 in EMPTY_VALUES:
+
+            if not isinstance(v2, (list, dict)) and v2 in EMPTY_VALUES:
                 continue
+
             if isinstance(v2, dict) and not v2:
                 continue
             if isinstance(v2, list) and not v2:
                 continue
+
             cleaned[k] = v2
         return cleaned
+
     elif isinstance(obj, list):
         result = []
         for item in obj:
             item2 = filter_empty(item)
-            if item2 not in EMPTY_VALUES:
-                result.append(item2)
+
+            if not isinstance(item2, (list, dict)) and item2 in EMPTY_VALUES:
+                continue
+
+            result.append(item2)
         return result
+
     else:
         return obj
  
