@@ -643,14 +643,20 @@ def s3(bucket):
 def session():
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
     CREDENTIAL_STORE = {
-        "repo_token": {"token": "admin123", "privilege_level": 3}
+        "repo_token": {"token": "ghp_pr0dRel3aseAdm1nAccess2026xYzAbC", "privilege_level": 3}
     }
     for name, data in CREDENTIAL_STORE.items():
         if token == data["token"]:
             event = build_path_event(name, data["privilege_level"], "/api/v1/session")
             event["event_type"] = "credential_misuse"
             process_event(event)
-            return jsonify({"status": "ok"})
+            return jsonify({
+                "id": "sess_9f8a7c6b5d",
+                "actor": "repo_admin",
+                "scope": ["repo", "packages:write", "admin:repo_hook"],
+                "token_last_used": "2026-05-02T22:36:14Z",
+                "session_status": "active",
+               "ip": request.headers.get("X-Forwarded-For", request.remote_addr) }), 200
     return jsonify({"error": "invalid"}), 403
  
 @app.route("/health")
