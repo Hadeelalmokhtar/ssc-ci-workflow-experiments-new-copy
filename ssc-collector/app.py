@@ -6,27 +6,27 @@ import os
 import requests
 import time
 import uuid
-
+ 
 app = Flask(__name__)
-
+ 
 # =====================================================
 # CONFIG
-
+ 
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_REPO  = os.getenv("GITHUB_REPO")
-
+ 
 STIX_FILE = "CTI_Storage/CTI_STIX.json"   # one STIX Bundle file, appended per hit
-
+ 
 ABUSE_API_KEY  = os.getenv("ABUSE_API_KEY")
 IPQS_API_KEY   = os.getenv("IPQS_API_KEY")
 SHODAN_API_KEY = os.getenv("SHODAN_API_KEY")
 VT_API_KEY     = os.getenv("VT_API_KEY")
-
+ 
 # =====================================================
 # CACHE
-
+ 
 CACHE = {}
-
+ 
 def cached_lookup(ip, func):
     if ip in CACHE and func.__name__ in CACHE[ip]:
         return CACHE[ip][func.__name__]
@@ -35,12 +35,12 @@ def cached_lookup(ip, func):
         CACHE[ip] = {}
     CACHE[ip][func.__name__] = data
     return data
-
+ 
 # =====================================================
 # DEDUP
-
+ 
 LAST_SEEN = {}
-
+ 
 def is_duplicate(event):
     endpoint = event.get("ioc_endpoint", "unknown")
     ip       = event.get("ip", "unknown")
@@ -50,28 +50,28 @@ def is_duplicate(event):
         return True
     LAST_SEEN[key] = now
     return False
-
+ 
 # =====================================================
 # IP TRACKING
-
+ 
 IP_TRACKER = {}
-
+ 
 def track_ip(ip):
     if ip not in IP_TRACKER:
         IP_TRACKER[ip] = {"count": 1}
     else:
         IP_TRACKER[ip]["count"] += 1
     return IP_TRACKER[ip]
-
+ 
 # =====================================================
 # ENRICHMENT
-
+ 
 def enrich_ip(ip):
     try:
         return requests.get(f"http://ip-api.com/json/{ip}", timeout=3).json()
     except:
         return {}
-
+ 
 def enrich_abuse(ip):
     try:
         r = requests.get(
@@ -83,7 +83,7 @@ def enrich_abuse(ip):
         return r.json().get("data", {})
     except:
         return {}
-
+ 
 def enrich_ipqs(ip):
     try:
         return requests.get(
@@ -92,7 +92,7 @@ def enrich_ipqs(ip):
         ).json()
     except:
         return {}
-
+ 
 def enrich_shodan(ip):
     try:
         return requests.get(
@@ -101,7 +101,7 @@ def enrich_shodan(ip):
         ).json()
     except:
         return {}
-
+ 
 def enrich_vt(ip):
     try:
         r = requests.get(
@@ -112,14 +112,14 @@ def enrich_vt(ip):
         return r.json()
     except:
         return {}
-
+ 
 # =====================================================
 # HELPER — build raw event
-
+ 
 def build_path_event(profile_name, privilege_level, endpoint_name):
     ip = request.headers.get("X-Forwarded-For", request.remote_addr)
     ip = ip.split(",")[0].strip()
-
+ 
     ua        = request.headers.get("User-Agent", "")
     ip_data   = track_ip(ip)
     geo       = cached_lookup(ip, enrich_ip)
@@ -127,13 +127,13 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
     ipqs      = cached_lookup(ip, enrich_ipqs)
     shodan    = cached_lookup(ip, enrich_shodan)
     vt        = cached_lookup(ip, enrich_vt)
-
+ 
     now            = datetime.utcnow()
     request_count  = ip_data["count"]
     burst_flag     = request_count > 5
     ua_lower       = ua.lower()
     automation_flag= any(x in ua_lower for x in ["curl","bot","python","scanner","wget"])
-
+ 
     return {
         "event_type":      "path_trigger",
         "token_profile":   profile_name,
@@ -161,12 +161,12 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
         },
         "timestamp": now.isoformat()
     }
-
+ 
 # =====================================================
 # FILTER — drop empty / error fields recursively
-
+ 
 EMPTY_VALUES = {None, "", "N/A", "Premium required.", "Requires membership or higher to access"}
-
+ 
 def filter_empty(obj):
     """Recursively remove keys whose value is empty/null/error placeholder."""
     if isinstance(obj, dict):
@@ -191,16 +191,16 @@ def filter_empty(obj):
         return result
     else:
         return obj
-
+ 
 # =====================================================
 # STIX HELPERS
-
+ 
 def stix_id(obj_type):
     return f"{obj_type}--{uuid.uuid4()}"
-
+ 
 def now_stix():
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
-
+ 
 def ts_to_stix(ts_str):
     """Convert event timestamp string to STIX format."""
     try:
@@ -208,14 +208,14 @@ def ts_to_stix(ts_str):
         return dt.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     except:
         return now_stix()
-
+ 
 # =====================================================
 # STIX BUILDER
-
+ 
 def build_stix_bundle(event):
     """
     Build a STIX 2.1 Bundle from one honeypot hit.
-
+ 
     Objects produced:
       - identity          (honeypot system / creator)
       - ipv4-addr         (attacker IP)
@@ -228,21 +228,21 @@ def build_stix_bundle(event):
     """
     created_ts = ts_to_stix(event.get("timestamp", now_stix()))
     intel      = event.get("intel", {})
-
+ 
     # ---- Filter raw intel per source ----
     geo_clean    = filter_empty(intel.get("geo", {}))
     abuse_clean  = filter_empty(intel.get("abuseipdb", {}))
     ipqs_clean   = filter_empty(intel.get("ipqualityscore", {}))
     shodan_clean = filter_empty(intel.get("shodan", {}))
     vt_raw       = intel.get("virustotal", {})
-
+ 
     # For VT keep only attributes + last_analysis_stats + last_analysis_results
     vt_attrs = filter_empty(vt_raw.get("data", {}).get("attributes", {}))
     # Strip huge whois/rdap blobs from VT to keep bundle lean but keep stats
     for drop_key in ["whois", "rdap", "last_https_certificate"]:
         vt_attrs.pop(drop_key, None)
     vt_clean = vt_attrs  # already filtered
-
+ 
     # ---- Derive threat score flags ----
     abuse_score   = abuse_clean.get("abuseConfidenceScore", 0)
     fraud_score   = ipqs_clean.get("fraud_score", 0)
@@ -252,9 +252,9 @@ def build_stix_bundle(event):
     vt_stats      = vt_clean.get("last_analysis_stats", {})
     vt_malicious  = vt_stats.get("malicious", 0)
     vt_suspicious = vt_stats.get("suspicious", 0)
-
+ 
     high_confidence = (abuse_score >= 80 or fraud_score >= 80 or vt_malicious >= 5)
-
+ 
     # ---- Labels ----
     labels = ["honeypot-hit"]
     if is_tor:        labels.append("tor-exit-node")
@@ -263,7 +263,7 @@ def build_stix_bundle(event):
     if vt_malicious:  labels.append("malicious-ip")
     if "config" in event.get("ioc_endpoint", ""):  labels.append("config-exposure")
     if "/s3/" in event.get("ioc_endpoint", ""):     labels.append("cloud-storage-probe")
-
+ 
     # ---- IDs ----
     identity_id       = stix_id("identity")
     ip_id             = stix_id("ipv4-addr")
@@ -276,9 +276,9 @@ def build_stix_bundle(event):
     note_shodan_id    = stix_id("note")
     note_vt_id        = stix_id("note")
     rel_ind_ip_id     = stix_id("relationship")
-
+ 
     objects = []
-
+ 
     # 1. Identity — the honeypot system
     objects.append({
         "type":            "identity",
@@ -291,7 +291,7 @@ def build_stix_bundle(event):
         "description":     "Honeytoken collector deployed in CI/CD workflow to detect credential misuse and path probing.",
         "labels":          ["honeypot", "threat-intelligence"]
     })
-
+ 
     # 2. IPv4 address — attacker
     ip_obj = {
         "type":          "ipv4-addr",
@@ -304,7 +304,7 @@ def build_stix_bundle(event):
     if event.get("isp"):      ip_obj["x_isp"]       = event["isp"]
     if event.get("asn"):      ip_obj["x_asn"]       = event["asn"]
     objects.append(ip_obj)
-
+ 
     # 3. Network traffic — the request
     net_obj = {
         "type":          "network-traffic",
@@ -332,7 +332,7 @@ def build_stix_bundle(event):
         "x_day_of_week":      event.get("day_of_week"),
     }
     objects.append(net_obj)
-
+ 
     # 4. Indicator — pattern on the IOC endpoint
     endpoint = event.get("ioc_endpoint", "")
     indicator_obj = {
@@ -356,7 +356,7 @@ def build_stix_bundle(event):
         "confidence":        85 if high_confidence else 55,
     }
     objects.append(indicator_obj)
-
+ 
     # 5. Observed-data — wraps the IP + network traffic
     objects.append({
         "type":             "observed-data",
@@ -371,7 +371,7 @@ def build_stix_bundle(event):
         "object_refs":      [ip_id, net_traffic_id],
         "labels":           labels,
     })
-
+ 
     # 6. Threat-actor (only if high confidence)
     if high_confidence:
         ta_id = stix_id("threat-actor")
@@ -396,7 +396,7 @@ def build_stix_bundle(event):
             "labels":          labels,
         }
         objects.append(ta_obj)
-
+ 
         # relationship: threat-actor → indicator
         objects.append({
             "type":            "relationship",
@@ -408,7 +408,7 @@ def build_stix_bundle(event):
             "source_ref":      ta_id,
             "target_ref":      indicator_id,
         })
-
+ 
     # 7. Relationship: indicator → ipv4-addr
     objects.append({
         "type":              "relationship",
@@ -420,9 +420,9 @@ def build_stix_bundle(event):
         "source_ref":        indicator_id,
         "target_ref":        ip_id,
     })
-
+ 
     # 8. Notes — one per intel source (only if non-empty after filtering)
-
+ 
     def make_note(note_id, source_name, data):
         if not data:
             return None
@@ -438,7 +438,7 @@ def build_stix_bundle(event):
             "object_refs":    [ip_id, indicator_id],
             "labels":         [source_name.lower().replace(" ", "-"), "raw-intel"],
         }
-
+ 
     for note_id, src, data in [
         (note_geo_id,   "GeoIP (ip-api)",  geo_clean),
         (note_abuse_id, "AbuseIPDB",       abuse_clean),
@@ -449,7 +449,7 @@ def build_stix_bundle(event):
         note = make_note(note_id, src, data)
         if note:
             objects.append(note)
-
+ 
     # ---- Assemble bundle ----
     bundle = {
         "type":         "bundle",
@@ -458,16 +458,16 @@ def build_stix_bundle(event):
         "objects":      objects,
     }
     return bundle
-
+ 
 # =====================================================
 # GITHUB SAVE — appends one bundle to a JSON array
-
+ 
 def save_stix_to_github(bundle: dict):
     url     = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{STIX_FILE}"
     headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-
+ 
     r = requests.get(url, headers=headers)
-
+ 
     if r.status_code == 200:
         meta   = r.json()
         sha    = meta["sha"]
@@ -480,43 +480,43 @@ def save_stix_to_github(bundle: dict):
     else:
         sha      = None
         existing = []
-
+ 
     existing.append(bundle)
-
+ 
     encoded = base64.b64encode(
         json.dumps(existing, indent=2, ensure_ascii=False).encode("utf-8")
     ).decode()
-
+ 
     payload = {"message": f"stix bundle: {bundle['id']}", "content": encoded, "branch": "main"}
     if sha:
         payload["sha"] = sha
-
+ 
     requests.put(url, headers=headers, json=payload)
-
+ 
 # =====================================================
 # PROCESS
-
+ 
 def process_event(event):
     if is_duplicate(event):
         return
     bundle = build_stix_bundle(event)
     save_stix_to_github(bundle)
-
+ 
 # =====================================================
 # ROUTES
-
+ 
 @app.route("/legacy_internal_config.yaml", methods=["GET"])
 def scm():
     event = build_path_event("legacy_registry", 1, "/legacy_internal_config.yaml")
     process_event(event)
     return "config exposed", 200
-
+ 
 @app.route("/s3/<bucket>", methods=["GET", "POST", "PUT"])
 def s3(bucket):
     event = build_path_event("s3", 3, f"/s3/{bucket}")
     process_event(event)
     return "denied", 403
-
+ 
 @app.route("/api/v1/session", methods=["POST"])
 def session():
     token = request.headers.get("Authorization", "").replace("Bearer ", "")
@@ -530,12 +530,12 @@ def session():
             process_event(event)
             return jsonify({"status": "ok"})
     return jsonify({"error": "invalid"}), 403
-
+ 
 @app.route("/health")
 def health():
     return {"status": "ok"}
-
+ 
 # =====================================================
-
+ 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
