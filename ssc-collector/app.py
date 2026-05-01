@@ -597,7 +597,41 @@ def process_event(event):
 def scm():
     event = build_path_event("legacy_registry", 1, "/legacy_internal_config.yaml")
     process_event(event)
-    return "config exposed", 200
+    return """
+ci:
+  provider: github-actions
+  runner: self-hosted
+  token: ghp_91kLmN8QxZ7aBcD3EfGhIjK4LmNoPqRsTuVwXyZ
+
+registry:
+  npm:
+    url: https://registry.npmjs.org/
+    token: npm_7f3a9c2b5d8e4a1f6b0c9d3e7f2a8b1c
+
+  pypi:
+    url: https://upload.pypi.org/legacy/
+    username: __token__
+    password: pypi-AgENdGVzdC5weXBpLm9yZwIkZjA5ZjY3YjItY2QxZC00Z
+
+internal_registry:
+  url: https://packages.internal.local
+  auth_token: irt_6d9f2b1a4c7e8f0d3b5a9c2e1f4d6a7b
+
+build:
+  artifact_storage: s3://ci-artifacts-prod
+  signing_key: -----BEGIN PRIVATE KEY-----
+    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCfakeKeyMaterialOnlyDoNotUse
+    -----END PRIVATE KEY-----
+
+docker:
+  registry: registry.internal.local
+  username: ci-bot
+  password: D0ckerP@ss!2025
+
+env:
+  NODE_ENV: production
+  DEBUG: false
+""", 200
  
 @app.route("/s3/<bucket>", methods=["GET", "POST", "PUT"])
 def s3(bucket):
