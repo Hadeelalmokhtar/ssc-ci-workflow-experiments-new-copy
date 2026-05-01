@@ -641,7 +641,8 @@ def s3(bucket):
  
 @app.route("/api/v1/session", methods=["POST"])
 def session():
-    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    auth = request.headers.get("Authorization", "")
+    token = auth.replace("Bearer ", "") if auth.startswith("Bearer ") else auth
     CREDENTIAL_STORE = {
         "repo_token": {"token": "ghp_pr0dRel3aseAdm1nAccess2026xYzAbC", "privilege_level": 3}
     }
