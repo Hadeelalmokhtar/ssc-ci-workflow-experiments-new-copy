@@ -21,7 +21,6 @@ GITHUB_REPO  = os.getenv("GITHUB_REPO")
 STIX_FILE = "CTI_Storage/CTI_STIX.json"
  
 ABUSE_API_KEY  = os.getenv("ABUSE_API_KEY")
-IPQS_API_KEY   = os.getenv("IPQS_API_KEY")
 SHODAN_API_KEY = os.getenv("SHODAN_API_KEY")
 VT_API_KEY     = os.getenv("VT_API_KEY")
  
@@ -34,7 +33,6 @@ def startup_checks():
     print(f"[STARTUP] GITHUB_TOKEN  : {'SET ✓' if GITHUB_TOKEN else 'MISSING ✗'}")
     print(f"[STARTUP] GITHUB_REPO   : {GITHUB_REPO or 'MISSING ✗'}")
     print(f"[STARTUP] ABUSE_API_KEY : {'SET ✓' if ABUSE_API_KEY else 'MISSING ✗'}")
-    print(f"[STARTUP] IPQS_API_KEY  : {'SET ✓' if IPQS_API_KEY else 'MISSING ✗'}")
     print(f"[STARTUP] SHODAN_API_KEY: {'SET ✓' if SHODAN_API_KEY else 'MISSING ✗'}")
     print(f"[STARTUP] VT_API_KEY    : {'SET ✓' if VT_API_KEY else 'MISSING ✗'}")
     print(f"[STARTUP] STIX_FILE     : {STIX_FILE}")
@@ -130,21 +128,6 @@ def enrich_abuse(ip):
         print(f"[ABUSE] FAILED for {ip}: {e}")
         return {}
  
-def enrich_ipqs(ip):
-    if not IPQS_API_KEY:
-        print("[IPQS] No API key — skipping")
-        return {}
-    try:
-        r = requests.get(
-            f"https://ipqualityscore.com/api/json/ip/{IPQS_API_KEY}/{ip}",
-            timeout=5
-        )
-        data = r.json()
-        print(f"[IPQS] {ip} → fraud={data.get('fraud_score', '?')}, vpn={data.get('vpn', '?')}, bot={data.get('bot_status', '?')}")
-        return data
-    except Exception as e:
-        print(f"[IPQS] FAILED for {ip}: {e}")
-        return {}
  
 def enrich_shodan(ip):
     if not SHODAN_API_KEY:
@@ -196,7 +179,6 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
     ip_data     = track_ip(ip)
     geo         = cached_lookup(ip, enrich_ip)
     abuse       = cached_lookup(ip, enrich_abuse)
-    ipqs        = cached_lookup(ip, enrich_ipqs)
     shodan      = cached_lookup(ip, enrich_shodan)
     vt          = cached_lookup(ip, enrich_vt)
  
@@ -227,7 +209,6 @@ def build_path_event(profile_name, privilege_level, endpoint_name):
         "intel": {
             "geo":            geo,
             "abuseipdb":      abuse,
-            "ipqualityscore": ipqs,
             "shodan":         shodan,
             "virustotal":     vt,
         },
@@ -295,7 +276,6 @@ def build_stix_bundle(event):
  
     geo_clean    = filter_empty(intel.get("geo", {}))
     abuse_clean  = filter_empty(intel.get("abuseipdb", {}))
-    ipqs_clean   = filter_empty(intel.get("ipqualityscore", {}))
     shodan_clean = filter_empty(intel.get("shodan", {}))
     vt_raw       = intel.get("virustotal", {})
  
@@ -305,15 +285,15 @@ def build_stix_bundle(event):
     vt_clean = vt_attrs
  
     abuse_score   = abuse_clean.get("abuseConfidenceScore", 0)
-    fraud_score   = ipqs_clean.get("fraud_score", 0)
-    is_tor        = abuse_clean.get("isTor", False) or ipqs_clean.get("tor", False)
-    is_vpn        = ipqs_clean.get("vpn", False)
-    is_bot        = event.get("automation_flag", False) or ipqs_clean.get("bot_status", False)
+    is_tor        = abuse_clean.get("isTor", False)
+    isp           = (event.get("isp") or "").lower()
+    is_vpn        = any(x in isp for x in ["hosting", "cloud", "vpn", "proxy"]) 
+    is_bot        = event.get("automation_flag", False)
     vt_stats      = vt_clean.get("last_analysis_stats", {})
     vt_malicious  = vt_stats.get("malicious", 0)
     vt_suspicious = vt_stats.get("suspicious", 0)
  
-    high_confidence = (abuse_score >= 80 or fraud_score >= 80 or vt_malicious >= 5)
+    high_confidence = (abuse_score >= 80 or vt_malicious >= 5)
  
     labels = ["honeypot-hit"]
     if is_tor:       labels.append("tor-exit-node")
@@ -435,7 +415,7 @@ def build_stix_bundle(event):
             "description": (
                 f"From {event.get('country', 'unknown')}. "
                 f"Infra: {'TOR' if is_tor else 'VPN/Proxy' if is_vpn else 'direct'}. "
-                f"Abuse={abuse_score}/100, Fraud={fraud_score}/100, "
+                f"Abuse={abuse_score}/100, "
                 f"VT malicious={vt_malicious}, suspicious={vt_suspicious}."
             ),
             "threat_actor_types": ["criminal"] if not is_tor else ["criminal", "activist"],
@@ -486,7 +466,6 @@ def build_stix_bundle(event):
     for src, data in [
         ("GeoIP-ip-api",   geo_clean),
         ("AbuseIPDB",      abuse_clean),
-        ("IPQualityScore", ipqs_clean),
         ("Shodan",         shodan_clean),
         ("VirusTotal",     vt_clean),
     ]:
