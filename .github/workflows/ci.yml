@@ -200,4 +200,5 @@ jobs:
           git add CTI_Storage/ || true
           
           git commit -m "SSC pipeline result (run ${{ github.run_number }})" || echo "Nothing to commit"
+          git pull origin main --rebase
           git push origin main
