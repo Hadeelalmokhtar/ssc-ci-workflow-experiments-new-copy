@@ -1,119 +1,219 @@
 import os
 import json
-import ipaddress
+import tarfile
+import tempfile
+import re
 import pandas as pd
 
-
-
-
+# Define base project paths
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 
+# Path to sandbox (decoy) logs
 DECOY_DIR = os.path.join(ROOT_DIR, "decoy_logs", "decoy_runs")
+
+# Path to stored packages (.tgz files)
+PACKAGE_DIR = os.path.join(ROOT_DIR, "packages", "decoy")
+
+# Output dataset file
 OUTPUT_CSV = os.path.join(ROOT_DIR, "CTI_Storage", "decoy_features.csv")
 
-def is_private_or_local(ip: str) -> int:
-    try:
-        ip_obj = ipaddress.ip_address(ip)
-        return int(
-            ip_obj.is_private or
-            ip_obj.is_loopback or
-            ip_obj.is_link_local or
-            ip_obj.is_multicast
-        )
-    except Exception:
-        return 0
 
-def is_public(ip: str) -> int:
-    try:
-        ip_obj = ipaddress.ip_address(ip)
-        return int(not (
-            ip_obj.is_private or
-            ip_obj.is_loopback or
-            ip_obj.is_link_local or
-            ip_obj.is_multicast
-        ))
-    except Exception:
-        return 0
+# Convert list values into a readable string (listing format)
+def join_list(values):
+    if not values:
+        return "none"
 
-def extract_one(log: dict) -> dict:
-    package = log.get("package", "unknown")
+    clean_values = [str(v) for v in values if v is not None and str(v).strip() != ""]
+    return " | ".join(clean_values) if clean_values else "none"
 
-    processes = log.get("processes", []) or []
-    files = log.get("files", []) or []
-    domains = log.get("domains", []) or []
-    dns = log.get("dns", []) or []
-    http_requests = log.get("http_requests", []) or []
-    decoded_payloads = log.get("decoded_payloads", []) or []
-    network_details = log.get("network_details", []) or []
-    timeline = log.get("timeline", []) or []
 
-    ips = [x.get("ip") for x in network_details if isinstance(x, dict) and x.get("ip")]
-    countries = [x.get("country") for x in network_details if isinstance(x, dict) and x.get("country")]
+# Extract the original package name from the package file
+def get_original_package_name(package_file):
+    package_path = os.path.join(PACKAGE_DIR, package_file)
 
-    timeline_events = [t.get("event", "") for t in timeline if isinstance(t, dict)]
+    # If file does not exist, return the file name
+    if not os.path.exists(package_path):
+        return package_file
 
-    num_public_ips = sum(is_public(ip) for ip in ips)
-    num_private_or_local_ips = sum(is_private_or_local(ip) for ip in ips)
+    # Handle npm packages (.tgz)
+    if package_file.endswith(".tgz") or package_file.endswith(".tar.gz"):
+        try:
+            # Extract to a temporary directory
+            with tempfile.TemporaryDirectory() as temp_dir:
+                with tarfile.open(package_path, "r:gz") as tar:
+                    tar.extractall(temp_dir)
 
-    has_node_process = int(any("node" == str(p).strip().lower() for p in processes))
-    has_execve = int(any("execve(" in e for e in timeline_events))
-    has_openat = int(any("openat(" in e for e in timeline_events))
-    has_access_ld_preload = int(any("/etc/ld.so.preload" in e for e in timeline_events))
+                # Search for package.json
+                for root, _, files in os.walk(temp_dir):
+                    if "package.json" in files:
+                        pkg_json = os.path.join(root, "package.json")
 
-    row = {
-        "package_name": package,
+                        with open(pkg_json, "r", encoding="utf-8", errors="ignore") as f:
+                            data = json.load(f)
 
-        # counts
-        "decoy_num_processes": len(processes),
-        "decoy_num_files": len(files),
-        "decoy_num_domains": len(domains),
-        "decoy_num_dns": len(dns),
-        "decoy_num_http_requests": len(http_requests),
-        "decoy_num_payloads": len(decoded_payloads),
-        "decoy_timeline_length": len(timeline),
-        "decoy_num_network_ips": len(ips),
-        "decoy_num_public_ips": num_public_ips,
-        "decoy_num_private_or_local_ips": num_private_or_local_ips,
-        "decoy_num_countries": len(set(countries)),
+                        # Return the original package name
+                        if data.get("name"):
+                            return data["name"]
 
-        # binary flags
-        "decoy_has_processes": int(len(processes) > 0),
-        "decoy_has_files": int(len(files) > 0),
-        "decoy_has_domains": int(len(domains) > 0),
-        "decoy_has_dns": int(len(dns) > 0),
-        "decoy_has_http_requests": int(len(http_requests) > 0),
-        "decoy_has_payloads": int(len(decoded_payloads) > 0),
-        "decoy_has_network": int(len(ips) > 0),
-        "decoy_has_timeline": int(len(timeline) > 0),
+        except Exception:
+            return package_file
 
-        # behavioral indicators
-        "decoy_has_node_process": has_node_process,
-        "decoy_has_execve": has_execve,
-        "decoy_has_openat": has_openat,
-        "decoy_has_access_ld_preload": has_access_ld_preload,
+    # Handle Python packages
+    if package_file.endswith(".py"):
+        try:
+            with open(package_path, "r", encoding="utf-8", errors="ignore") as f:
+                content = f.read()
+
+            # Extract name from setup.py style
+            match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', content)
+            if match:
+                return match.group(1)
+
+        except Exception:
+            pass
+
+    # Fallback
+    return package_file
+
+
+# Extract behavior labels from sandbox findings
+def extract_behavior_labels(behavior_findings):
+    labels = []
+
+    for item in behavior_findings:
+        if isinstance(item, dict):
+            label = item.get("label")
+            if label:
+                labels.append(label)
+        else:
+            labels.append(str(item))
+
+    return labels
+
+
+# Extract attack phases (only phases with activity)
+def extract_phases(behavioral_phases):
+    if not behavioral_phases:
+        return []
+
+    phases = []
+
+    for phase, events in behavioral_phases.items():
+        if events:
+            phases.append(phase)
+
+    return phases
+
+
+# Extract static analysis features
+def extract_static_values(static_analysis):
+    entropy_values = []
+    obfuscation_values = []
+    suspicious_imports = []
+    dynamic_exec_calls = []
+
+    if not static_analysis:
+        return {
+            "static_entropy": "none",
+            "static_obfuscation": "none",
+            "suspicious_imports": "none",
+            "dynamic_exec_calls": "none",
+        }
+
+    for filename, result in static_analysis.items():
+        if "entropy" in result:
+            entropy_values.append(f"{filename}:{result['entropy']}")
+
+        if "has_obfuscation" in result:
+            obfuscation_values.append(f"{filename}:{result['has_obfuscation']}")
+
+        if result.get("suspicious_imports"):
+            suspicious_imports.extend(result["suspicious_imports"])
+
+        if result.get("dynamic_exec_calls"):
+            dynamic_exec_calls.extend(result["dynamic_exec_calls"])
+
+    return {
+        "static_entropy": join_list(entropy_values),
+        "static_obfuscation": join_list(obfuscation_values),
+        "suspicious_imports": join_list(suspicious_imports),
+        "dynamic_exec_calls": join_list(dynamic_exec_calls),
     }
 
-    return row
 
-def main():
-    rows = []
+# Extract network-related features
+def extract_network_values(network_analysis):
+    if not network_analysis:
+        return {
+            "real_domains": "none",
+            "external_ips": "none",
+            "ip_countries": "none",
+            "ip_orgs": "none",
+            "http_summary": "none",
+        }
 
-    os.makedirs("CTI_Storage", exist_ok=True)
+    external_ips = network_analysis.get("external_ips", [])
 
-    for fname in os.listdir(DECOY_DIR):
-        if not fname.endswith(".json"):
+    return {
+        "real_domains": join_list(network_analysis.get("real_domains", [])),
+        "external_ips": join_list([ip.get("ip") for ip in external_ips]),
+        "ip_countries": join_list([ip.get("country") for ip in external_ips if ip.get("country")]),
+        "ip_orgs": join_list([ip.get("org") for ip in external_ips if ip.get("org")]),
+        "http_summary": json.dumps(network_analysis.get("http_summary", {})),
+    }
+
+
+# Build dataset from all decoy logs
+rows = []
+
+if os.path.exists(DECOY_DIR):
+    for log_name in os.listdir(DECOY_DIR):
+        if not log_name.endswith(".json"):
             continue
 
-        fpath = os.path.join(DECOY_DIR, fname)
-        with open(fpath, "r", encoding="utf-8") as f:
+        log_path = os.path.join(DECOY_DIR, log_name)
+
+        # Load log file
+        with open(log_path, "r", encoding="utf-8") as f:
             log = json.load(f)
 
-        rows.append(extract_one(log))
+        # Extract package names
+        package_file = log.get("package_file") or log.get("package", "unknown")
+        package_name = get_original_package_name(package_file)
 
-    df = pd.DataFrame(rows)
-    df.to_csv(OUTPUT_CSV, index=False)
-    print(f"Saved {len(df)} rows to {OUTPUT_CSV}")
+        # Extract features
+        behavior_labels = extract_behavior_labels(log.get("behavior_findings", []))
+        phases = extract_phases(log.get("behavioral_phases", {}))
+        static_values = extract_static_values(log.get("static_analysis", {}))
+        network_values = extract_network_values(log.get("network_analysis", {}))
 
-if __name__ == "__main__":
-    main()
+        # Build dataset row
+        row = {
+            "package": package_name,
+            "package_file": package_file,
+            "label": log.get("verdict", "unknown"),
+
+            "behavior_findings": join_list(behavior_labels),
+            "behavioral_phases": join_list(phases),
+            "accessed_files": join_list(log.get("accessed_files", [])),
+            "decoded_payloads": join_list(log.get("decoded_payloads", [])),
+            "memory_strings": join_list(log.get("memory_strings", [])),
+
+            **network_values,
+            **static_values,
+        }
+
+        rows.append(row)
+
+# Convert to DataFrame
+df = pd.DataFrame(rows)
+
+# Ensure output directory exists
+os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
+
+# Save dataset
+df.to_csv(OUTPUT_CSV, index=False, encoding="utf-8")
+
+print(f"Saved decoy features to: {OUTPUT_CSV}")
+print(f"Rows: {len(df)}")
