@@ -170,7 +170,7 @@ jobs:
             exit 0
           fi
 
-          VERDICT=$(python -c "import json;print(json.load(open('$LOG_FILE')).get('threat_verdict','UNKNOWN'))")
+          VERDICT=$(python -c "import json;print(json.load(open('$LOG_FILE')).get('verdict','UNKNOWN'))")
 
           echo "Sandbox verdict: $VERDICT"
 
