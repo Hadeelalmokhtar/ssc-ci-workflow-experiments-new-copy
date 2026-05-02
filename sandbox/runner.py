@@ -791,12 +791,43 @@ log = {
     "timeline":           timeline,
 }
 
-run_id = str(int(time.time()))
-with open(f"decoy_logs/decoy_runs/log_{run_id}.json", "w") as f:
+#run_id = str(int(time.time()))
+#with open(f"decoy_logs/decoy_runs/log_{run_id}.json", "w") as f:
+#    json.dump(log, f, indent=4, ensure_ascii=False)
+
+#with open("decoy_logs/latest.json", "w") as f:
+#    json.dump(log, f, indent=4, ensure_ascii=False)
+
+#print(f"Saved: {run_id} | Verdict: {verdict} | Score: {score}") 
+# Build a clean package stem from the filename
+# e.g. "lodash-4.17.21.tgz" → "lodash-4.17.21"
+#      "requests-2.31.0.tar.gz" → "requests-2.31.0"
+pkg_basename = os.path.basename(original_input)
+for ext in (".tar.gz", ".tgz", ".whl", ".zip"):
+    if pkg_basename.endswith(ext):
+        pkg_stem = pkg_basename[: -len(ext)]
+        break
+else:
+    pkg_stem = os.path.splitext(pkg_basename)[0]
+
+# Sanitize: keep only alphanumerics, hyphens, dots, underscores
+pkg_stem = re.sub(r"[^\w.\-]", "_", pkg_stem)
+
+# Avoid collisions: if a log for the same package already exists, append _run2, _run3, …
+base_log_path = f"decoy_logs/decoy_runs/{pkg_stem}.json"
+log_path = base_log_path
+run_index = 1
+while os.path.exists(log_path):
+    run_index += 1
+    log_path = f"decoy_logs/decoy_runs/{pkg_stem}_run{run_index}.json"
+
+run_id = os.path.splitext(os.path.basename(log_path))[0]   # human-readable ID for the print
+
+with open(log_path, "w") as f:
     json.dump(log, f, indent=4, ensure_ascii=False)
 
 with open("decoy_logs/latest.json", "w") as f:
     json.dump(log, f, indent=4, ensure_ascii=False)
 
-print(f"Saved: {run_id} | Verdict: {verdict} | Score: {score}")
+print(f"Saved: {log_path} | Verdict: {verdict} | Score: {score}")
 print(f"Network: {len(network_analysis['real_domains'])} real domains, {len(network_analysis['external_ips'])} external IPs")
