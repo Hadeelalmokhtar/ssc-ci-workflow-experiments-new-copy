@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>CTI STIX Dashboard</title>
+<title>HoneyToken Dashboard</title>
 <style>
 body {
     background: #0f172a;
@@ -11,64 +11,64 @@ body {
     padding: 30px;
     margin: 0;
 }
-
+ 
 h1, h3 { margin-top: 0; }
-
+ 
 .top-card {
     background: #1e293b;
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
 }
-
+ 
 .mini-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 12px;
     margin-top: 10px;
 }
-
+ 
 .mini-stat {
     background: #0b1220;
     border-radius: 8px;
     padding: 12px;
 }
-
+ 
 .mini-stat-label {
     color: #94a3b8;
     font-size: 12px;
     margin-bottom: 6px;
 }
-
+ 
 .mini-stat-value {
     font-size: 20px;
     font-weight: bold;
     word-break: break-word;
 }
-
+ 
 .mini-stat-value.red   { color: #f87171; }
 .mini-stat-value.amber { color: #fbbf24; }
 .mini-stat-value.teal  { color: #34d399; }
 .mini-stat-value.blue  { color: #60a5fa; }
-
+ 
 .main-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
     gap: 20px;
     margin-bottom: 20px;
 }
-
+ 
 .card {
     background: #1e293b;
     padding: 20px;
     border-radius: 10px;
 }
-
+ 
 .card h3 {
     color: #ffffff;
     margin-bottom: 14px;
 }
-
+ 
 .list {
     background: #0b1220;
     padding: 14px;
@@ -76,7 +76,7 @@ h1, h3 { margin-top: 0; }
     max-height: 420px;
     overflow: auto;
 }
-
+ 
 .item {
     padding: 12px;
     border-bottom: 1px solid #2b3548;
@@ -86,11 +86,11 @@ h1, h3 { margin-top: 0; }
     border-radius: 8px;
     line-height: 1.7;
 }
-
+ 
 .item:last-child { margin-bottom: 0; border-bottom: none; }
-
+ 
 .empty { color: #94a3b8; font-size: 13px; }
-
+ 
 .badge {
     display: inline-block;
     font-size: 10px;
@@ -106,7 +106,7 @@ h1, h3 { margin-top: 0; }
 .badge-purple { background: #26215c; color: #a78bfa; }
 .badge-blue   { background: #042c53; color: #60a5fa; }
 .badge-gray   { background: #1e293b; color: #94a3b8; border: 1px solid #2b3548; }
-
+ 
 .kv {
     display: flex;
     gap: 8px;
@@ -116,7 +116,7 @@ h1, h3 { margin-top: 0; }
 }
 .kv-k { color: #64748b; min-width: 130px; font-size: 12px; flex-shrink: 0; padding-top: 1px; }
 .kv-v { color: #e2e8f0; font-size: 12px; word-break: break-all; flex: 1; }
-
+ 
 .intel-block {
     background: #0b1220;
     border-radius: 8px;
@@ -124,7 +124,7 @@ h1, h3 { margin-top: 0; }
     margin-top: 8px;
     border: 1px solid #2b3548;
 }
-
+ 
 .intel-title {
     color: #93c5fd;
     font-size: 11px;
@@ -133,7 +133,7 @@ h1, h3 { margin-top: 0; }
     text-transform: uppercase;
     letter-spacing: .05em;
 }
-
+ 
 .section-title {
     color: #93c5fd;
     font-size: 11px;
@@ -142,7 +142,7 @@ h1, h3 { margin-top: 0; }
     text-transform: uppercase;
     letter-spacing: .05em;
 }
-
+ 
 .bundle-header {
     cursor: pointer;
     display: flex;
@@ -155,7 +155,7 @@ h1, h3 { margin-top: 0; }
 .bundle-body.open { display: block; }
 .arrow { font-size: 11px; color: #64748b; transition: transform .2s; margin-left: auto; }
 .arrow.open { transform: rotate(90deg); }
-
+ 
 .bar-row {
     display: flex;
     align-items: center;
@@ -167,9 +167,9 @@ h1, h3 { margin-top: 0; }
 .bar-track { flex: 1; height: 10px; background: #07101f; border-radius: 5px; overflow: hidden; }
 .bar-fill  { height: 100%; border-radius: 5px; }
 .bar-count { color: #64748b; width: 24px; text-align: right; flex-shrink: 0; }
-
+ 
 .divider { border: none; border-top: 1px solid #2b3548; margin: 10px 0; }
-
+ 
 .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
 .fbtn {
     font-size: 11px; padding: 4px 12px; border-radius: 20px;
@@ -178,21 +178,21 @@ h1, h3 { margin-top: 0; }
 }
 .fbtn:hover { background: #1e293b; }
 .fbtn.active { background: #042c53; color: #60a5fa; border-color: #185FA5; font-weight: bold; }
-
+ 
 .nested { border-left: 2px solid #2b3548; padding-left: 10px; margin: 4px 0; }
-
+ 
 .list::-webkit-scrollbar { width: 4px; }
 .list::-webkit-scrollbar-track { background: transparent; }
 .list::-webkit-scrollbar-thumb { background: #2b3548; border-radius: 2px; }
-
+ 
 .mono { font-family: 'Courier New', monospace; font-size: 11px; color: #94a3b8; white-space: pre-wrap; word-break: break-all; max-height: 220px; overflow: auto; }
 </style>
 </head>
 <body>
-
-<h1>SSC Honeytoken STIX Dashboard</h1>
+ 
+<h1>HoneyToken Dashboard</h1>
 <p style="color:#64748b;margin-top:-10px;margin-bottom:20px;font-size:13px" id="subTitle">Loading CTI_Storage/CTI_STIX.json …</p>
-
+ 
 <!-- Metrics -->
 <div class="top-card">
     <div class="mini-grid">
@@ -222,8 +222,8 @@ h1, h3 { margin-top: 0; }
         </div>
     </div>
 </div>
-
-<!-- Charts + lists -->
+ 
+<!-- Row 1: charts + IPs -->
 <div class="main-grid">
     <div class="card">
         <h3>Hits by Endpoint</h3>
@@ -237,26 +237,30 @@ h1, h3 { margin-top: 0; }
         <h3>Top Attacking IPs</h3>
         <div class="list" id="listIPs"></div>
     </div>
+</div>
+ 
+<!-- Row 2: Timeline same level as other cards -->
+<div class="main-grid">
     <div class="card">
         <h3>Timeline</h3>
         <div class="list" id="listTimeline"></div>
     </div>
 </div>
-
+ 
 <!-- All bundles -->
 <div class="card">
     <h3>All Bundles</h3>
     <div class="filter-bar" id="filterBar"></div>
     <div class="list" id="listBundles"></div>
 </div>
-
+ 
 <script>
 // ============================================================
 // STATE
 // ============================================================
 var allBundles = [];
 var activeFilter = 'all';
-
+ 
 var FILTERS = [
     { k:'all',     label:'All' },
     { k:'high',    label:'High Confidence' },
@@ -267,7 +271,7 @@ var FILTERS = [
     { k:'config',  label:'Config Probe' },
     { k:'cred',    label:'Credential Misuse' },
 ];
-
+ 
 // ============================================================
 // UTILS
 // ============================================================
@@ -276,7 +280,7 @@ function esc(s) {
         .replace(/&/g,'&amp;').replace(/</g,'&lt;')
         .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
-
+ 
 function fmtTs(ts) {
     if (!ts) return '—';
     try {
@@ -284,7 +288,7 @@ function fmtTs(ts) {
             { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
     } catch(e) { return ts; }
 }
-
+ 
 function chipColor(label) {
     var l = (label || '').toLowerCase();
     if (l.includes('malicious') || l.includes('tor') || l.includes('danger')) return 'badge-red';
@@ -294,7 +298,7 @@ function chipColor(label) {
     if (l.includes('network') || l.includes('traffic')) return 'badge-blue';
     return 'badge-gray';
 }
-
+ 
 function scoreBadge(key, val) {
     var k = (key || '').toLowerCase();
     var n = Number(val);
@@ -311,7 +315,7 @@ function scoreBadge(key, val) {
     if (k.includes('bot') && val === true) return 'badge-amber';
     return null;
 }
-
+ 
 // ============================================================
 // KV RENDERER — fully dynamic, renders any depth
 // ============================================================
@@ -319,14 +323,14 @@ function renderKV(obj, depth) {
     if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return '';
     depth = depth || 0;
     var html = '';
-
+ 
     Object.entries(obj).forEach(function(entry) {
         var k = entry[0], v = entry[1];
         if (v === null || v === undefined || v === '') return;
-
+ 
         html += '<div class="kv">';
         html += '<div class="kv-k">' + esc(k) + '</div>';
-
+ 
         if (Array.isArray(v)) {
             if (v.length === 0) {
                 html += '<div class="kv-v" style="color:#64748b">[ ]</div>';
@@ -368,13 +372,13 @@ function renderKV(obj, depth) {
                 html += '<div class="kv-v">' + str + '</div>';
             }
         }
-
+ 
         html += '</div>';
     });
-
+ 
     return html;
 }
-
+ 
 // ============================================================
 // RENDER ONE BUNDLE CARD
 // ============================================================
@@ -387,7 +391,7 @@ function renderBundle(bundle, idx) {
     var observed  = objs.find(function(o){ return o.type === 'observed-data'; });
     var notes     = objs.filter(function(o){ return o.type === 'note'; });
     var rels      = objs.filter(function(o){ return o.type === 'relationship'; });
-
+ 
     var ipVal  = (ip && ip.value) ? ip.value : '?';
     var ep     = (net && net.extensions && net.extensions['http-request-ext'])
                  ? net.extensions['http-request-ext'].request_value
@@ -397,10 +401,10 @@ function renderBundle(bundle, idx) {
     var conf   = indicator ? (indicator.confidence || 0) : 0;
     var isHigh = conf >= 80;
     var dotColor = isHigh ? '#f87171' : labels.includes('tor-exit-node') ? '#fbbf24' : '#34d399';
-
+ 
     var cardId = 'bc_' + idx;
     var html = '<div class="item">';
-
+ 
     // Header
     html += '<div class="bundle-header" onclick="toggleBundle(\'' + cardId + '\')">';
     html += '<span style="width:8px;height:8px;border-radius:50%;background:' + dotColor + ';display:inline-block;flex-shrink:0"></span>';
@@ -415,10 +419,10 @@ function renderBundle(bundle, idx) {
     html += '<span style="color:#64748b;font-size:11px;white-space:nowrap">' + esc(fmtTs(ts)) + '</span>';
     html += '<span class="arrow" id="arr_' + cardId + '">▶</span>';
     html += '</div>';
-
+ 
     // Body
     html += '<div class="bundle-body" id="' + cardId + '">';
-
+ 
     // IP
     if (ip) {
         html += '<div class="section-title">IP Address</div>';
@@ -428,7 +432,7 @@ function renderBundle(bundle, idx) {
         });
         html += renderKV(ipFields, 0);
     }
-
+ 
     // Request
     if (net) {
         html += '<div class="divider"></div><div class="section-title">HTTP Request</div>';
@@ -445,7 +449,7 @@ function renderBundle(bundle, idx) {
         });
         html += renderKV(reqFields, 0);
     }
-
+ 
     // Indicator
     if (indicator) {
         html += '<div class="divider"></div><div class="section-title">Indicator</div>';
@@ -456,7 +460,7 @@ function renderBundle(bundle, idx) {
         });
         html += renderKV(indFields, 0);
     }
-
+ 
     // Observed data
     if (observed) {
         html += '<div class="divider"></div><div class="section-title">Observed Data</div>';
@@ -467,7 +471,7 @@ function renderBundle(bundle, idx) {
         });
         html += renderKV(obsFields, 0);
     }
-
+ 
     // Threat actor
     if (ta) {
         html += '<div class="divider"></div><div class="section-title">Threat Actor</div>';
@@ -478,7 +482,7 @@ function renderBundle(bundle, idx) {
         });
         html += renderKV(taFields, 0);
     }
-
+ 
     // Intel notes — ALL fields from ALL sources rendered dynamically
     if (notes.length > 0) {
         html += '<div class="divider"></div><div class="section-title">Intel Sources (' + notes.length + ')</div>';
@@ -486,17 +490,17 @@ function renderBundle(bundle, idx) {
             var src = note.abstract || (note.labels && note.labels[0]) || 'source';
             html += '<div class="intel-block">';
             html += '<div class="intel-title">' + esc(src) + '</div>';
-
+ 
             var parsed = null;
             try { parsed = JSON.parse(note.content); } catch(e) {}
-
+ 
             if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
                 // Render every field that came from the intel source — nothing hardcoded
                 html += renderKV(parsed, 0);
             } else if (note.content) {
                 html += '<div class="mono">' + esc(note.content) + '</div>';
             }
-
+ 
             // Any extra custom fields on the note itself
             var extraSkip = ['type','spec_version','id','created','modified','created_by_ref','object_refs','abstract','content','labels'];
             Object.entries(note).forEach(function(e){
@@ -504,11 +508,11 @@ function renderBundle(bundle, idx) {
                     html += '<div class="kv"><div class="kv-k">' + esc(e[0]) + '</div><div class="kv-v">' + esc(String(e[1])) + '</div></div>';
                 }
             });
-
+ 
             html += '</div>';
         });
     }
-
+ 
     // Relationships
     if (rels.length > 0) {
         html += '<div class="divider"></div><div class="section-title">Relationships</div>';
@@ -521,18 +525,18 @@ function renderBundle(bundle, idx) {
             html += '</div>';
         });
     }
-
+ 
     html += '</div></div>';
     return html;
 }
-
+ 
 function toggleBundle(id) {
     var body = document.getElementById(id);
     var arr  = document.getElementById('arr_' + id);
     var open = body.classList.toggle('open');
     arr.classList.toggle('open', open);
 }
-
+ 
 // ============================================================
 // FILTER
 // ============================================================
@@ -552,19 +556,19 @@ function matchesFilter(bundle, f) {
     if (f === 'cred')    return net && net.x_event_type === 'credential_misuse';
     return true;
 }
-
+ 
 function renderFilterBar() {
     document.getElementById('filterBar').innerHTML = FILTERS.map(function(f) {
         return '<button class="fbtn' + (f.k === activeFilter ? ' active' : '') + '" onclick="setFilter(\'' + f.k + '\')">' + esc(f.label) + '</button>';
     }).join('');
 }
-
+ 
 function setFilter(k) {
     activeFilter = k;
     renderFilterBar();
     applyFilter();
 }
-
+ 
 function applyFilter() {
     var filtered = allBundles.filter(function(b){ return matchesFilter(b, activeFilter); });
     var el = document.getElementById('listBundles');
@@ -574,7 +578,7 @@ function applyFilter() {
     }
     el.innerHTML = filtered.slice().reverse().map(function(b, i){ return renderBundle(b, i); }).join('');
 }
-
+ 
 // ============================================================
 // BAR CHART
 // ============================================================
@@ -592,7 +596,7 @@ function renderBar(containerId, data, colorFn) {
         '</div>';
     }).join('');
 }
-
+ 
 // ============================================================
 // MAIN LOAD + RENDER
 // ============================================================
@@ -608,62 +612,64 @@ async function load() {
         console.error(err);
     }
 }
-
+ 
 function render() {
     var uniqueIPs = new Set();
     var highConf = 0, torVpn = 0;
     var endpointCounts = {}, countryCounts = {}, ipCounts = {};
-
+ 
     allBundles.forEach(function(b) {
         var objs      = b.objects || [];
         var ip        = objs.find(function(o){ return o.type === 'ipv4-addr'; });
         var net       = objs.find(function(o){ return o.type === 'network-traffic'; });
         var indicator = objs.find(function(o){ return o.type === 'indicator'; });
-
+ 
         if (ip && ip.value) {
             uniqueIPs.add(ip.value);
             ipCounts[ip.value] = (ipCounts[ip.value] || 0) + 1;
         }
-
+ 
         var conf = indicator ? (indicator.confidence || 0) : 0;
         if (conf >= 80) highConf++;
-
+ 
         var labels = indicator ? (indicator.labels || []) : [];
         if (labels.includes('tor-exit-node') || labels.includes('vpn')) torVpn++;
-
+ 
         var epRaw = (net && net.extensions && net.extensions['http-request-ext'])
                     ? net.extensions['http-request-ext'].request_value : 'unknown';
         var ep = (epRaw || 'unknown').split('/').filter(Boolean)[0] || 'unknown';
+        // Friendly label for endpoint chart
+        if (ep === 'api') ep = 'Admin token';
         endpointCounts[ep] = (endpointCounts[ep] || 0) + 1;
-
+ 
         var country = (ip && ip.x_country) ? ip.x_country : 'Unknown';
         countryCounts[country] = (countryCounts[country] || 0) + 1;
     });
-
+ 
     // Metrics
     document.getElementById('mTotal').textContent = allBundles.length;
     document.getElementById('mIPs').textContent   = uniqueIPs.size;
     document.getElementById('mHigh').textContent  = highConf;
     document.getElementById('mTor').textContent   = torVpn;
-
+ 
     var sortedIPs = Object.entries(ipCounts).sort(function(a,b){ return b[1]-a[1]; });
     document.getElementById('mTopIP').textContent = sortedIPs.length
         ? sortedIPs[0][0] + ' (' + sortedIPs[0][1] + 'x)' : '—';
-
+ 
     var sortedEPs = Object.entries(endpointCounts).sort(function(a,b){ return b[1]-a[1]; });
     document.getElementById('mTopEP').textContent = sortedEPs.length
         ? '/' + sortedEPs[0][0] + ' (' + sortedEPs[0][1] + 'x)' : '—';
-
+ 
     document.getElementById('subTitle').textContent =
         allBundles.length + ' bundle' + (allBundles.length !== 1 ? 's' : '') +
         ' loaded · auto-refresh every 10s · last: ' + fmtTs(new Date().toISOString());
-
+ 
     // Charts
     renderBar('chartEndpoint', endpointCounts, function(l) {
         return l.includes('s3') ? '#1D9E75' : l.includes('legacy') || l.includes('config') ? '#fbbf24' : '#a78bfa';
     });
     renderBar('chartCountry', countryCounts, function(){ return '#378ADD'; });
-
+ 
     // Top IPs list
     var ipEl = document.getElementById('listIPs');
     ipEl.innerHTML = sortedIPs.length
@@ -672,7 +678,7 @@ function render() {
                    ' <span style="color:#64748b">→ ' + e[1] + ' hit' + (e[1]!==1?'s':'') + '</span></div>';
           }).join('')
         : '<div class="item empty">No data yet</div>';
-
+ 
     // Timeline
     var tlEl = document.getElementById('listTimeline');
     tlEl.innerHTML = allBundles.slice().reverse().slice(0,15).map(function(b) {
@@ -695,12 +701,12 @@ function render() {
             labels.slice(0,4).map(function(l){ return '<span class="badge ' + chipColor(l) + '">' + esc(l) + '</span>'; }).join('') +
         '</div>';
     }).join('');
-
+ 
     // Bundles
     renderFilterBar();
     applyFilter();
 }
-
+ 
 load();
 setInterval(load, 10000);
 </script>
