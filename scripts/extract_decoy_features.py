@@ -179,8 +179,7 @@ if os.path.exists(DECOY_DIR):
             log = json.load(f)
 
         # Extract package names
-        package_file = log.get("package_file") or log.get("package", "unknown")
-        package_name = get_original_package_name(package_file)
+        package_name = log.get("package", "unknown") 
 
         # Extract features
         behavior_labels = extract_behavior_labels(log.get("behavior_findings", []))
