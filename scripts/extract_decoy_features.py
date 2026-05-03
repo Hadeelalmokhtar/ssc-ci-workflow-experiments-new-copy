@@ -188,20 +188,33 @@ if os.path.exists(DECOY_DIR):
         static_values = extract_static_values(log.get("static_analysis", {}))
         network_values = extract_network_values(log.get("network_analysis", {}))
 
+        # Map verdict to label
+        raw_verdict = log.get("verdict", "unknown").upper()
+        if raw_verdict == "CLEAN":
+            label = "CLEAN"
+        elif raw_verdict == "SUSPICIOUS":
+            label = "SUSPICIOUS"
+        else:
+            # MALICIOUS and UNKNOWN both become MALICIOUS
+            label = "MALICIOUS"
+
         # Build dataset row
         row = {
             "package": package_name,
-            "package_file": package_file,
-            "label": log.get("verdict", "unknown"),
+            "label": label,
 
             "behavior_findings": join_list(behavior_labels),
             "behavioral_phases": join_list(phases),
-            "accessed_files": join_list(log.get("accessed_files", [])),
-            "decoded_payloads": join_list(log.get("decoded_payloads", [])),
-            "memory_strings": join_list(log.get("memory_strings", [])),
+            "accessed_files":    join_list(log.get("accessed_files", [])),
 
-            **network_values,
-            **static_values,
+            "real_domains":       network_values["real_domains"],
+            "external_ips":       network_values["external_ips"],
+            "ip_countries":       network_values["ip_countries"],
+            "ip_orgs":            network_values["ip_orgs"],
+
+            "static_entropy":     static_values["static_entropy"],
+            "suspicious_imports": static_values["suspicious_imports"],
+            "dynamic_exec_calls": static_values["dynamic_exec_calls"],
         }
 
         rows.append(row)
