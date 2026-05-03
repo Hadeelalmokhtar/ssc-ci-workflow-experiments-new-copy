@@ -1,0 +1,51 @@
+{
+    "run_id": "1777768907",
+    "package": "wifitool-0.2.0.tar.gz",
+    "risk_probability": 0.8530485033988953,
+    "prediction": 1,
+    "file_entropy": 4.8777,
+    "execution_time": 1.124,
+    "timestamp": "2026-05-03T00:41:47.027009",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.2105172872543335
+        ],
+        [
+            "num__.md",
+            -0.9929659962654114
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.6130900382995605
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5925206542015076
+        ],
+        [
+            "num__Number of lines in metadata",
+            -0.5716884732246399
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5455270409584045
+        ],
+        [
+            "num__presence of installation script",
+            -0.5239611268043518
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4387468099594116
+        ],
+        [
+            "num__shannon std string source code",
+            -0.43744468688964844
+        ],
+        [
+            "num__bracket ratio q3",
+            0.40957096219062805
+        ]
+    ]
+}
