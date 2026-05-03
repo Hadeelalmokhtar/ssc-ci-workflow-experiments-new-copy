@@ -1,0 +1,51 @@
+{
+    "run_id": "1777767003",
+    "package": "typing-extnesions-99.9.tar.gz",
+    "risk_probability": 0.9904758334159851,
+    "prediction": 1,
+    "file_entropy": 4.847,
+    "execution_time": 2.523,
+    "timestamp": "2026-05-03T00:10:03.822489",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.4562815427780151
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            1.2325859069824219
+        ],
+        [
+            "num__Number of lines in source code",
+            1.1946669816970825
+        ],
+        [
+            "num__.md",
+            0.9732781052589417
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5797373652458191
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.57119220495224
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5478326678276062
+        ],
+        [
+            "num__Number of lines in metadata",
+            -0.5460047721862793
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5390191674232483
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5217081308364868
+        ]
+    ]
+}
