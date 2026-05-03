@@ -1,0 +1,51 @@
+{
+    "run_id": "1777805483",
+    "package": "alrsnlaseast-2.0.tar.gz",
+    "risk_probability": 0.9966802597045898,
+    "prediction": 1,
+    "file_entropy": 4.4177,
+    "execution_time": 1.263,
+    "timestamp": "2026-05-03T10:51:23.265402",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.3057711124420166
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.022565484046936
+        ],
+        [
+            "num__.md",
+            0.9183166027069092
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7769861221313477
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.572980523109436
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5505282878875732
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5314382910728455
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.5200601816177368
+        ],
+        [
+            "num__bracket ratio max",
+            0.4431271255016327
+        ],
+        [
+            "num__shannon mean string source code",
+            0.42946234345436096
+        ]
+    ]
+}
