@@ -1,0 +1,51 @@
+{
+    "run_id": "1777826660",
+    "package": "ng-cat-common-9.89.9.tgz",
+    "risk_probability": 0.9977402687072754,
+    "prediction": 1,
+    "file_entropy": 4.4152,
+    "execution_time": 23.691,
+    "timestamp": "2026-05-03T16:44:20.612511",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.9777817726135254
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0314863920211792
+        ],
+        [
+            "num__.md",
+            0.8248189091682434
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7478852272033691
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.5980372428894043
+        ],
+        [
+            "num__Number of lines in source code",
+            0.5802066326141357
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5619989037513733
+        ],
+        [
+            "num__shannon mean string source code",
+            0.4673512279987335
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4647083580493927
+        ],
+        [
+            "num__Number of Words in metadata",
+            0.36276769638061523
+        ]
+    ]
+}
