@@ -1,0 +1,51 @@
+{
+    "run_id": "1777824715",
+    "package": "acapy-agent-didx-0.0.0.1.tar.gz",
+    "risk_probability": 0.7727063894271851,
+    "prediction": 1,
+    "file_entropy": 4.704,
+    "execution_time": 1.141,
+    "timestamp": "2026-05-03T16:11:55.276543",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.3998411893844604
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.084632158279419
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -1.0336676836013794
+        ],
+        [
+            "num__.md",
+            -0.8820284605026245
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5974059700965881
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5924398899078369
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5437172055244446
+        ],
+        [
+            "num__presence of installation script",
+            -0.5422786474227905
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5255672335624695
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.5005283355712891
+        ]
+    ]
+}
