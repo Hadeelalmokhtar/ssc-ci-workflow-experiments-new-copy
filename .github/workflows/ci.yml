@@ -76,16 +76,20 @@ jobs:
             echo "No package detected → skipping pipeline"
             echo "skip_pipeline=true" >> $GITHUB_OUTPUT
             echo "package_path=" >> $GITHUB_OUTPUT
+            echo "package_name=" >> $GITHUB_OUTPUT
             exit 0
           fi
 
           echo "Package detected: $PACKAGE"
 
+          PKG_NAME=$(basename "$PACKAGE")
+
           echo "skip_pipeline=false" >> $GITHUB_OUTPUT
           echo "package_path=$PACKAGE" >> $GITHUB_OUTPUT
+          echo "package_name=$PKG_NAME" >> $GITHUB_OUTPUT
 
       # =========================
-      # ML GATE (FIXED EXIT CODE)
+      # ML GATE
       # =========================
       - name: ML Security Gate
         id: ml_scan
@@ -100,7 +104,7 @@ jobs:
 
           echo "ML_EXIT_CODE=$RESULT"
           echo "ml_result=$RESULT" >> $GITHUB_OUTPUT
-          
+
       # =========================
       # MOVE TO DECOY (ONLY IF MALICIOUS)
       # =========================
@@ -108,9 +112,8 @@ jobs:
         if: steps.detect_pkg.outputs.skip_pipeline == 'false' && steps.ml_scan.outputs.ml_result != '0'
         run: |
           mkdir -p packages/decoy
-
           mv -f "${{ steps.detect_pkg.outputs.package_path }}" \
-          packages/decoy/package_${{ github.run_number }}.tgz
+          packages/decoy/${{ steps.detect_pkg.outputs.package_name }}
 
       # =========================
       # SANDBOX ONLY IF MALICIOUS
@@ -128,8 +131,8 @@ jobs:
           -v ${{ github.workspace }}:/app \
           ssc-sandbox \
           python sandbox/runner.py \
-          packages/decoy/package_${{ github.run_number }}.tgz
-          
+          packages/decoy/${{ steps.detect_pkg.outputs.package_name }}
+
       # =========================
       # CTI FEATURE EXTRACTION
       # =========================
@@ -158,7 +161,7 @@ jobs:
             mkdir -p packages/releases
 
             mv "${{ steps.detect_pkg.outputs.package_path }}" \
-            packages/releases/package_${{ github.run_number }}.tgz
+            packages/releases/${{ steps.detect_pkg.outputs.package_name }}
 
             exit 0
           fi
@@ -180,8 +183,8 @@ jobs:
 
             mkdir -p packages/releases
 
-            mv packages/decoy/package_${{ github.run_number }}.tgz \
-            packages/releases/package_${{ github.run_number }}.tgz
+            mv packages/decoy/${{ steps.detect_pkg.outputs.package_name }} \
+            packages/releases/${{ steps.detect_pkg.outputs.package_name }}
 
           else
             echo "Still malicious → staying in decoy"
@@ -198,6 +201,6 @@ jobs:
           git add packages/ || true
           git add decoy_logs/ || true
           git add CTI_Storage/ || true
-          
+
           git commit -m "SSC pipeline result (run ${{ github.run_number }})" || echo "Nothing to commit"
           git push origin main
