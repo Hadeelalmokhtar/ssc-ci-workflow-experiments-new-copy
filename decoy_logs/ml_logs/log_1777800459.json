@@ -1,0 +1,51 @@
+{
+    "run_id": "1777800459",
+    "package": "pyiinstaller-0.1.tar.gz",
+    "risk_probability": 0.9575064778327942,
+    "prediction": 1,
+    "file_entropy": 3.7595,
+    "execution_time": 1.691,
+    "timestamp": "2026-05-03T09:27:39.619182",
+    "top_shap": [
+        [
+            "num__shannon mean ID metadata",
+            -1.3926790952682495
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            1.351935625076294
+        ],
+        [
+            "num__Number of lines in source code",
+            1.2368905544281006
+        ],
+        [
+            "num__.md",
+            1.0587955713272095
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.595756471157074
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5525281429290771
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5007641315460205
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.43500062823295593
+        ],
+        [
+            "num__Number of Words in metadata",
+            -0.41729387640953064
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4091411232948303
+        ]
+    ]
+}
