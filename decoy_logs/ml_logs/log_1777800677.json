@@ -1,0 +1,51 @@
+{
+    "run_id": "1777800677",
+    "package": "testepassword-generate-0.1.tar.gz",
+    "risk_probability": 0.8937267065048218,
+    "prediction": 1,
+    "file_entropy": 5.1174,
+    "execution_time": 1.256,
+    "timestamp": "2026-05-03T09:31:17.124364",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.382881999015808
+        ],
+        [
+            "num__.md",
+            1.2314554452896118
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.6005435585975647
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5987941026687622
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5418333411216736
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.4904806911945343
+        ],
+        [
+            "num__plus ratio mean",
+            -0.48226428031921387
+        ],
+        [
+            "num__presence of installation script",
+            -0.46744245290756226
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.4374374449253082
+        ],
+        [
+            "num__Number of lines in metadata",
+            -0.4262947142124176
+        ]
+    ]
+}
