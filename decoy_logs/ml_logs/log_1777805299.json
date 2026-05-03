@@ -1,0 +1,51 @@
+{
+    "run_id": "1777805299",
+    "package": "akh-py-0.0.1.tar.gz",
+    "risk_probability": 0.9801267385482788,
+    "prediction": 1,
+    "file_entropy": 5.1573,
+    "execution_time": 1.113,
+    "timestamp": "2026-05-03T10:48:19.976262",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.1881659030914307
+        ],
+        [
+            "num__.md",
+            -0.932729184627533
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.621259868144989
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5496236681938171
+        ],
+        [
+            "num__homogeneous strings in source code",
+            0.49960842728614807
+        ],
+        [
+            "num__presence of installation script",
+            -0.49206122756004333
+        ],
+        [
+            "num__plus ratio mean",
+            -0.44733670353889465
+        ],
+        [
+            "num__shannon max ID metadata",
+            0.3987064063549042
+        ],
+        [
+            "num__bracket ratio max",
+            0.37089788913726807
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.3345177173614502
+        ]
+    ]
+}
