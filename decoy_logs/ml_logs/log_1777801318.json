@@ -1,0 +1,51 @@
+{
+    "run_id": "1777801318",
+    "package": "henter-1.0.0.tar.gz",
+    "risk_probability": 0.9572094082832336,
+    "prediction": 1,
+    "file_entropy": 5.5009,
+    "execution_time": 1.329,
+    "timestamp": "2026-05-03T09:41:58.177830",
+    "top_shap": [
+        [
+            "num__shannon mean ID metadata",
+            -1.7639919519424438
+        ],
+        [
+            "num__presence of installation script",
+            1.6297671794891357
+        ],
+        [
+            "num__Number of lines in source code",
+            1.2523185014724731
+        ],
+        [
+            "num__.md",
+            0.8796966075897217
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.6003370881080627
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5572409629821777
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            0.5381100177764893
+        ],
+        [
+            "num__Number of lines in metadata",
+            -0.5197620391845703
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.49826279282569885
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4163466989994049
+        ]
+    ]
+}
