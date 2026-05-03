@@ -1,0 +1,51 @@
+{
+    "run_id": "1777769210",
+    "package": "front-locales-9.9.8.tgz",
+    "risk_probability": 0.8363856673240662,
+    "prediction": 1,
+    "file_entropy": 4.9445,
+    "execution_time": 0.89,
+    "timestamp": "2026-05-03T00:46:50.898916",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.3804118633270264
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.062429428100586
+        ],
+        [
+            "num__bracket ratio max",
+            -0.9040630459785461
+        ],
+        [
+            "num__.md",
+            -0.7567430734634399
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.7299681901931763
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.694056510925293
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5215503573417664
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4395381510257721
+        ],
+        [
+            "num__shannon q3 string metadata",
+            -0.393466979265213
+        ],
+        [
+            "num__eq ratio max",
+            -0.3714801073074341
+        ]
+    ]
+}
