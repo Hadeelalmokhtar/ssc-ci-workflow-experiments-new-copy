@@ -1,0 +1,51 @@
+{
+    "run_id": "1777804942",
+    "package": "clean_packager-1.0.0.tar.gz",
+    "risk_probability": 0.9843528866767883,
+    "prediction": 1,
+    "file_entropy": 4.7416,
+    "execution_time": 3.006,
+    "timestamp": "2026-05-03T10:42:22.627978",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.6719962358474731
+        ],
+        [
+            "num__Number of lines in source code",
+            1.13811457157135
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            1.1142479181289673
+        ],
+        [
+            "num__.md",
+            -0.8933345675468445
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5721467137336731
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5704414248466492
+        ],
+        [
+            "num__Number of lines in metadata",
+            -0.5657118558883667
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5465977191925049
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5309547781944275
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5194545984268188
+        ]
+    ]
+}
