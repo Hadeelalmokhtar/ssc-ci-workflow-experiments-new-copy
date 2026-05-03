@@ -752,6 +752,104 @@ graph_data = build_process_graph(
     honeytoken_hits
 )
 # ============================================================
+# HYBRID ANALYSIS CTI ENRICHMENT
+# ============================================================
+
+def query_hybrid_analysis(file_path):
+    """
+    Query Hybrid Analysis API for CTI features useful for ML training.
+    Returns a dict of CTI features or empty dict on failure.
+    """
+    api_key = os.environ.get("HYBRID_ANALYSIS_API_KEY", "")
+    if not api_key:
+        print("[HA] No API key found — skipping Hybrid Analysis")
+        return {}
+
+    try:
+        import hashlib
+        import urllib.parse
+
+        # Calculate SHA256 of the package file
+        sha256 = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                sha256.update(chunk)
+        file_hash = sha256.hexdigest()
+        print(f"[HA] SHA256: {file_hash}")
+
+        headers = {
+            "api-key": api_key,
+            "User-Agent": "Falcon Sandbox",
+            "Accept": "application/json",
+        }
+
+        # Hash lookup
+        url  = "https://www.hybrid-analysis.com/api/v2/search/hash"
+        data = urllib.parse.urlencode({"hash": file_hash}).encode()
+        req  = urllib.request.Request(url, data=data, headers=headers, method="POST")
+
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            results = json.loads(resp.read().decode())
+
+        if not results:
+            print("[HA] Hash not found in Hybrid Analysis database")
+            return {"sha256": file_hash, "found": False}
+
+        # Pick the most complete report (highest threat score)
+        report = max(results, key=lambda r: r.get("threat_score") or 0)
+
+        # Extract CTI features for ML training
+        cti = {
+            "sha256":            file_hash,
+            "found":             True,
+
+            # Verdict & Score
+            "verdict":           report.get("verdict", "unknown"),
+            "threat_score":      report.get("threat_score"),        # 0-100
+            "av_detect":         report.get("av_detect"),           # % AV engines detecting
+
+            # Malware classification
+            "malware_family":    report.get("vx_family"),           # e.g. "Emotet"
+            "threat_level":      report.get("threat_level"),        # 0-3
+
+            # MITRE ATT&CK techniques
+            "mitre_attacks": [
+                a.get("technique") or a.get("attck_id")
+                for a in report.get("mitre_attcks", [])
+                if a.get("technique") or a.get("attck_id")
+            ],
+
+            # Behavioral signatures
+            "signatures": [
+                s.get("name")
+                for s in report.get("signatures", [])
+                if s.get("name")
+            ],
+
+            # Network IOCs
+            "network_hosts":       report.get("hosts", []),
+            "network_domains":     report.get("domains", []),
+            "compromised_hosts":   report.get("compromised_hosts", []),
+
+            # Tags e.g. ["ransomware", "backdoor", "cryptominer"]
+            "tags":                report.get("tags", []),
+        }
+
+        print(f"[HA] Verdict: {cti['verdict']} | Score: {cti['threat_score']} | Family: {cti['malware_family']}")
+        print(f"[HA] MITRE: {cti['mitre_attacks']}")
+        print(f"[HA] Signatures: {cti['signatures'][:5]}")
+
+        return cti
+
+    except Exception as e:
+        print(f"[HA] Error: {e}")
+        return {}
+
+
+# Run Hybrid Analysis on the original package file
+hybrid_analysis_cti = query_hybrid_analysis(original_input)
+
+# ============================================================
 # SAVE RESULTS
 # ============================================================
 
@@ -789,6 +887,9 @@ log = {
     
     # Timeline
     "timeline":           timeline,
+
+    # Hybrid Analysis CTI (external enrichment for ML training)
+    "hybrid_analysis":    hybrid_analysis_cti,
 }
 
 #run_id = str(int(time.time()))
