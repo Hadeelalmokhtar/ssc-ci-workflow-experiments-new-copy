@@ -1,0 +1,51 @@
+{
+    "run_id": "1777828429",
+    "package": "angular_devkit-architect-99.1.1.tgz",
+    "risk_probability": 0.9877222180366516,
+    "prediction": 1,
+    "file_entropy": 5.1044,
+    "execution_time": 135.908,
+    "timestamp": "2026-05-03T17:13:49.885909",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.1171295642852783
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.1026102304458618
+        ],
+        [
+            "num__.md",
+            0.816849946975708
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.800054669380188
+        ],
+        [
+            "num__Number of lines in source code",
+            0.6580386161804199
+        ],
+        [
+            "num__shannon std string source code",
+            -0.5926164984703064
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5870685577392578
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5442854166030884
+        ],
+        [
+            "num__plus ratio mean",
+            -0.4430575966835022
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.43451765179634094
+        ]
+    ]
+}
