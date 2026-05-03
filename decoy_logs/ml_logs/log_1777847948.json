@@ -1,0 +1,51 @@
+{
+    "run_id": "1777847948",
+    "package": "dns-exfil-pkg-1.0.0.tar.gz",
+    "risk_probability": 0.9331242442131042,
+    "prediction": 1,
+    "file_entropy": 4.682,
+    "execution_time": 1.575,
+    "timestamp": "2026-05-03T22:39:08.195659",
+    "top_shap": [
+        [
+            "num__.md",
+            0.9746246337890625
+        ],
+        [
+            "num__Number of lines in source code",
+            0.9293113350868225
+        ],
+        [
+            "num__Number of lines in metadata",
+            0.9045624136924744
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8482848405838013
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5800735950469971
+        ],
+        [
+            "num__presence of installation script",
+            -0.5338961482048035
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4935588538646698
+        ],
+        [
+            "num__bracket ratio q3",
+            -0.4874524772167206
+        ],
+        [
+            "num__shannon std string source code",
+            -0.4529537558555603
+        ],
+        [
+            "num__Number of Words in metadata",
+            0.36727386713027954
+        ]
+    ]
+}
