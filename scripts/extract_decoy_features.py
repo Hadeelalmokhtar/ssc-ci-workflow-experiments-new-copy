@@ -200,6 +200,9 @@ if os.path.exists(DECOY_DIR):
 # Convert to DataFrame
 df = pd.DataFrame(rows)
 
+# Keep only the latest run per package (avoid duplicates)
+df = df.drop_duplicates(subset=["package"], keep="last")
+
 # Ensure output directory exists
 os.makedirs(os.path.dirname(OUTPUT_CSV), exist_ok=True)
 
