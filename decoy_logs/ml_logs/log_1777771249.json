@@ -1,0 +1,51 @@
+{
+    "run_id": "1777771249",
+    "package": "watermark-1.0.1.tgz",
+    "risk_probability": 0.594078540802002,
+    "prediction": 1,
+    "file_entropy": 5.4089,
+    "execution_time": 1.129,
+    "timestamp": "2026-05-03T01:20:49.276961",
+    "top_shap": [
+        [
+            "num__Number of lines in source code",
+            1.3376731872558594
+        ],
+        [
+            "num__Number of lines in metadata",
+            0.9317827820777893
+        ],
+        [
+            "num__.md",
+            -0.89153653383255
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7727285623550415
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.7469658851623535
+        ],
+        [
+            "num__presence of installation script",
+            -0.6020862460136414
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5782697796821594
+        ],
+        [
+            "num__bracket ratio q3",
+            -0.45118170976638794
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4426221549510956
+        ],
+        [
+            "num__Number of Words in metadata",
+            0.38389432430267334
+        ]
+    ]
+}
