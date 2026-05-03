@@ -1,0 +1,51 @@
+{
+    "run_id": "1777847090",
+    "package": "test-network-package-1.0.0.tgz",
+    "risk_probability": 0.9985606074333191,
+    "prediction": 1,
+    "file_entropy": 5.1182,
+    "execution_time": 400.907,
+    "timestamp": "2026-05-03T22:24:50.756565",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.826001763343811
+        ],
+        [
+            "num__Number of lines in source code",
+            1.1768399477005005
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.0621414184570312
+        ],
+        [
+            "num__.md",
+            0.8494924306869507
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7736055850982666
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5740862488746643
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5695406794548035
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5181856751441956
+        ],
+        [
+            "num__shannon std string source code",
+            -0.49498340487480164
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.4826127588748932
+        ]
+    ]
+}
