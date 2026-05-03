@@ -789,7 +789,22 @@ log = {
     
     # Timeline
     "timeline":           timeline,
+
+     # ── Behaviour enriched ──────────────────────────────────────
+    "behavior_score":     score,
+    "behavior_tiers":     [f.get("tier","")   for f in behavior_findings if isinstance(f, dict)],
+    "behavior_weights":   [f.get("weight", 0) for f in behavior_findings if isinstance(f, dict)],
+ 
+    # ── DNS captured by fake DNS server ─────────────────────────
+    "dns_queries":        [d.get("query","")  for d in captured_dns      if d.get("query")],
+ 
+    # ── HTTP captured by fake HTTP server ────────────────────────
+    "http_hosts":         [r.get("host","")   for r in captured_requests if r.get("host")],
+    "http_methods":       [r.get("method","") for r in captured_requests if r.get("method")],
+    "http_paths":         [r.get("path","")   for r in captured_requests if r.get("path")],
 }
+
+
 
 #run_id = str(int(time.time()))
 #with open(f"decoy_logs/decoy_runs/log_{run_id}.json", "w") as f:
