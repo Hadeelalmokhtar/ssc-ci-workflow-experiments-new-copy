@@ -129,6 +129,7 @@ jobs:
         run: |
           docker run --rm \
           -v ${{ github.workspace }}:/app \
+          -e HYBRID_ANALYSIS_API_KEY=${{ secrets.HYBRID_ANALYSIS_API_KEY }} \
           ssc-sandbox \
           python sandbox/runner.py \
           packages/decoy/${{ steps.detect_pkg.outputs.package_name }}
