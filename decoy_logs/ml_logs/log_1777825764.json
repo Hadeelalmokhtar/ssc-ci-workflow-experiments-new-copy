@@ -1,0 +1,51 @@
+{
+    "run_id": "1777825764",
+    "package": "one-site-europcar-2.93.1.tgz",
+    "risk_probability": 0.9989359974861145,
+    "prediction": 1,
+    "file_entropy": 4.6707,
+    "execution_time": 1.496,
+    "timestamp": "2026-05-03T16:29:24.810627",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.086169719696045
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.1017729043960571
+        ],
+        [
+            "num__.md",
+            0.8066273927688599
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7576162815093994
+        ],
+        [
+            "num__Number of lines in source code",
+            0.7382495999336243
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.576956033706665
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5476756691932678
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.5440691113471985
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.4937642514705658
+        ],
+        [
+            "num__Number of Words in metadata",
+            0.39459744095802307
+        ]
+    ]
+}
