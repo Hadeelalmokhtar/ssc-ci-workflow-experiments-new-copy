@@ -1,0 +1,51 @@
+{
+    "run_id": "1777827451",
+    "package": "indigo-web-material-2.4.3.tgz",
+    "risk_probability": 0.9916629791259766,
+    "prediction": 1,
+    "file_entropy": 4.7244,
+    "execution_time": 0.829,
+    "timestamp": "2026-05-03T16:57:31.587138",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.926663875579834
+        ],
+        [
+            "num__Number of lines in source code",
+            1.2207008600234985
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.1201822757720947
+        ],
+        [
+            "num__.md",
+            0.87642902135849
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8719803094863892
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5839540958404541
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5473642945289612
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.49402880668640137
+        ],
+        [
+            "num__plus ratio mean",
+            -0.48546457290649414
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.39527997374534607
+        ]
+    ]
+}
