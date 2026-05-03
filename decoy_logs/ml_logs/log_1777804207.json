@@ -1,0 +1,51 @@
+{
+    "run_id": "1777804207",
+    "package": "fakeuseragent-0.1.1.tar.gz",
+    "risk_probability": 0.9713051319122314,
+    "prediction": 1,
+    "file_entropy": 4.7041,
+    "execution_time": 1.622,
+    "timestamp": "2026-05-03T10:30:07.150529",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            1.6756144762039185
+        ],
+        [
+            "num__Number of lines in source code",
+            1.185339093208313
+        ],
+        [
+            "num__.md",
+            0.9179115295410156
+        ],
+        [
+            "num__shannon std string source code",
+            -0.6171771883964539
+        ],
+        [
+            "num__heterogeneous strings in source code",
+            -0.5917108654975891
+        ],
+        [
+            "num__shannon mean ID source code",
+            -0.5738428831100464
+        ],
+        [
+            "num__Number of lines in metadata",
+            -0.5333393812179565
+        ],
+        [
+            "num__shannon std ID source code",
+            0.3939249515533447
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            0.3929685652256012
+        ],
+        [
+            "num__bracket ratio q3",
+            0.3851434290409088
+        ]
+    ]
+}
