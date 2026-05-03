@@ -1,0 +1,51 @@
+{
+    "run_id": "1777846375",
+    "package": "data-exfil-pkg-1.0.0.tar.gz",
+    "risk_probability": 0.8336002826690674,
+    "prediction": 1,
+    "file_entropy": 4.6722,
+    "execution_time": 0.886,
+    "timestamp": "2026-05-03T22:12:55.744852",
+    "top_shap": [
+        [
+            "num__Number of lines in metadata",
+            1.0056082010269165
+        ],
+        [
+            "num__.md",
+            0.9210398197174072
+        ],
+        [
+            "num__bracket ratio max",
+            -0.9183308482170105
+        ],
+        [
+            "num__Number of lines in source code",
+            0.9040680527687073
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.8464945554733276
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.702093780040741
+        ],
+        [
+            "num__shannon std string source code",
+            -0.6155562996864319
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5599908828735352
+        ],
+        [
+            "num__presence of installation script",
+            -0.5567970275878906
+        ],
+        [
+            "num__bracket ratio q3",
+            -0.5514677166938782
+        ]
+    ]
+}
