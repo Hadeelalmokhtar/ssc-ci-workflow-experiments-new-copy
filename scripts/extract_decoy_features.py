@@ -28,55 +28,6 @@ def join_list(values):
     return " | ".join(clean_values) if clean_values else "none"
 
 
-# Extract the original package name from the package file
-def get_original_package_name(package_file):
-    package_path = os.path.join(PACKAGE_DIR, package_file)
-
-    # If file does not exist, return the file name
-    if not os.path.exists(package_path):
-        return package_file
-
-    # Handle npm packages (.tgz)
-    if package_file.endswith(".tgz") or package_file.endswith(".tar.gz"):
-        try:
-            # Extract to a temporary directory
-            with tempfile.TemporaryDirectory() as temp_dir:
-                with tarfile.open(package_path, "r:gz") as tar:
-                    tar.extractall(temp_dir)
-
-                # Search for package.json
-                for root, _, files in os.walk(temp_dir):
-                    if "package.json" in files:
-                        pkg_json = os.path.join(root, "package.json")
-
-                        with open(pkg_json, "r", encoding="utf-8", errors="ignore") as f:
-                            data = json.load(f)
-
-                        # Return the original package name
-                        if data.get("name"):
-                            return data["name"]
-
-        except Exception:
-            return package_file
-
-    # Handle Python packages
-    if package_file.endswith(".py"):
-        try:
-            with open(package_path, "r", encoding="utf-8", errors="ignore") as f:
-                content = f.read()
-
-            # Extract name from setup.py style
-            match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', content)
-            if match:
-                return match.group(1)
-
-        except Exception:
-            pass
-
-    # Fallback
-    return package_file
-
-
 # Extract behavior labels from sandbox findings
 def extract_behavior_labels(behavior_findings):
     labels = []
@@ -109,14 +60,12 @@ def extract_phases(behavioral_phases):
 # Extract static analysis features
 def extract_static_values(static_analysis):
     entropy_values = []
-    obfuscation_values = []
     suspicious_imports = []
     dynamic_exec_calls = []
 
     if not static_analysis:
         return {
-            "static_entropy": "none",
-            "static_obfuscation": "none",
+            "static_entropy":     "none",
             "suspicious_imports": "none",
             "dynamic_exec_calls": "none",
         }
@@ -125,9 +74,6 @@ def extract_static_values(static_analysis):
         if "entropy" in result:
             entropy_values.append(f"{filename}:{result['entropy']}")
 
-        if "has_obfuscation" in result:
-            obfuscation_values.append(f"{filename}:{result['has_obfuscation']}")
-
         if result.get("suspicious_imports"):
             suspicious_imports.extend(result["suspicious_imports"])
 
@@ -135,8 +81,7 @@ def extract_static_values(static_analysis):
             dynamic_exec_calls.extend(result["dynamic_exec_calls"])
 
     return {
-        "static_entropy": join_list(entropy_values),
-        "static_obfuscation": join_list(obfuscation_values),
+        "static_entropy":     join_list(entropy_values),
         "suspicious_imports": join_list(suspicious_imports),
         "dynamic_exec_calls": join_list(dynamic_exec_calls),
     }
@@ -149,8 +94,7 @@ def extract_network_values(network_analysis):
             "real_domains": "none",
             "external_ips": "none",
             "ip_countries": "none",
-            "ip_orgs": "none",
-            "http_summary": "none",
+            "ip_orgs":      "none",
         }
 
     external_ips = network_analysis.get("external_ips", [])
@@ -159,8 +103,36 @@ def extract_network_values(network_analysis):
         "real_domains": join_list(network_analysis.get("real_domains", [])),
         "external_ips": join_list([ip.get("ip") for ip in external_ips]),
         "ip_countries": join_list([ip.get("country") for ip in external_ips if ip.get("country")]),
-        "ip_orgs": join_list([ip.get("org") for ip in external_ips if ip.get("org")]),
-        "http_summary": json.dumps(network_analysis.get("http_summary", {})),
+        "ip_orgs":      join_list([ip.get("org") for ip in external_ips if ip.get("org")]),
+    }
+
+
+# Extract Hybrid Analysis CTI features
+def extract_ha_values(ha):
+    if not ha or not ha.get("found"):
+        return {
+            "ha_verdict":         "none",
+            "ha_threat_score":    None,
+            "ha_av_detect":       None,
+            "ha_malware_family":  "none",
+            "ha_threat_level":    None,
+            "ha_mitre_attacks":   "none",
+            "ha_signatures":      "none",
+            "ha_network_hosts":   "none",
+            "ha_network_domains": "none",
+            "ha_tags":            "none",
+        }
+    return {
+        "ha_verdict":         ha.get("verdict", "none"),
+        "ha_threat_score":    ha.get("threat_score"),
+        "ha_av_detect":       ha.get("av_detect"),
+        "ha_malware_family":  ha.get("malware_family", "none"),
+        "ha_threat_level":    ha.get("threat_level"),
+        "ha_mitre_attacks":   join_list(ha.get("mitre_attacks", [])),
+        "ha_signatures":      join_list(ha.get("signatures", [])),
+        "ha_network_hosts":   join_list(ha.get("network_hosts", [])),
+        "ha_network_domains": join_list(ha.get("network_domains", [])),
+        "ha_tags":            join_list(ha.get("tags", [])),
     }
 
 
@@ -178,14 +150,15 @@ if os.path.exists(DECOY_DIR):
         with open(log_path, "r", encoding="utf-8") as f:
             log = json.load(f)
 
-        # Extract package names
-        package_name = log.get("package", "unknown") 
+        # Package name is already stored in the log
+        package_name = log.get("package", "unknown")
 
         # Extract features
         behavior_labels = extract_behavior_labels(log.get("behavior_findings", []))
-        phases = extract_phases(log.get("behavioral_phases", {}))
-        static_values = extract_static_values(log.get("static_analysis", {}))
-        network_values = extract_network_values(log.get("network_analysis", {}))
+        phases          = extract_phases(log.get("behavioral_phases", {}))
+        static_values   = extract_static_values(log.get("static_analysis", {}))
+        network_values  = extract_network_values(log.get("network_analysis", {}))
+        ha_values       = extract_ha_values(log.get("hybrid_analysis", {}))
 
         # Map verdict to label
         raw_verdict = log.get("verdict", "unknown").upper()
@@ -194,26 +167,32 @@ if os.path.exists(DECOY_DIR):
         elif raw_verdict == "SUSPICIOUS":
             label = "SUSPICIOUS"
         else:
-            # MALICIOUS and UNKNOWN both become MALICIOUS
             label = "MALICIOUS"
 
         # Build dataset row
         row = {
-            "package": package_name,
-            "label": label,
+            # Identity
+            "package":            package_name,
+            "label":              label,
 
-            "behavior_findings": join_list(behavior_labels),
-            "behavioral_phases": join_list(phases),
-            "accessed_files":    join_list(log.get("accessed_files", [])),
+            # Sandbox behavioral features
+            "behavior_findings":  join_list(behavior_labels),
+            "behavioral_phases":  join_list(phases),
+            "accessed_files":     join_list(log.get("accessed_files", [])),
 
+            # Network features
             "real_domains":       network_values["real_domains"],
             "external_ips":       network_values["external_ips"],
             "ip_countries":       network_values["ip_countries"],
             "ip_orgs":            network_values["ip_orgs"],
 
+            # Static analysis features
             "static_entropy":     static_values["static_entropy"],
             "suspicious_imports": static_values["suspicious_imports"],
             "dynamic_exec_calls": static_values["dynamic_exec_calls"],
+
+            # Hybrid Analysis CTI features
+            **ha_values,
         }
 
         rows.append(row)
