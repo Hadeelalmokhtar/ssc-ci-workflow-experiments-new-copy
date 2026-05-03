@@ -6,13 +6,13 @@
 <style>
 /* ── Tab shell only — no interference with inner dashboards ── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
 body {
     background: #060b14;
     font-family: Arial, sans-serif;
     min-height: 100vh;
 }
- 
+
 /* ── Top tab bar ── */
 #tab-bar {
     display: flex;
@@ -26,7 +26,7 @@ body {
     z-index: 99999;
     height: 52px;
 }
- 
+
 .tab-logo {
     font-family: 'Courier New', monospace;
     font-size: 12px;
@@ -37,7 +37,7 @@ body {
     white-space: nowrap;
 }
 .tab-logo span { color: #5a7a9a; }
- 
+
 .tab-btn {
     display: flex;
     align-items: center;
@@ -85,9 +85,9 @@ body {
     color: #ff4e6a;
     border-bottom-color: #ff4e6a;
 }
- 
+
 .tab-spacer { flex: 1; }
- 
+
 /* ── Dashboard panels ── */
 .dash-panel {
     display: none;
@@ -95,7 +95,7 @@ body {
 .dash-panel.active {
     display: block;
 }
- 
+
 /* ── Isolate each dashboard's styles via scoped wrappers ── */
 /* Panel 1 inherits its own body styles via the wrapper */
 #panel-honeytoken {
@@ -107,29 +107,29 @@ body {
 </style>
 </head>
 <body>
- 
+
 <!-- ══════════════════════════════════════════
      SHARED TAB BAR
 ════════════════════════════════════════════ -->
 <div id="tab-bar">
     <div class="tab-logo">SSC<span>/</span>SECURITY</div>
- 
+
     <button class="tab-btn active" onclick="switchTab('honeytoken', this)">
         <span class="tab-dot"></span>
         HoneyToken Dashboard
     </button>
- 
+
     <button class="tab-btn" onclick="switchTab('decoy', this)">
         <span class="tab-dot"></span>
         Decoy System Dashboard
     </button>
- 
+
     <div class="tab-spacer"></div>
- 
+
     <div style="font-family:'Courier New',monospace;font-size:11px;color:#5a7a9a;letter-spacing:.08em" id="tab-clock"></div>
 </div>
- 
- 
+
+
 <!-- ══════════════════════════════════════════
      PANEL 1 — HONEYTOKEN DASHBOARD
      (original code untouched, only wrapped)
@@ -139,7 +139,7 @@ body {
 <style>
 /* Scoped to panel-honeytoken to avoid leaking into decoy panel */
 #panel-honeytoken h1, #panel-honeytoken h3 { margin-top: 0; }
- 
+
 #panel-honeytoken .top-card {
     background: #1e293b;
     padding: 20px;
@@ -244,12 +244,12 @@ body {
 #panel-honeytoken .list::-webkit-scrollbar-thumb { background: #2b3548; border-radius: 2px; }
 #panel-honeytoken .mono { font-family: 'Courier New', monospace; font-size: 11px; color: #94a3b8; white-space: pre-wrap; word-break: break-all; max-height: 220px; overflow: auto; }
 </style>
- 
+
 <div style="background:#0f172a;color:white;font-family:Arial;padding:30px;min-height:calc(100vh - 52px)">
- 
-<h1>HoneyToken Dashboard</h1>
-<p style="color:#64748b;margin-top:-10px;margin-bottom:20px;font-size:13px" id="subTitle">Loading CTI_Storage/CTI_STIX.json …</p>
- 
+
+<h1 style="margin-bottom:10px">HoneyToken Dashboard</h1>
+<p style="color:#94a3b8;margin-top:0;margin-bottom:24px;font-size:13px;line-height:1.6;background:#1e293b;padding:8px 14px;border-radius:6px;border-left:3px solid #378ADD" id="subTitle">Loading CTI_Storage/CTI_STIX.json …</p>
+
 <div class="top-card">
     <div class="mini-grid">
         <div class="mini-stat"><div class="mini-stat-label">Total Hits</div><div class="mini-stat-value blue" id="mTotal">0</div></div>
@@ -260,25 +260,25 @@ body {
         <div class="mini-stat"><div class="mini-stat-label">Most Triggered HoneyTokens</div><div class="mini-stat-value" style="font-size:13px" id="mTopEP">—</div></div>
     </div>
 </div>
- 
+
 <div class="main-grid">
     <div class="card"><h3>Activity by HoneyToken</h3><div id="chartEndpoint"></div></div>
     <div class="card"><h3>Hits by Country</h3><div id="chartCountry"></div></div>
     <div class="card"><h3>Top Attacking IPs</h3><div class="list" id="listIPs"></div></div>
 </div>
- 
+
 <div class="main-grid">
     <div class="card"><h3>Timeline</h3><div class="list" id="listTimeline"></div></div>
 </div>
- 
+
 <div class="card">
     <h3>All Bundles</h3>
     <div class="filter-bar" id="filterBar"></div>
     <div class="list" id="listBundles"></div>
 </div>
- 
+
 </div>
- 
+
 <script>
 var allBundles = [];
 var activeFilter = 'all';
@@ -306,8 +306,8 @@ setInterval(loadHoney,10000);
 </script>
 <!-- ↑↑↑ ORIGINAL HONEYTOKEN DASHBOARD CODE END ↑↑↑ -->
 </div>
- 
- 
+
+
 <!-- ══════════════════════════════════════════
      PANEL 2 — DECOY SYSTEM DASHBOARD
      (original code untouched, only wrapped)
@@ -361,7 +361,7 @@ setInterval(loadHoney,10000);
 #graph-container{height:500px;background:var(--bg1);border-radius:8px;border:1px solid var(--border);overflow:hidden;}
 #panel-decoy .empty{padding:20px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--text-dim);}
 </style>
- 
+
 <header>
   <div class="logo">DECOY<span>/</span>SYSTEM &nbsp;—&nbsp; DashBoard</div>
   <div style="display:flex;align-items:center;gap:20px">
@@ -369,7 +369,7 @@ setInterval(loadHoney,10000);
     <div class="live-badge"><div class="live-dot"></div>LIVE</div>
   </div>
 </header>
- 
+
 <main>
   <div id="verdict-banner">
     <div class="banner-left">
@@ -414,7 +414,7 @@ setInterval(loadHoney,10000);
   <div class="card"><div class="card-title">Timeline</div><div class="scroll" id="timeline-list" style="max-height:300px"><div class="empty">No events</div></div></div>
   <div class="card"><div class="card-title">Attack Graph</div><div id="graph-container"></div></div>
 </main>
- 
+
 <script>
 function el(id){ return document.getElementById(id) }
 function row(icon, text){ return `<div class="row"><span class="row-icon">${icon}</span><span>${text}</span></div>` }
@@ -446,8 +446,8 @@ setInterval(loadDecoy, 5000);
 </script>
 <!-- ↑↑↑ ORIGINAL DECOY DASHBOARD CODE END ↑↑↑ -->
 </div>
- 
- 
+
+
 <!-- ══════════════════════════════════════════
      TAB SWITCHING — only toggles visibility
 ════════════════════════════════════════════ -->
@@ -465,7 +465,7 @@ function switchTab(name, btn) {
     document.getElementById('panel-' + name).classList.add('active');
     btn.classList.add('active');
 }
- 
+
 // Live clock in tab bar
 function updateClock() {
     var now = new Date();
@@ -475,7 +475,6 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 </script>
- 
+
 </body>
 </html>
- 
