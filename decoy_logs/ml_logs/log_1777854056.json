@@ -1,0 +1,49 @@
+{
+    "run_id": "1777854056",
+    "package": "4equest-6.9.2.tgz",
+    "risk_probability": 0.9937819838523865,
+    "prediction": 1,
+    "timestamp": "2026-05-04T00:20:56.528760",
+    "top_shap": [
+        [
+            "num__presence of installation script",
+            2.1887121200561523
+        ],
+        [
+            "num__Number of lines in metadata",
+            1.1519757509231567
+        ],
+        [
+            "num__.md",
+            -0.74690181016922
+        ],
+        [
+            "num__homogeneous identifiers in metadata",
+            -0.7159379720687866
+        ],
+        [
+            "num__Number of lines in source code",
+            0.5743762254714966
+        ],
+        [
+            "num__shannon mean ID metadata",
+            0.5694613456726074
+        ],
+        [
+            "num__shannon mean ID source code",
+            0.5172474384307861
+        ],
+        [
+            "num__shannon std ID metadata",
+            -0.5154708623886108
+        ],
+        [
+            "num__shannon std ID source code",
+            -0.4863418936729431
+        ],
+        [
+            "num__Number of Words in metadata",
+            0.4098282754421234
+        ]
+    ]
+}
