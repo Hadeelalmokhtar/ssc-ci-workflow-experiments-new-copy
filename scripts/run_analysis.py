@@ -2,10 +2,8 @@ import sys
 import os
 import json
 import joblib
-import subprocess 
 import time
 import ast
-import math
 import re
 import tarfile
 import tempfile
@@ -126,66 +124,7 @@ except Exception as e:
     print("SHAP error:", e)
 
 # ======================================
-# FIND EXECUTABLE FILE FOR DYNAMIC
-# ======================================
-analysis_target = None
-
-if os.path.isdir(file_path):
-    for root, dirs, files in os.walk(file_path):
-        for fname in files:
-            if original_input.endswith(".tgz") and fname.endswith(".js"):
-                analysis_target = os.path.join(root, fname)
-                break
-            elif fname.endswith(".py"):
-                analysis_target = os.path.join(root, fname)
-                break
-        if analysis_target:
-            break
-
-if analysis_target is None:
-    print("No executable file found for dynamic analysis.")
-    sys.exit(0)
-
-# ======================================
-# ENTROPY
-# ======================================
-def calculate_entropy(data):
-    if not data:
-        return 0
-    prob = [float(data.count(c)) / len(data) for c in set(data)]
-    return -sum(p * math.log2(p) for p in prob)
-
-with open(analysis_target, "r", errors="ignore") as f:
-    content = f.read()
-
-file_entropy = round(calculate_entropy(content), 4)
-
-# ======================================
-# STRACE SANDBOX
-# ======================================
-print("Starting sandbox execution with strace...")
-
-start_time = time.time()
-
-process = subprocess.Popen(
-    ["strace", "-f", "-e", "trace=execve,open,connect,write,fork",
-     "node" if repo_name == "NPM" else "python",
-     analysis_target],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
-    text=True
-)
-
-try:
-    stdout, stderr = process.communicate(timeout=15)
-except subprocess.TimeoutExpired:
-    process.kill()
-    stdout, stderr = process.communicate()
-
-execution_time = round(time.time() - start_time, 3)
-
-# ======================================
-# SAVE LOG (FINAL FIX)
+# SAVE LOG 
 # ======================================
 
 os.makedirs("decoy_logs", exist_ok=True)
@@ -193,23 +132,20 @@ os.makedirs("decoy_logs/ml_logs", exist_ok=True)
 
 run_id = str(int(time.time()))
 
-dynamic_log = {
+ml_log = {
     "run_id": str(run_id),
     "package": str(original_input),
     "risk_probability": float(proba),
     "prediction": int(pred),
-    "file_entropy": float(file_entropy),
-    "execution_time": float(execution_time),
     "timestamp": str(datetime.utcnow().isoformat()),
     "top_shap": [(str(k), float(v)) for k, v in top_shap]
 }
 
 with open(f"decoy_logs/ml_logs/log_{run_id}.json", "w") as f:
-    json.dump(dynamic_log, f, indent=4)
-
+    json.dump(ml_log, f, indent=4)
 
 with open("decoy_logs/latest.json", "w") as f:
-    json.dump(dynamic_log, f, indent=4)
+    json.dump(ml_log, f, indent=4)
 
 print(f"Saved ML log: decoy_logs/ml_logs/log_{run_id}.json")
 print("Updated decoy_logs/latest.json")
