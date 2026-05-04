@@ -7,43 +7,33 @@
     "top_shap": [
         [
             "num__Number of lines in source code",
-            -1.112683653831482
-        ],
+            -1.112683653831482 ],
         [
             "num__homogeneous identifiers in metadata",
-            -0.9026137590408325
-        ],
+            -0.9026137590408325 ],
         [
             "num__.md",
-            -0.8070996999740601
-        ],
+            -0.8070996999740601 ],
         [
             "num__presence of installation script",
-            -0.6420261859893799
-        ],
+            -0.6420261859893799 ],
         [
             "num__shannon std string source code",
-            -0.6316478848457336
-        ],
+            -0.6316478848457336 ],
         [
             "num__Number of lines in metadata",
-            -0.4950282573699951
-        ],
+            -0.4950282573699951   ],
         [
             "num__shannon std ID source code",
-            0.49411219358444214
-        ],
+            0.49411219358444214  ],
         [
             "num__eq ratio q3",
-            -0.48367375135421753
-        ],
+            -0.48367375135421753  ],
         [
             "num__bracket ratio q3",
-            -0.4651411473751068
-        ],
+            -0.4651411473751068  ],
         [
             "num__homogeneous identifiers in source code",
-            -0.45226654410362244
-        ]
+            -0.45226654410362244  ]
     ]
 }
